@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Muhammad Dhiyauddin — Network Engineer</title>
+  <meta name="description" content="Portfolio Muhammad Dhiyauddin — Network Engineer berbasis di Tangerang." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0d0d0d; --surface: #161616; --border: #2a2a2a;
+      --accent: #c8f135; --text: #e8e8e8; --muted: #888;
+      --font-main: 'Sora', sans-serif; --font-mono: 'DM Mono', monospace;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-main); font-size: 16px; line-height: 1.7; overflow-x: hidden; }
+    #network-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 2.5rem; background: rgba(13,13,13,0.75); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
+    .nav-logo { font-family: var(--font-mono); font-size: 0.9rem; color: var(--accent); letter-spacing: 0.05em; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; letter-spacing: 0.04em; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    section { position: relative; z-index: 1; padding: 6rem 2.5rem; max-width: 960px; margin: 0 auto; }
+    #hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding-top: 8rem; }
+    .hero-inner { display: grid; grid-template-columns: 1fr auto; gap: 3rem; align-items: center; }
+    .hero-photo-wrap { position: relative; flex-shrink: 0; }
+    .hero-photo-frame { width: 220px; height: 260px; position: relative; }
+    .hero-photo-frame::before, .hero-photo-frame::after { content: ''; position: absolute; width: 28px; height: 28px; border-color: var(--accent); border-style: solid; z-index: 2; }
+    .hero-photo-frame::before { top: -6px; left: -6px; border-width: 2px 0 0 2px; }
+    .hero-photo-frame::after { bottom: -6px; right: -6px; border-width: 0 2px 2px 0; }
+    .inner-corners::before, .inner-corners::after { content: ''; position: absolute; width: 28px; height: 28px; border-color: var(--accent); border-style: solid; z-index: 2; }
+    .inner-corners::before { top: -6px; right: -6px; border-width: 2px 2px 0 0; }
+    .inner-corners::after { bottom: -6px; left: -6px; border-width: 0 0 2px 2px; }
+    .hero-photo { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; display: block; filter: grayscale(20%); transition: filter 0.3s; }
+    .hero-photo:hover { filter: grayscale(0%); }
+    .photo-placeholder { width: 100%; height: 100%; border-radius: 4px; background: var(--surface); border: 1px dashed var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; color: var(--muted); font-family: var(--font-mono); font-size: 0.72rem; text-align: center; padding: 1rem; }
+    .status-badge { position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 0.4rem; background: var(--surface); border: 1px solid var(--border); padding: 0.3rem 0.75rem; border-radius: 999px; font-family: var(--font-mono); font-size: 0.7rem; color: var(--accent); white-space: nowrap; z-index: 3; }
+    .status-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse-dot 1.8s ease-in-out infinite; }
+    @keyframes pulse-dot { 0%, 100% { box-shadow: 0 0 0 0 rgba(200,241,53,0.6); } 50% { box-shadow: 0 0 0 5px rgba(200,241,53,0); } }
+    .hero-tag { font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.5rem; }
+    h1 { font-size: clamp(2.4rem, 6vw, 4.8rem); font-weight: 700; line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 1.5rem; }
+    h1 span { color: var(--accent); }
+    .hero-sub { font-size: 1.05rem; color: var(--muted); max-width: 480px; margin-bottom: 2.5rem; font-weight: 300; }
+    .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 6px; font-family: var(--font-mono); font-size: 0.85rem; text-decoration: none; transition: all 0.2s; cursor: pointer; border: none; }
+    .btn-primary { background: var(--accent); color: #0d0d0d; font-weight: 500; }
+    .btn-primary:hover { background: #d8ff45; transform: translateY(-1px); }
+    .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .btn-outline:hover { border-color: var(--muted); background: var(--surface); }
+    .hero-scroll { margin-top: 3rem; display: flex; align-items: center; gap: 0.75rem; color: var(--muted); font-size: 0.8rem; font-family: var(--font-mono); }
+    .scroll-line { width: 40px; height: 1px; background: var(--border); }
+    .divider { position: relative; z-index: 1; height: 1px; background: var(--border); max-width: 960px; margin: 0 auto; }
+    .section-label { font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 2rem; }
+    h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 1.5rem; line-height: 1.2; }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+    .about-text p { color: var(--muted); margin-bottom: 1rem; font-weight: 300; }
+    .about-text p strong { color: var(--text); font-weight: 600; }
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 0.75rem; margin-top: 1.5rem; }
+    .skill-tag { padding: 0.5rem 0.75rem; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); text-align: center; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
+    .skill-tag:hover { border-color: var(--accent); color: var(--accent); }
+    .skill-icon { width: 28px; height: 28px; object-fit: contain; display: block; opacity: 0.85; transition: all 0.2s; }
+    .skill-icon-svg { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; opacity: 0.85; transition: all 0.2s; }
+    .skill-tag:hover .skill-icon-svg { opacity: 1; }
+    .projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
+    .project-card { background: rgba(22,22,22,0.85); backdrop-filter: blur(8px); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; transition: border-color 0.2s, transform 0.2s; }
+    .project-card:hover { border-color: rgba(200,241,53,0.4); transform: translateY(-3px); }
+    .project-num { font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent); }
+    .project-title { font-size: 1.1rem; font-weight: 600; letter-spacing: -0.01em; }
+    .project-desc { font-size: 0.9rem; color: var(--muted); font-weight: 300; flex: 1; }
+    .detail-btn { display: inline-flex; align-items: center; gap: 0.45rem; margin-top: 0.5rem; padding: 0.45rem 1rem; background: transparent; border: 1px solid rgba(200,241,53,0.3); border-radius: 6px; color: var(--accent); font-family: var(--font-mono); font-size: 0.75rem; cursor: pointer; transition: all 0.2s; width: fit-content; }
+    .detail-btn:hover { background: rgba(200,241,53,0.08); border-color: var(--accent); }
+    .exp-list { display: flex; flex-direction: column; margin-top: 2rem; }
+    .exp-item { display: grid; grid-template-columns: 140px 1fr; gap: 2rem; padding: 1.5rem 0; border-top: 1px solid var(--border); }
+    .exp-item:last-child { border-bottom: 1px solid var(--border); }
+    .exp-year { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); padding-top: 0.3rem; }
+    .exp-role { font-weight: 600; font-size: 1rem; }
+    .exp-company { color: var(--accent); font-size: 0.9rem; margin-bottom: 0.5rem; }
+    .exp-desc { font-size: 0.9rem; color: var(--muted); font-weight: 300; margin-bottom: 0.75rem; }
+    .exp-company-logo { width: auto; max-width: 120px; object-fit: contain; opacity: 0.9; border-radius: 6px; }
+    .exp-company-logo.intek-logo { height: 75px; }
+    .exp-company-logo.smk-logo { height: 50px; }
+    #contact { text-align: center; }
+    #contact h2 { margin-bottom: 1rem; }
+    #contact p { color: var(--muted); max-width: 480px; margin: 0 auto 2.5rem; font-weight: 300; }
+    .contact-links { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+    footer { position: relative; z-index: 1; border-top: 1px solid var(--border); padding: 2rem 2.5rem; display: flex; justify-content: space-between; align-items: center; max-width: 960px; margin: 0 auto; font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
+    .hero-stats { display: flex; gap: 15px; margin-top: 30px; flex-wrap: wrap; }
+    .stat-box { background: rgba(255,255,255,.03); border: 1px solid var(--border); padding: 14px 18px; border-radius: 10px; }
+    .stat-box h3 { color: var(--accent); }
+    .stat-box span { color: var(--muted); font-size: .8rem; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-up { animation: fadeUp 0.7s ease both; }
+    .delay-1 { animation-delay: 0.1s; } .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; } .delay-4 { animation-delay: 0.4s; }
+    .delay-5 { animation-delay: 0.5s; }
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.25rem; } .nav-links { display: none; }
+      section { padding: 4rem 1.25rem; }
+      .hero-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      .hero-photo-wrap { order: -1; display: flex; justify-content: center; }
+      .hero-photo-frame { width: 160px; height: 195px; }
+      .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .exp-item { grid-template-columns: 1fr; gap: 0.25rem; }
+    }
+    .modal-overlay { display: none; position: fixed; inset: 0; z-index: 999; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 1.5rem; }
+    .modal-overlay.open { display: flex; }
+    .modal-box { background: #111; border: 1px solid var(--border); border-radius: 14px; width: 100%; max-width: 700px; max-height: 90vh; overflow-y: auto; position: relative; animation: modalIn 0.28s cubic-bezier(0.34,1.56,0.64,1) both; }
+    @keyframes modalIn { from { opacity: 0; transform: scale(0.92) translateY(16px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    .modal-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 1.5rem 1.5rem 1rem; border-bottom: 1px solid var(--border); gap: 1rem; }
+    .modal-tag { font-family: var(--font-mono); font-size: 0.7rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.3rem; }
+    .modal-title { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.02em; }
+    .modal-close { background: var(--surface); border: 1px solid var(--border); color: var(--muted); width: 34px; height: 34px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1.1rem; transition: all 0.2s; }
+    .modal-close:hover { color: var(--text); border-color: var(--muted); }
+    .modal-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
+    .modal-section-label { font-family: var(--font-mono); font-size: 0.7rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem; }
+    .modal-desc { font-size: 0.9rem; color: var(--muted); font-weight: 300; line-height: 1.75; }
+    .modal-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 0.75rem; }
+    .gallery-item { border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: var(--surface); cursor: pointer; transition: border-color 0.2s, transform 0.15s; position: relative; }
+    .gallery-item:hover { border-color: var(--accent); transform: scale(1.02); }
+    .gallery-item img { width: 100%; height: 135px; object-fit: cover; display: block; }
+    .gallery-item video { width: 100%; height: 135px; object-fit: cover; display: block; }
+    .media-label { padding: 0.35rem 0.6rem; font-family: var(--font-mono); font-size: 0.68rem; color: var(--muted); background: var(--surface); }
+    .play-badge { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -65%); background: rgba(0,0,0,0.65); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.9rem; pointer-events: none; }
+    .gallery-portrait .gallery-item img { height: 200px; object-fit: contain; background: #1a1a2e; }
+    .lightbox { display: none; position: fixed; inset: 0; z-index: 1100; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; }
+    .lightbox.open { display: flex; }
+    .lightbox img { max-width: 90vw; max-height: 88vh; border-radius: 8px; object-fit: contain; }
+    .lightbox-close { position: absolute; top: 1.25rem; right: 1.25rem; background: rgba(255,255,255,0.1); border: none; color: #fff; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; z-index: 9999 !important; }
+    .lightbox img { pointer-events: none; }
+    .lightbox video { pointer-events: auto; }
+  </style>
+</head>
+<body>
+
+<canvas id="network-canvas"></canvas>
+
+<nav>
+  <span class="nav-logo"> > My Portfolio < </span>
+  <ul class="nav-links">
+    <li><a href="#about">about</a></li>
+    <li><a href="#projects">projects</a></li>
+    <li><a href="#experience">experience</a></li>
+    <li><a href="#contact">contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <p class="hero-tag fade-up">available for work</p>
+      <h1 class="fade-up delay-1">Halo, saya<br /><span>Muhammad<br/>Dhiyauddin.</span></h1>
+      <p class="hero-sub fade-up delay-2">Fresh Graduate TJKT yang memiliki pengalaman pada Mikrotik, Linux Server, Proxmox, Arduino, ESP32, UI/UX Figma, dan implementasi jaringan komputer.</p>
+      <div class="hero-cta fade-up delay-3">
+        <a href="#projects" class="btn btn-primary">Lihat proyek saya &rarr;</a>
+        <a href="#contact" class="btn btn-outline">Hubungi saya</a>
+      </div>
+      <div class="hero-scroll fade-up delay-4">
+        <div class="scroll-line"></div>
+        <span>scroll to explore</span>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-box"><h3>4+</h3><span>Projects</span></div>
+        <div class="stat-box"><h3>3+</h3><span>Certificates</span></div>
+        <div class="stat-box"><h3>1</h3><span>Internship</span></div>
+      </div>
+    </div>
+    <div class="hero-photo-wrap fade-up delay-5">
+      <div class="hero-photo-frame" onclick="togglePhoto()" style="cursor:pointer;">
+        <div class="inner-corners"></div>
+        <img src="foto_full.jpeg" alt="Muhammad Dhiyauddin" class="hero-photo" id="hero-img" />
+      </div>
+      <div class="status-badge"><div class="status-dot"></div>available for work</div>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <p class="section-label">01 &mdash; about me</p>
+  <div class="about-grid">
+    <div class="about-text">
+      <h2>Sedikit tentang saya</h2>
+      <p>Saya adalah <strong>Network Engineer</strong> yang berpengalaman dalam merancang dan mengelola infrastruktur jaringan.</p>
+      <p>Keahlian saya mencakup <strong>konfigurasi Mikrotik & server Linux</strong>, virtualisasi dengan Proxmox, dan pemrograman mikrokontroler.</p>
+      <p>Di luar pekerjaan, saya aktif mengikuti perkembangan teknologi jaringan dan sertifikasi industri.</p>
+      <a href="CV_Muhammad_Dhiyauddin.pdf" class="btn btn-outline" style="margin-top:1rem; display:inline-flex;" download>&darr; Lihat CV</a>
+    </div>
+    <div>
+      <p class="section-label" style="margin-bottom:1rem;">tech stack</p>
+      <div class="skills-grid">
+        <div class="skill-tag">
+          <span class="skill-icon-svg">
+            <svg width="28" height="28" viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="8" fill="#1a1a1a"/><rect x="6" y="6" width="16" height="16" rx="2" fill="#c8f135" opacity="0.9"/><rect x="26" y="6" width="16" height="16" rx="2" fill="#c8f135" opacity="0.6"/><rect x="6" y="26" width="16" height="16" rx="2" fill="#c8f135" opacity="0.6"/><rect x="26" y="26" width="16" height="16" rx="2" fill="#c8f135" opacity="0.35"/></svg>
+          </span>
+          WinBox
+        </div>
+        <div class="skill-tag">
+          <img class="skill-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/arduino/arduino-original.svg" alt="Arduino" />
+          Arduino Ide
+        </div>
+        <div class="skill-tag">
+          <span class="skill-icon-svg">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ff6b35" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9.5 12l1.5 1.5 3.5-3.5" stroke="#ff6b35" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          Firewall
+        </div>
+        <div class="skill-tag">
+          <span class="skill-icon-svg">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="1.8"><path d="M5 12.55a11 11 0 0 1 14.08 0" stroke-linecap="round"/><path d="M1.42 9a16 16 0 0 1 21.16 0" stroke-linecap="round"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0" stroke-linecap="round"/><circle cx="12" cy="20" r="1" fill="#38bdf8"/></svg>
+          </span>
+          Access Point
+        </div>
+        <div class="skill-tag">
+          <img class="skill-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/canva/canva-original.svg" alt="Canva" />
+          Canva
+        </div>
+        <div class="skill-tag">
+          <img class="skill-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" alt="Linux" />
+          Linux
+        </div>
+        <div class="skill-tag">
+          <span class="skill-icon-svg">
+            <svg width="28" height="28" viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="8" fill="#1a1a1a"/><path d="M10 8 L38 8 L38 16 L18 16 L18 20 L34 20 L34 28 L18 28 L18 32 L38 32 L38 40 L10 40 Z" fill="#e57000" opacity="0.9"/></svg>
+          </span>
+          Proxmox
+        </div>
+        <div class="skill-tag">
+          <span class="skill-icon-svg">
+            <svg width="28" height="28" viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="8" fill="#1a1a1a"/><rect x="8" y="18" width="32" height="12" rx="3" fill="none" stroke="#c8f135" stroke-width="2"/><circle cx="14" cy="24" r="2" fill="#c8f135"/><circle cx="22" cy="24" r="2" fill="#c8f135" opacity="0.6"/><circle cx="30" cy="24" r="2" fill="#c8f135" opacity="0.4"/><line x1="24" y1="18" x2="24" y2="10" stroke="#c8f135" stroke-width="2"/><line x1="18" y1="30" x2="18" y2="38" stroke="#c8f135" stroke-width="2"/><line x1="30" y1="30" x2="30" y2="38" stroke="#c8f135" stroke-width="2"/><circle cx="24" cy="8" r="2.5" fill="#c8f135"/></svg>
+          </span>
+          Mikrotik
+        </div>
+        <div class="skill-tag">
+          <img class="skill-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" alt="Figma" />
+          Figma
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <p class="section-label">02 &mdash; projects</p>
+  <h2>Proyek pilihan</h2>
+  <div class="projects-grid">
+    <div class="project-card">
+      <span class="project-num">01</span>
+      <div class="project-title">Smart Car Mini</div>
+      <p class="project-desc">Mobil mini cerdas dengan sensor ultrasonik HC-SR04 untuk menghindari rintangan secara otomatis, dilengkapi fitur penyedot debu berbasis dinamo kipas.</p>
+      <button class="detail-btn" onclick="openModal('proj-01')">Lihat Bukti &amp; Detail</button>
+    </div>
+    <div class="project-card">
+      <span class="project-num">02</span>
+      <div class="project-title">UI/UX Aplikasi TJKT – SI Wistek</div>
+      <p class="project-desc">Desain antarmuka aplikasi Sistem Informasi Jurusan berbasis mobile untuk SMK Wisata Indonesia. Dibuat menggunakan Figma.</p>
+      <button class="detail-btn" onclick="openModal('proj-02')">Lihat Bukti &amp; Detail</button>
+    </div>
+    <div class="project-card">
+      <span class="project-num">03</span>
+      <div class="project-title">Server dan Jaringan Virtual</div>
+      <p class="project-desc">Membangun server dan jaringan virtual menggunakan Proxmox VE, Mikrotik, Ubuntu, dan hosting web menggunakan aaPanel.</p>
+      <button class="detail-btn" onclick="openModal('proj-03')">Lihat Bukti &amp; Detail</button>
+    </div>
+    <div class="project-card">
+      <span class="project-num">04</span>
+      <div class="project-title">Smart Door Lock Berbasis ESP32 & RFID</div>
+      <p class="project-desc">Sistem keamanan pintu pintar berbasis ESP32 dengan modul RFID RC522 dan solenoid door lock sebagai mekanisme pengunci.</p>
+      <button class="detail-btn" onclick="openModal('proj-04')">Lihat Bukti &amp; Detail</button>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <p class="section-label">03 &mdash; experience</p>
+  <h2>Pengalaman kerja</h2>
+  <div class="exp-list">
+    <div class="exp-item">
+      <div class="exp-year">2024 &mdash; 2025</div>
+      <div>
+        <div class="exp-role">Programmer Intern</div>
+        <div class="exp-company-row">
+          <img src="solusi-intek-logo.png" alt="PT Solusi Intek Indonesia" class="exp-company-logo intek-logo" onerror="this.style.display='none';" />
+          <div class="exp-company">PT Solusi Intek Indonesia</div>
+        </div>
+        <p class="exp-desc">Melaksanakan program PKL selama 6 bulan dengan fokus pada pengumpulan dan analisis data untuk mendeteksi potensi kebocoran data perusahaan dan klien.</p>
+        <button class="detail-btn" onclick="openModal('exp-01')">Lihat Sertifikat &amp; Bukti</button>
+      </div>
+    </div>
+    <div class="exp-item">
+      <div class="exp-year">2023 &mdash; 2026</div>
+      <div>
+        <div class="exp-role">Lulusan SMK</div>
+        <div class="exp-company-row">
+          <img src="smk-wisata-logo.png" alt="SMK Wisata Indonesia" class="exp-company-logo smk-logo" onerror="this.style.display='none';" />
+          <div class="exp-company">SMK Wisata Indonesia</div>
+        </div>
+        <p class="exp-desc">Jurusan Teknik Komputer dan Jaringan. Memiliki sertifikasi LSP BNSP, UKOM, dan sertifikasi mikrokontroler.</p>
+        <button class="detail-btn" onclick="openModal('exp-02')">Lihat Sertifikat</button>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <p class="section-label">04 &mdash; contact</p>
+  <h2>Mari berkolaborasi.</h2>
+  <p>Saya terbuka untuk peluang kerja, freelance, atau sekadar diskusi. Hubungi saya lewat email atau media sosial.</p>
+  <div class="contact-links">
+    <a href="https://mail.google.com/mail/?view=cm&to=dhiyauddintjkt@gmail.com" class="btn btn-primary" target="_blank">dhiyauddintjkt@gmail.com &rarr;</a>
+    <a href="https://linkedin.com/in/mdhiyauddin" class="btn btn-outline" target="_blank">LinkedIn</a>
+    <a href="https://github.com/mdhiyauddin" class="btn btn-outline" target="_blank">GitHub</a>
+  </div>
+</section>
+
+<footer>
+  <span>&copy; 2026 Muhammad Dhiyauddin</span>
+</footer>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modal-proj-01">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div><div class="modal-tag">Project 01</div><div class="modal-title">Smart Car Mini</div></div>
+      <button class="modal-close" onclick="closeModal('proj-01')">&#x2715;</button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <div class="modal-section-label">Foto &amp; Video Proyek</div>
+        <div class="modal-gallery">
+          <div class="gallery-item" data-type="img"><img src="car1.jpg" alt="Foto 1"/><div class="media-label">Foto 1</div></div>
+          <div class="gallery-item" data-type="vid"><video muted playsinline preload="metadata"><source src="vid2.mp4" type="video/mp4"/></video><div class="play-badge">&#9654;</div><div class="media-label">Video Demo</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="modal-section-label">Deskripsi Lengkap</div>
+        <p class="modal-desc">Mobil mini cerdas berbasis Arduino Uno dengan sensor ultrasonik HC-SR04 untuk deteksi dan penghindaran rintangan otomatis. Dilengkapi fitur penyedot debu di bagian bawah sebagai prototipe smart cleaning robot.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-proj-02">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div><div class="modal-tag">Project 02 · UI/UX Design</div><div class="modal-title">Aplikasi SI Wistek – TJKT</div></div>
+      <button class="modal-close" onclick="closeModal('proj-02')">&#x2715;</button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <div class="modal-section-label">Tampilan UI Aplikasi</div>
+        <div class="modal-gallery gallery-portrait">
+          <div class="gallery-item" data-type="img"><img src="ui-1-welcome.png" alt="Welcome"/><div class="media-label">Welcome</div></div>
+          <div class="gallery-item" data-type="img"><img src="ui-2-login.png" alt="Login"/><div class="media-label">Login</div></div>
+          <div class="gallery-item" data-type="img"><img src="ui-3-home.png" alt="Dashboard"/><div class="media-label">Dashboard</div></div>
+          <div class="gallery-item" data-type="img"><img src="ui-4-profile.png" alt="Profil"/><div class="media-label">Profil Siswa</div></div>
+          <div class="gallery-item" data-type="img"><img src="ui-5-info.png" alt="Info"/><div class="media-label">Info Aplikasi</div></div>
+          <div class="gallery-item" data-type="img"><img src="ui-6-kalender.png" alt="Kalender"/><div class="media-label">Kalender Jurusan</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="modal-section-label">Deskripsi Lengkap</div>
+        <p class="modal-desc">Desain UI/UX aplikasi mobile Sistem Informasi Jurusan (SI Wistek) untuk SMK Wisata Indonesia jurusan TJKT. Dibuat menggunakan Figma dengan pendekatan mobile-first.</p>
+        <a href="https://www.figma.com/design/jo2iNYlK98NIi0x6qfa5vJ/" target="_blank" class="detail-btn" style="margin-top:0.5rem; text-decoration:none;">Buka di Figma</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-proj-03">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div><div class="modal-tag">Project 03</div><div class="modal-title">Server dan Jaringan Virtual</div></div>
+      <button class="modal-close" onclick="closeModal('proj-03')">&#x2715;</button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <div class="modal-section-label">Deskripsi Lengkap</div>
+        <p class="modal-desc">Membangun server dan jaringan virtual menggunakan Proxmox VE. Mengkonfigurasi routing pada Mikrotik, server berbasis Ubuntu, serta melakukan deployment dan hosting web menggunakan aaPanel di lingkungan Linux secara mandiri.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-proj-04">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div><div class="modal-tag">Project 04</div><div class="modal-title">Smart Door Lock Berbasis ESP32 & RFID</div></div>
+      <button class="modal-close" onclick="closeModal('proj-04')">&#x2715;</button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <div class="modal-section-label">Foto &amp; Video Proyek</div>
+        <div class="modal-gallery">
+          <div class="gallery-item" data-type="img"><img src="prj41.jpeg" alt="Foto 1"/><div class="media-label">Foto 1</div></div>
+          <div class="gallery-item" data-type="img"><img src="prj42.jpeg" alt="Foto 2"/><div class="media-label">Foto 2</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="modal-section-label">Deskripsi Lengkap</div>
+        <p class="modal-desc">Sistem keamanan pintu pintar berbasis ESP32 dengan modul RFID RC522 dan Solenoid Door Lock. Hanya kartu RFID terdaftar yang dapat membuka pintu secara otomatis.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-exp-01">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div><div class="modal-tag">Experience · 2024–2025</div><div class="modal-title">PT Solusi Intek Indonesia</div></div>
+      <button class="modal-close" onclick="closeModal('exp-01')">&#x2715;</button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <div class="modal-section-label">Sertifikat &amp; Dokumen</div>
+        <div class="modal-gallery">
+          <div class="gallery-item" data-type="img"><img src="cert.jpeg" alt="Sertifikat PKL"/><div class="media-label">Sertifikat PKL</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="modal-section-label">Detail Kegiatan</div>
+        <p class="modal-desc">Melaksanakan program PKL selama 6 bulan di PT Solusi Intek Indonesia. Fokus pada pengumpulan dan analisis data untuk mendeteksi potensi kebocoran data perusahaan dan klien.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-exp-02">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div><div class="modal-tag">Education · 2023–2026</div><div class="modal-title">SMK Wisata Indonesia</div></div>
+      <button class="modal-close" onclick="closeModal('exp-02')">&#x2715;</button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <div class="modal-section-label">Sertifikat &amp; Dokumen</div>
+        <div class="modal-gallery">
+          <div class="gallery-item" data-type="img">
+            <img src="sertifikat-bnsp.jpeg" alt="Sertifikat BNSP"/>
+            <div class="media-label">Sertifikat BNSP</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="modal-section-label">Detail Pendidikan</div>
+        <p class="modal-desc">Jurusan Teknik Komputer dan Jaringan · Sertifikasi LSP BNSP · Sertifikasi Mikrokontroler · UKOM (Virtualisasi Linux, Web Server, WordPress & Mail Server Roundcube).</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="if(event.target===this)closeLightbox()">
+  <button class="lightbox-close" onclick="window.closeLightbox()">&#x2715;</button>
+  <img id="lb-img" src="" alt="" style="display:none;" />
+  <video id="lb-vid" controls style="display:none;max-width:90vw;max-height:88vh;border-radius:8px;"></video>
+</div>
+
+<script>
+  // ----- CANVAS JARINGAN -----
+  (function(){
+    const canvas = document.getElementById('network-canvas');
+    if(!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let w, h;
+    function resize(){ w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight; }
+    window.addEventListener('resize', resize);
+    resize();
+    const nodes=[];
+    const COUNT=75;
+    for(let i=0;i<COUNT;i++){
+      nodes.push({x:Math.random()*w, y:Math.random()*h, vx:(Math.random()-0.5)*0.3, vy:(Math.random()-0.5)*0.3});
+    }
+    function draw(){
+      ctx.clearRect(0,0,w,h);
+      for(let n of nodes){
+        n.x+=n.vx; n.y+=n.vy;
+        if(n.x<0||n.x>w) n.vx*=-1;
+        if(n.y<0||n.y>h) n.vy*=-1;
+        ctx.beginPath();
+        ctx.arc(n.x,n.y,1.2,0,Math.PI*2);
+        ctx.fillStyle='rgba(200,241,53,0.4)';
+        ctx.fill();
+      }
+      for(let i=0;i<nodes.length;i++){
+        for(let j=i+1;j<nodes.length;j++){
+          const dx=nodes[i].x-nodes[j].x, dy=nodes[i].y-nodes[j].y;
+          const dist=Math.sqrt(dx*dx+dy*dy);
+          if(dist<120){
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x,nodes[i].y);
+            ctx.lineTo(nodes[j].x,nodes[j].y);
+            ctx.strokeStyle=`rgba(200,241,53,${0.08*(1-dist/120)})`;
+            ctx.lineWidth=0.6;
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+
+  // ----- MODAL -----
+  function openModal(id){
+    const el=document.getElementById('modal-'+id);
+    if(el) el.classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+  function closeModal(id){
+    const el=document.getElementById('modal-'+id);
+    if(el) el.classList.remove('open');
+    document.body.style.overflow='auto';
+  }
+  window.openModal=openModal;
+  window.closeModal=closeModal;
+
+  // ----- LIGHTBOX -----
+  function openLightbox(src, type){
+    const lb=document.getElementById('lightbox');
+    const img=document.getElementById('lb-img');
+    const vid=document.getElementById('lb-vid');
+    img.style.display='none'; vid.style.display='none';
+    if(type==='img'){ img.src=src; img.style.display='block'; }
+    else if(type==='vid'){ vid.src=src; vid.style.display='block'; vid.load(); }
+    lb.classList.add('open');
+  }
+  function closeLightbox(){
+    const lb=document.getElementById('lightbox');
+    const vid=document.getElementById('lb-vid');
+    vid.pause();
+    lb.classList.remove('open');
+  }
+  window.openLightbox=openLightbox;
+  window.closeLightbox=closeLightbox;
+
+  // ----- GALLERY CLICK -----
+  document.querySelectorAll('.gallery-item').forEach(el=>{
+    el.addEventListener('click', function(e){
+      const img=this.querySelector('img');
+      const vid=this.querySelector('video');
+      if(img){ openLightbox(img.src, 'img'); }
+      else if(vid){ 
+        const src=vid.querySelector('source')?.src || vid.src;
+        if(src) openLightbox(src, 'vid'); 
+      }
+    });
+  });
+
+  // ----- SCROLL ANIMATION (Intersection Observer)-----
+  document.addEventListener('DOMContentLoaded', function(){
+    const els=document.querySelectorAll('.fade-up');
+    const observer=new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){ entry.target.style.animationPlayState='running'; }
+      });
+    }, { threshold:0.1 });
+    els.forEach(el=>{
+      el.style.animationPlayState='paused';
+      observer.observe(el);
+    });
+  });
+</script>
+
+</body>
+</html>
