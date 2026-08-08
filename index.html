@@ -163,7 +163,7 @@
         <span>scroll to explore</span>
       </div>
       <div class="hero-stats">
-        <div class="stat-box"><h3>4+</h3><span>Projects</span></div>
+        <div class="stat-box"><h3>6+</h3><span>Projects</span></div>
         <div class="stat-box"><h3>3+</h3><span>Certificates</span></div>
         <div class="stat-box"><h3>1</h3><span>Internship</span></div>
       </div>
@@ -273,6 +273,18 @@
       <div class="project-title">Smart Door Lock Berbasis ESP32 & RFID</div>
       <p class="project-desc">Sistem keamanan pintu pintar berbasis ESP32 dengan modul RFID RC522 dan solenoid door lock sebagai mekanisme pengunci.</p>
       <button class="detail-btn" onclick="openModal('proj-04')">Lihat Bukti &amp; Detail</button>
+    </div>
+    <div class="project-card">
+      <span class="project-num">05</span>
+      <div class="project-title">Caffe Adin - QR Code Restoran</div>
+      <p class="project-desc">Sistem pemesanan restoran digital via QR Code. Pelanggan scan QR di meja, pesan mandiri via HP. Dashboard admin dengan grafik penjualan, export Excel hasil penjualan, pemantauan pesanan secara real-time</p>
+      <button class="detail-btn" onclick="openModal('proj-05')">Lihat Bukti &amp; Detail</button>
+    </div>
+    <div class="project-card">
+      <span class="project-num">06</span>
+      <div class="project-title">Kado Digital ESP32 - Happy Birthday Bunda</div>
+      <p class="project-desc">Hadiah interaktif berbasis ESP32 dengan layar TFT 2.8", buzzer, dan tombol. Menampilkan slideshow foto & pesan, memutar lagu ulang tahun otomatis.</p>
+      <button class="detail-btn" onclick="openModal('proj-06')">Lihat Bukti &amp; Detail</button>
     </div>
   </div>
 </section>
@@ -409,6 +421,74 @@
       <div>
         <div class="modal-section-label">Deskripsi Lengkap</div>
         <p class="modal-desc">Sistem keamanan pintu pintar berbasis ESP32 dengan modul RFID RC522 dan Solenoid Door Lock. Hanya kartu RFID terdaftar yang dapat membuka pintu secara otomatis.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PROJ-05: Caffe Adin -->
+<div class="modal-overlay" id="modal-proj-05">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div><div class="modal-tag">Project 05 · Fullstack Web</div><div class="modal-title">Caffe Adin - QR Code Restoran</div></div>
+      <button class="modal-close" onclick="closeModal('proj-05')">&#x2715;</button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <div class="modal-section-label">Foto &amp; Video Proyek</div>
+        <div class="modal-gallery">
+          <div class="gallery-item" data-type="img"><img src="caffe-login.jpg" alt="login"/><div class="media-label">login</div></div>
+          <div class="gallery-item" data-type="img"><img src="caffe-dashboard.png" alt="Dashboard"/><div class="media-label">Dashboard</div></div>
+          <div class="gallery-item" data-type="img"><img src="caffe-menu.png" alt="Menu"/><div class="media-label">Halaman Menu</div></div>
+          <div class="gallery-item" data-type="img"><img src="caffe-qr.png" alt="QR Code"/><div class="media-label">QR Code Meja</div></div>
+          <div class="gallery-item" data-type="vid"><video muted playsinline preload="metadata"><source src="caffe-demo.mp4" type="video/mp4"/></video><div class="play-badge">&#9654;</div><div class="media-label">Video Demo</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="modal-section-label">Deskripsi Lengkap</div>
+        <p class="modal-desc">
+          <strong>Caffe Adin</strong> adalah sistem pemesanan restoran digital yang memungkinkan pelanggan memesan makanan secara mandiri melalui scan QR Code di meja. Dilengkapi dashboard admin untuk manajemen menu, pemantauan pesanan real-time, serta analisis penjualan berbasis grafik.
+          <br/><br/>
+          <strong>💡 Pengembangan:</strong><br/>
+          Project ini dikembangkan dengan memanfaatkan AI (ChatGPT/GitHub Copilot) sebagai asisten pemrograman. Saya bertanggung jawab penuh atas arsitektur sistem, desain database, integrasi fitur, pengujian, dan deployment. AI digunakan sebagai alat bantu untuk mempercepat proses pengembangan dan learning.
+          <br/><br/>
+          <strong>⚡ Fitur Unggulan:</strong><br/>
+          QR Code per meja (8 meja) · Pemesanan mandiri via HP  · Dashboard admin dengan grafik penjualan · Manajemen menu (CRUD + upload gambar) · Export laporan Excel/CSV · Filter pesanan by tanggal · Pencarian menu · Cetak invoice/struk · Login admin · Responsive design
+          <br/><br/>
+          <strong>🛠️ Teknologi:</strong><br/>
+          Backend: PHP 8.2, MySQL · Frontend: Tailwind CSS, JavaScript · Library: Chart.js, QRCode.js, Font Awesome · AI Tools: ChatGPT (coding assistant), GitHub Copilot
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PROJ-06: Kado Digital ESP32 -->
+<div class="modal-overlay" id="modal-proj-06">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div><div class="modal-tag">Project 06 · Embedded System</div><div class="modal-title">Kado Digital ESP32 - Happy Birthday Bunda</div></div>
+      <button class="modal-close" onclick="closeModal('proj-06')">&#x2715;</button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <div class="modal-section-label">Foto &amp; Video Proyek</div>
+        <div class="modal-gallery">
+          <div class="gallery-item" data-type="img"><img src="kado-cover.jpg" alt="Cover"/><div class="media-label">Cover</div></div>
+          <div class="gallery-item" data-type="vid"><video muted playsinline preload="metadata"><source src="kado-demo.mp4" type="video/mp4"/></video><div class="play-badge">&#9654;</div><div class="media-label">Video Demo</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="modal-section-label">Deskripsi Lengkap</div>
+        <p class="modal-desc">
+          <strong>Kado Digital ESP32</strong> adalah hadiah ulang tahun personal berbasis ESP32 dengan layar TFT 2.8" ILI9341, buzzer pasif, dan tombol push. Menampilkan 4 slide foto & pesan, memutar lagu "Happy Birthday" otomatis di slide kedua.
+          <br/><br/>
+          <strong>🛠️ Teknologi:</strong><br/>
+          ESP32 · C++ (Arduino IDE) · TFT_eSPI · SPI · PWM Buzzer
+          <br/><br/>
+          <strong>⚡ Fitur:</strong><br/>
+          Slideshow interaktif · Tampilan foto full color · Kontrol satu tombol
+        </p>
       </div>
     </div>
   </div>
