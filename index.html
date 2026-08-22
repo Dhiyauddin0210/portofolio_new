@@ -22,6 +22,19 @@
     .nav-links { display: flex; gap: 2rem; list-style: none; }
     .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; letter-spacing: 0.04em; transition: color 0.2s; }
     .nav-links a:hover { color: var(--text); }
+    .lang-toggle {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-left: 1rem;
+    }
+    .lang-toggle:hover { border-color: var(--accent); color: var(--accent); }
     section { position: relative; z-index: 1; padding: 6rem 2.5rem; max-width: 960px; margin: 0 auto; }
     #hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding-top: 8rem; }
     .hero-inner { display: grid; grid-template-columns: 1fr auto; gap: 3rem; align-items: center; }
@@ -131,6 +144,75 @@
     .lightbox-close { position: absolute; top: 1.25rem; right: 1.25rem; background: rgba(255,255,255,0.1); border: none; color: #fff; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; z-index: 9999 !important; }
     .lightbox img { pointer-events: none; }
     .lightbox video { pointer-events: auto; }
+
+    /* === EXCEL CARD === */
+    .excel-card {
+      margin-top: 1.5rem;
+      padding: 1rem 1.2rem;
+      background: rgba(22,22,22,0.85);
+      border: 1px solid rgba(200,241,53,0.35);
+      border-radius: 8px;
+      transition: border-color 0.2s;
+      backdrop-filter: blur(8px);
+    }
+    .excel-card:hover { border-color: rgba(200,241,53,0.65); }
+    .cert-card {
+      margin-top: 1.5rem;
+      padding: 1rem 1.2rem;
+      background: rgba(22,22,22,0.85);
+      border: 1px solid rgba(200,241,53,0.35);
+      border-radius: 8px;
+      backdrop-filter: blur(8px);
+      transition: border-color 0.2s;
+    }
+    .cert-card:hover { border-color: rgba(200,241,53,0.65); }
+    .cert-card-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    .cert-list { display: flex; flex-direction: column; gap: 0.6rem; }
+    .cert-item {
+      display: flex; align-items: flex-start; gap: 0.6rem;
+      font-size: 0.82rem; color: var(--muted); font-weight: 300; line-height: 1.5;
+    }
+    .cert-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent); flex-shrink: 0; margin-top: 0.45rem; opacity: 0.7;
+    }
+    .excel-card-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+    .excel-card-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-weight: 300;
+      line-height: 1.7;
+    }
+    .excel-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.75rem;
+    }
+    .excel-badge {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      transition: all 0.2s;
+    }
+    .excel-badge:hover { border-color: var(--accent); color: var(--accent); }
   </style>
 </head>
 <body>
@@ -139,33 +221,36 @@
 
 <nav>
   <span class="nav-logo"> > My Portfolio < </span>
-  <ul class="nav-links">
-    <li><a href="#about">about</a></li>
-    <li><a href="#projects">projects</a></li>
-    <li><a href="#experience">experience</a></li>
-    <li><a href="#contact">contact</a></li>
-  </ul>
+  <div style="display:flex; align-items:center;">
+    <ul class="nav-links">
+      <li><a href="#about">about</a></li>
+      <li><a href="#projects">projects</a></li>
+      <li><a href="#experience">experience</a></li>
+      <li><a href="#contact">contact</a></li>
+    </ul>
+    <button class="lang-toggle" onclick="toggleLang()" id="langBtn">🇬🇧 EN</button>
+  </div>
 </nav>
 
 <!-- HERO -->
 <section id="hero">
   <div class="hero-inner">
     <div class="hero-left">
-      <p class="hero-tag fade-up">available for work</p>
-      <h1 class="fade-up delay-1">Halo, saya<br /><span>Muhammad<br/>Dhiyauddin.</span></h1>
-      <p class="hero-sub fade-up delay-2">Fresh Graduate TJKT yang memiliki pengalaman pada Mikrotik, Linux Server, Proxmox, Arduino, ESP32, UI/UX Figma, dan implementasi jaringan komputer.</p>
+      <p class="hero-tag fade-up" data-key="hero.tag">available for work</p>
+      <h1 class="fade-up delay-1" data-key="hero.title">Halo, saya<br /><span>Muhammad<br/>Dhiyauddin.</span></h1>
+      <p class="hero-sub fade-up delay-2" data-key="hero.sub">Fresh Graduate TJKT yang memiliki pengalaman pada Mikrotik, Linux Server, Proxmox, Arduino, ESP32, UI/UX Figma, dan implementasi jaringan komputer.</p>
       <div class="hero-cta fade-up delay-3">
-        <a href="#projects" class="btn btn-primary">Lihat proyek saya &rarr;</a>
-        <a href="#contact" class="btn btn-outline">Hubungi saya</a>
+        <a href="#projects" class="btn btn-primary" data-key="hero.btn1">Lihat proyek saya →</a>
+        <a href="#contact" class="btn btn-outline" data-key="hero.btn2">Hubungi saya</a>
       </div>
       <div class="hero-scroll fade-up delay-4">
         <div class="scroll-line"></div>
-        <span>scroll to explore</span>
+        <span data-key="hero.scroll">scroll to explore</span>
       </div>
       <div class="hero-stats">
-        <div class="stat-box"><h3>6+</h3><span>Projects</span></div>
-        <div class="stat-box"><h3>3+</h3><span>Certificates</span></div>
-        <div class="stat-box"><h3>1</h3><span>Internship</span></div>
+        <div class="stat-box"><h3>6+</h3><span data-key="hero.stats1">Projects</span></div>
+        <div class="stat-box"><h3>3+</h3><span data-key="hero.stats2">Certificates</span></div>
+        <div class="stat-box"><h3>1</h3><span data-key="hero.stats3">Internship</span></div>
       </div>
     </div>
     <div class="hero-photo-wrap fade-up delay-5">
@@ -181,17 +266,36 @@
 
 <!-- ABOUT -->
 <section id="about">
-  <p class="section-label">01 &mdash; about me</p>
+  <p class="section-label" data-key="about.label">01 — about me</p>
   <div class="about-grid">
     <div class="about-text">
-      <h2>Sedikit tentang saya</h2>
-      <p>Saya adalah <strong>Network Engineer</strong> yang berpengalaman dalam merancang dan mengelola infrastruktur jaringan.</p>
-      <p>Keahlian saya mencakup <strong>konfigurasi Mikrotik & server Linux</strong>, virtualisasi dengan Proxmox, dan pemrograman mikrokontroler.</p>
-      <p>Di luar pekerjaan, saya aktif mengikuti perkembangan teknologi jaringan dan sertifikasi industri.</p>
-      <a href="CV_Muhammad_Dhiyauddin.pdf" class="btn btn-outline" style="margin-top:1rem; display:inline-flex;" download>&darr; Lihat CV</a>
+      <h2 data-key="about.title">Sedikit tentang saya</h2>
+      <p data-key="about.p1">Saya adalah <strong>Network Engineer</strong> yang berpengalaman dalam merancang dan mengelola infrastruktur jaringan.</p>
+      <p data-key="about.p2">Keahlian saya mencakup <strong>konfigurasi Mikrotik & server Linux</strong>, virtualisasi dengan Proxmox, dan pemrograman mikrokontroler.</p>
+      <p data-key="about.p3">Di luar pekerjaan, saya aktif mengikuti perkembangan teknologi jaringan dan sertifikasi industri.</p>
+      <a href="CV_Muhammad_Dhiyauddin.pdf" class="btn btn-outline" style="margin-top:1rem; display:inline-flex;" download data-key="about.cv">↓ Lihat CV</a>
+
+      <!-- EXCEL CARD - kolom kiri -->
+      <div class="excel-card">
+        <p class="excel-card-label" style="color:#c8f135;" data-key="about.excel">Excel · Data Analysis</p>
+        <p class="excel-card-desc" data-key="about.excel.desc">
+          Mampu mengolah dan menganalisis data menggunakan <strong style="color: var(--text);">SUM, AVERAGE, COUNTIF, SUMIF, IF, VLOOKUP, XLOOKUP</strong>, Pivot Table, dan Filter untuk kebutuhan laporan dan analisis data.
+        </p>
+        <div class="excel-badges">
+          <span class="excel-badge">SUM / AVERAGE</span>
+          <span class="excel-badge">COUNT / MAX / MIN</span>
+          <span class="excel-badge">COUNTIF / SUMIF</span>
+          <span class="excel-badge">IF</span>
+          <span class="excel-badge">VLOOKUP / HLOOKUP</span>
+          <span class="excel-badge">XLOOKUP</span>
+          <span class="excel-badge">Pivot Table</span>
+          <span class="excel-badge">Filter</span>
+        </div>
+      </div>
+
     </div>
     <div>
-      <p class="section-label" style="margin-bottom:1rem;">tech stack</p>
+      <p class="section-label" style="margin-bottom:1rem;" data-key="about.techstack">tech stack</p>
       <div class="skills-grid">
         <div class="skill-tag">
           <span class="skill-icon-svg">
@@ -239,7 +343,95 @@
           <img class="skill-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" alt="Figma" />
           Figma
         </div>
+        <!-- ESP32 -->
+        <div class="skill-tag">
+          <span class="skill-icon-svg">
+            <svg width="28" height="28" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="48" height="48" rx="8" fill="#1a1a1a"/>
+              <rect x="6" y="14" width="36" height="20" rx="3" fill="none" stroke="#c8f135" stroke-width="2"/>
+              <rect x="10" y="18" width="28" height="12" rx="2" fill="#c8f135" opacity="0.08"/>
+              <line x1="12" y1="10" x2="12" y2="14" stroke="#c8f135" stroke-width="2" stroke-linecap="round"/>
+              <line x1="18" y1="10" x2="18" y2="14" stroke="#c8f135" stroke-width="2" stroke-linecap="round"/>
+              <line x1="24" y1="10" x2="24" y2="14" stroke="#c8f135" stroke-width="2" stroke-linecap="round"/>
+              <line x1="30" y1="10" x2="30" y2="14" stroke="#c8f135" stroke-width="2" stroke-linecap="round"/>
+              <line x1="36" y1="10" x2="36" y2="14" stroke="#c8f135" stroke-width="2" stroke-linecap="round"/>
+              <line x1="12" y1="34" x2="12" y2="38" stroke="#c8f135" stroke-width="2" stroke-linecap="round"/>
+              <line x1="18" y1="34" x2="18" y2="38" stroke="#c8f135" stroke-width="2" stroke-linecap="round"/>
+              <line x1="24" y1="34" x2="24" y2="38" stroke="#c8f135" stroke-width="2" stroke-linecap="round"/>
+              <line x1="30" y1="34" x2="30" y2="38" stroke="#c8f135" stroke-width="2" stroke-linecap="round"/>
+              <line x1="36" y1="34" x2="36" y2="38" stroke="#c8f135" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="24" cy="24" r="4" fill="none" stroke="#c8f135" stroke-width="1.8"/>
+              <circle cx="24" cy="24" r="1.5" fill="#c8f135"/>
+            </svg>
+          </span>
+          ESP32
+        </div>
+
+        <!-- GitHub -->
+        <div class="skill-tag">
+          <span class="skill-icon-svg">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="#c8f135" opacity="0.85" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.579.688.481C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
+            </svg>
+          </span>
+          GitHub
+        </div>
+
+        <!-- EXCEL - ADDED -->
+        <div class="skill-tag">
+          <span class="skill-icon-svg">
+            <svg width="28" height="28" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="48" height="48" rx="8" fill="#1a1a1a"/>
+              <rect x="8" y="6" width="32" height="36" rx="3" fill="none" stroke="#c8f135" stroke-width="2.5"/>
+              <line x1="8" y1="18" x2="40" y2="18" stroke="#c8f135" stroke-width="1.5" opacity="0.5"/>
+              <line x1="8" y1="28" x2="40" y2="28" stroke="#c8f135" stroke-width="1.5" opacity="0.5"/>
+              <line x1="24" y1="6" x2="24" y2="42" stroke="#c8f135" stroke-width="1.5" opacity="0.5"/>
+              <path d="M13 23 L19 30 M19 23 L13 30" stroke="#c8f135" stroke-width="2.5" stroke-linecap="round"/>
+              <rect x="27" y="32" width="3" height="6" fill="#c8f135" opacity="0.7" rx="1"/>
+              <rect x="32" y="28" width="3" height="10" fill="#c8f135" opacity="0.9" rx="1"/>
+            </svg>
+          </span>
+          Excel
+        </div>
       </div>
+
+      <!-- TABEL PROGRAMMING SKILLS - KOLOM KANAN -->
+      <div style="margin-top: 2rem;">
+        <p class="section-label" style="margin-bottom:1rem;" data-key="about.progskills">programming skills</p>
+        <table style="width:100%; border-collapse:collapse; color:var(--muted); font-size:0.8rem;">
+          <thead>
+            <tr style="border-bottom:2px solid var(--border);">
+              <th style="padding:6px 0; text-align:left; font-weight:600; color:var(--text);">Skill</th>
+              <th style="padding:6px 0; text-align:left; font-weight:600; color:var(--text);">Deskripsi</th>
+              <th style="padding:6px 0; text-align:left; font-weight:600; color:var(--text);">Catatan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:6px 0; font-weight:500; color:var(--text);">Laravel</td>
+              <td style="padding:6px 0;">Framework PHP untuk web development</td>
+              <td style="padding:6px 0; color:var(--accent); font-size:0.75rem;">✅ AI-assisted</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:6px 0; font-weight:500; color:var(--text);">Arduino IDE</td>
+              <td style="padding:6px 0;">Pemrograman mikrokontroler (C++)</td>
+              <td style="padding:6px 0; color:var(--accent); font-size:0.75rem;">✅ AI-assisted</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:6px 0; font-weight:500; color:var(--text);">ESP32</td>
+              <td style="padding:6px 0;">IoT & embedded system</td>
+              <td style="padding:6px 0; color:var(--accent); font-size:0.75rem;">✅ AI-assisted</td>
+            </tr>
+            <tr>
+              <td style="padding:6px 0; font-weight:500; color:var(--text);">PHP 8.2</td>
+              <td style="padding:6px 0;">Backend web development</td>
+              <td style="padding:6px 0; color:var(--accent); font-size:0.75rem;">✅ AI-assisted</td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="margin-top:0.5rem; font-size:0.7rem; color:var(--muted);" data-key="about.progskills.note">✅ AI-assisted = Dikembangkan dengan bantuan ChatGPT / GitHub Copilot</p>
+      </div>
+
     </div>
   </div>
 </section>
@@ -247,44 +439,44 @@
 
 <!-- PROJECTS -->
 <section id="projects">
-  <p class="section-label">02 &mdash; projects</p>
-  <h2>Proyek pilihan</h2>
+  <p class="section-label" data-key="projects.label">02 — projects</p>
+  <h2 data-key="projects.title">Proyek pilihan</h2>
   <div class="projects-grid">
     <div class="project-card">
       <span class="project-num">01</span>
       <div class="project-title">Smart Car Mini</div>
-      <p class="project-desc">Mobil mini cerdas dengan sensor ultrasonik HC-SR04 untuk menghindari rintangan secara otomatis, dilengkapi fitur penyedot debu berbasis dinamo kipas.</p>
-      <button class="detail-btn" onclick="openModal('proj-01')">Lihat Bukti &amp; Detail</button>
+      <p class="project-desc" data-key="projects.desc1">Mobil mini cerdas dengan sensor ultrasonik HC-SR04 untuk menghindari rintangan secara otomatis, dilengkapi fitur penyedot debu berbasis dinamo kipas.</p>
+      <button class="detail-btn" onclick="openModal('proj-01')" data-key="projects.btn">Lihat Bukti &amp; Detail</button>
     </div>
     <div class="project-card">
       <span class="project-num">02</span>
       <div class="project-title">UI/UX Aplikasi TJKT – SI Wistek</div>
-      <p class="project-desc">Desain antarmuka aplikasi Sistem Informasi Jurusan berbasis mobile untuk SMK Wisata Indonesia. Dibuat menggunakan Figma.</p>
-      <button class="detail-btn" onclick="openModal('proj-02')">Lihat Bukti &amp; Detail</button>
+      <p class="project-desc" data-key="projects.desc2">Desain antarmuka aplikasi Sistem Informasi Jurusan berbasis mobile untuk SMK Wisata Indonesia. Dibuat menggunakan Figma.</p>
+      <button class="detail-btn" onclick="openModal('proj-02')" data-key="projects.btn">Lihat Bukti &amp; Detail</button>
     </div>
     <div class="project-card">
       <span class="project-num">03</span>
       <div class="project-title">Server dan Jaringan Virtual</div>
-      <p class="project-desc">Membangun server dan jaringan virtual menggunakan Proxmox VE, Mikrotik, Ubuntu, dan hosting web menggunakan aaPanel.</p>
-      <button class="detail-btn" onclick="openModal('proj-03')">Lihat Bukti &amp; Detail</button>
+      <p class="project-desc" data-key="projects.desc3">Membangun server dan jaringan virtual menggunakan Proxmox VE, Mikrotik, Ubuntu, dan hosting web menggunakan aaPanel.</p>
+      <button class="detail-btn" onclick="openModal('proj-03')" data-key="projects.btn">Lihat Bukti &amp; Detail</button>
     </div>
     <div class="project-card">
       <span class="project-num">04</span>
       <div class="project-title">Smart Door Lock Berbasis ESP32 & RFID</div>
-      <p class="project-desc">Sistem keamanan pintu pintar berbasis ESP32 dengan modul RFID RC522 dan solenoid door lock sebagai mekanisme pengunci.</p>
-      <button class="detail-btn" onclick="openModal('proj-04')">Lihat Bukti &amp; Detail</button>
+      <p class="project-desc" data-key="projects.desc4">Sistem keamanan pintu pintar berbasis ESP32 dengan modul RFID RC522 dan solenoid door lock sebagai mekanisme pengunci.</p>
+      <button class="detail-btn" onclick="openModal('proj-04')" data-key="projects.btn">Lihat Bukti &amp; Detail</button>
     </div>
     <div class="project-card">
       <span class="project-num">05</span>
       <div class="project-title">Caffe Adin - QR Code Restoran</div>
-      <p class="project-desc">Sistem pemesanan restoran digital via QR Code. Pelanggan scan QR di meja, pesan mandiri via HP. Dashboard admin dengan grafik penjualan, export Excel hasil penjualan, pemantauan pesanan secara real-time</p>
-      <button class="detail-btn" onclick="openModal('proj-05')">Lihat Bukti &amp; Detail</button>
+      <p class="project-desc" data-key="projects.desc5">Sistem pemesanan restoran digital via QR Code. Pelanggan scan QR di meja, pesan mandiri via HP. Dashboard admin dengan grafik penjualan, export Excel hasil penjualan, pemantauan pesanan secara real-time</p>
+      <button class="detail-btn" onclick="openModal('proj-05')" data-key="projects.btn">Lihat Bukti &amp; Detail</button>
     </div>
     <div class="project-card">
       <span class="project-num">06</span>
       <div class="project-title">Kado Digital ESP32 - Happy Birthday Bunda</div>
-      <p class="project-desc">Hadiah interaktif berbasis ESP32 dengan layar TFT 2.8", buzzer, dan tombol. Menampilkan slideshow foto & pesan, memutar lagu ulang tahun otomatis.</p>
-      <button class="detail-btn" onclick="openModal('proj-06')">Lihat Bukti &amp; Detail</button>
+      <p class="project-desc" data-key="projects.desc6">Hadiah interaktif berbasis ESP32 dengan layar TFT 2.8", buzzer, dan tombol. Menampilkan slideshow foto & pesan, memutar lagu ulang tahun otomatis.</p>
+      <button class="detail-btn" onclick="openModal('proj-06')" data-key="projects.btn">Lihat Bukti &amp; Detail</button>
     </div>
   </div>
 </section>
@@ -292,31 +484,31 @@
 
 <!-- EXPERIENCE -->
 <section id="experience">
-  <p class="section-label">03 &mdash; experience</p>
-  <h2>Pengalaman kerja</h2>
+  <p class="section-label" data-key="experience.label">03 — experience</p>
+  <h2 data-key="experience.title">Pengalaman kerja</h2>
   <div class="exp-list">
     <div class="exp-item">
-      <div class="exp-year">2024 &mdash; 2025</div>
+      <div class="exp-year">2024 — 2025</div>
       <div>
-        <div class="exp-role">Programmer Intern</div>
+        <div class="exp-role" data-key="exp1.role">Programmer Intern</div>
         <div class="exp-company-row">
           <img src="solusi-intek-logo.png" alt="PT Solusi Intek Indonesia" class="exp-company-logo intek-logo" onerror="this.style.display='none';" />
-          <div class="exp-company">PT Solusi Intek Indonesia</div>
+          <div class="exp-company" data-key="exp1.company">PT Solusi Intek Indonesia</div>
         </div>
-        <p class="exp-desc">Melaksanakan program PKL selama 6 bulan dengan fokus pada pengumpulan dan analisis data untuk mendeteksi potensi kebocoran data perusahaan dan klien.</p>
-        <button class="detail-btn" onclick="openModal('exp-01')">Lihat Sertifikat &amp; Bukti</button>
+        <p class="exp-desc" data-key="exp1.desc">Melaksanakan program PKL selama 6 bulan dengan fokus pada pengumpulan dan analisis data untuk mendeteksi potensi kebocoran data perusahaan dan klien.</p>
+        <button class="detail-btn" onclick="openModal('exp-01')" data-key="exp1.btn">Lihat Sertifikat &amp; Bukti</button>
       </div>
     </div>
     <div class="exp-item">
-      <div class="exp-year">2023 &mdash; 2026</div>
+      <div class="exp-year">2023 — 2026</div>
       <div>
-        <div class="exp-role">Lulusan SMK</div>
+        <div class="exp-role" data-key="exp2.role">Lulusan SMK</div>
         <div class="exp-company-row">
           <img src="smk-wisata-logo.png" alt="SMK Wisata Indonesia" class="exp-company-logo smk-logo" onerror="this.style.display='none';" />
-          <div class="exp-company">SMK Wisata Indonesia</div>
+          <div class="exp-company" data-key="exp2.company">SMK Wisata Indonesia</div>
         </div>
-        <p class="exp-desc">Jurusan Teknik Komputer dan Jaringan. Memiliki sertifikasi LSP BNSP, UKOM, dan sertifikasi mikrokontroler.</p>
-        <button class="detail-btn" onclick="openModal('exp-02')">Lihat Sertifikat</button>
+        <p class="exp-desc" data-key="exp2.desc">Jurusan Teknik Komputer dan Jaringan. Memiliki sertifikasi LSP BNSP, UKOM, dan sertifikasi mikrokontroler.</p>
+        <button class="detail-btn" onclick="openModal('exp-02')" data-key="exp2.btn">Lihat Sertifikat</button>
       </div>
     </div>
   </div>
@@ -325,18 +517,18 @@
 
 <!-- CONTACT -->
 <section id="contact">
-  <p class="section-label">04 &mdash; contact</p>
-  <h2>Mari berkolaborasi.</h2>
-  <p>Saya terbuka untuk peluang kerja, freelance, atau sekadar diskusi. Hubungi saya lewat email atau media sosial.</p>
+  <p class="section-label" data-key="contact.label">04 — contact</p>
+  <h2 data-key="contact.title">Mari berkolaborasi.</h2>
+  <p data-key="contact.desc">Saya terbuka untuk peluang kerja, freelance, atau sekadar diskusi. Hubungi saya lewat email atau media sosial.</p>
   <div class="contact-links">
-    <a href="https://mail.google.com/mail/?view=cm&to=dhiyauddintjkt@gmail.com" class="btn btn-primary" target="_blank">dhiyauddintjkt@gmail.com &rarr;</a>
+    <a href="https://mail.google.com/mail/?view=cm&to=dhiyauddintjkt@gmail.com" class="btn btn-primary" target="_blank">dhiyauddintjkt@gmail.com →</a>
     <a href="https://linkedin.com/in/mdhiyauddin" class="btn btn-outline" target="_blank">LinkedIn</a>
     <a href="https://github.com/mdhiyauddin" class="btn btn-outline" target="_blank">GitHub</a>
   </div>
 </section>
 
 <footer>
-  <span>&copy; 2026 Muhammad Dhiyauddin</span>
+  <span data-key="footer.copyright">© 2026 Muhammad Dhiyauddin</span>
 </footer>
 
 <!-- MODALS -->
@@ -434,7 +626,6 @@
   </div>
 </div>
 
-<!-- MODAL PROJ-05: Caffe Adin -->
 <div class="modal-overlay" id="modal-proj-05">
   <div class="modal-box">
     <div class="modal-header">
@@ -479,7 +670,6 @@
   </div>
 </div>
 
-<!-- MODAL PROJ-06: Kado Digital ESP32 -->
 <div class="modal-overlay" id="modal-proj-06">
   <div class="modal-box">
     <div class="modal-header">
@@ -654,14 +844,14 @@
       const img=this.querySelector('img');
       const vid=this.querySelector('video');
       if(img){ openLightbox(img.src, 'img'); }
-      else if(vid){ 
+      else if(vid){
         const src=vid.querySelector('source')?.src || vid.src;
-        if(src) openLightbox(src, 'vid'); 
+        if(src) openLightbox(src, 'vid');
       }
     });
   });
 
-  // ----- SCROLL ANIMATION (Intersection Observer)-----
+  // ----- SCROLL ANIMATION -----
   document.addEventListener('DOMContentLoaded', function(){
     const els=document.querySelectorAll('.fade-up');
     const observer=new IntersectionObserver((entries)=>{
@@ -680,7 +870,6 @@
     const images = [
       'foto_full.jpeg',
       'ftoadin.jpg'
-      // Tambahin foto lain di sini kalo mau, misal: 'foto3.jpg'
     ];
     let currentIndex = 0;
     const imgElement = document.getElementById('hero-img');
@@ -694,9 +883,125 @@
       }, 300);
     }
 
-    // Mulai slideshow setiap 3 detik
     setInterval(changeImage, 3000);
   })();
+
+  // ----- MULTI LANGUAGE EN/ID -----
+  const translations = {
+    id: {
+      'hero.tag': 'available for work',
+      'hero.title': 'Halo, saya<br /><span>Muhammad<br/>Dhiyauddin.</span>',
+      'hero.sub': 'Fresh Graduate TJKT yang memiliki pengalaman pada Mikrotik, Linux Server, Proxmox, Arduino, ESP32, UI/UX Figma, dan implementasi jaringan komputer.',
+      'hero.btn1': 'Lihat proyek saya →',
+      'hero.btn2': 'Hubungi saya',
+      'hero.scroll': 'scroll to explore',
+      'hero.stats1': 'Projects',
+      'hero.stats2': 'Certificates',
+      'hero.stats3': 'Internship',
+      'about.label': '01 — about me',
+      'about.title': 'Sedikit tentang saya',
+      'about.p1': 'Saya adalah <strong>Network Engineer</strong> yang berpengalaman dalam merancang dan mengelola infrastruktur jaringan.',
+      'about.p2': 'Keahlian saya mencakup <strong>konfigurasi Mikrotik & server Linux</strong>, virtualisasi dengan Proxmox, dan pemrograman mikrokontroler.',
+      'about.p3': 'Di luar pekerjaan, saya aktif mengikuti perkembangan teknologi jaringan dan sertifikasi industri.',
+      'about.cv': '↓ Lihat CV',
+      'about.excel': 'Excel · Data Analysis',
+      'about.excel.desc': 'Mampu mengolah dan menganalisis data menggunakan <strong style="color: var(--text);">SUM, AVERAGE, COUNTIF, SUMIF, IF, VLOOKUP, XLOOKUP</strong>, Pivot Table, dan Filter untuk kebutuhan laporan dan analisis data.',
+      'about.techstack': 'tech stack',
+      'about.progskills': 'programming skills',
+      'about.progskills.note': '✅ AI-assisted = Dikembangkan dengan bantuan ChatGPT / GitHub Copilot',
+      'projects.label': '02 — projects',
+      'projects.title': 'Proyek pilihan',
+      'projects.btn': 'Lihat Bukti & Detail',
+      'projects.desc1': 'Mobil mini cerdas dengan sensor ultrasonik HC-SR04 untuk menghindari rintangan secara otomatis, dilengkapi fitur penyedot debu berbasis dinamo kipas.',
+      'projects.desc2': 'Desain antarmuka aplikasi Sistem Informasi Jurusan berbasis mobile untuk SMK Wisata Indonesia. Dibuat menggunakan Figma.',
+      'projects.desc3': 'Membangun server dan jaringan virtual menggunakan Proxmox VE, Mikrotik, Ubuntu, dan hosting web menggunakan aaPanel.',
+      'projects.desc4': 'Sistem keamanan pintu pintar berbasis ESP32 dengan modul RFID RC522 dan solenoid door lock sebagai mekanisme pengunci.',
+      'projects.desc5': 'Sistem pemesanan restoran digital via QR Code. Pelanggan scan QR di meja, pesan mandiri via HP. Dashboard admin dengan grafik penjualan, export Excel hasil penjualan, pemantauan pesanan secara real-time',
+      'projects.desc6': 'Hadiah interaktif berbasis ESP32 dengan layar TFT 2.8", buzzer, dan tombol. Menampilkan slideshow foto & pesan, memutar lagu ulang tahun otomatis.',
+      'experience.label': '03 — experience',
+      'experience.title': 'Pengalaman kerja',
+      'exp1.role': 'Programmer Intern',
+      'exp1.company': 'PT Solusi Intek Indonesia',
+      'exp1.desc': 'Melaksanakan program PKL selama 6 bulan dengan fokus pada pengumpulan dan analisis data untuk mendeteksi potensi kebocoran data perusahaan dan klien.',
+      'exp1.btn': 'Lihat Sertifikat & Bukti',
+      'exp2.role': 'Lulusan SMK',
+      'exp2.company': 'SMK Wisata Indonesia',
+      'exp2.desc': 'Jurusan Teknik Komputer dan Jaringan. Memiliki sertifikasi LSP BNSP, UKOM, dan sertifikasi mikrokontroler.',
+      'exp2.btn': 'Lihat Sertifikat',
+      'contact.label': '04 — contact',
+      'contact.title': 'Mari berkolaborasi.',
+      'contact.desc': 'Saya terbuka untuk peluang kerja, freelance, atau sekadar diskusi. Hubungi saya lewat email atau media sosial.',
+      'footer.copyright': '© 2026 Muhammad Dhiyauddin',
+    },
+    en: {
+      'hero.tag': 'available for work',
+      'hero.title': 'Hello, I\'m<br /><span>Muhammad<br/>Dhiyauddin.</span>',
+      'hero.sub': 'Fresh Graduate in Computer and Network Engineering with experience in Mikrotik, Linux Server, Proxmox, Arduino, ESP32, UI/UX Figma, and network implementation.',
+      'hero.btn1': 'View my projects →',
+      'hero.btn2': 'Contact me',
+      'hero.scroll': 'scroll to explore',
+      'hero.stats1': 'Projects',
+      'hero.stats2': 'Certificates',
+      'hero.stats3': 'Internship',
+      'about.label': '01 — about me',
+      'about.title': 'A bit about me',
+      'about.p1': 'I am a <strong>Network Engineer</strong> experienced in designing and managing network infrastructure.',
+      'about.p2': 'My expertise includes <strong>Mikrotik & Linux server configuration</strong>, virtualization with Proxmox, and microcontroller programming.',
+      'about.p3': 'Outside of work, I actively follow developments in network technology and industry certifications.',
+      'about.cv': '↓ View CV',
+      'about.excel': 'Excel · Data Analysis',
+      'about.excel.desc': 'Able to process and analyze data using <strong style="color: var(--text);">SUM, AVERAGE, COUNTIF, SUMIF, IF, VLOOKUP, XLOOKUP</strong>, Pivot Table, and Filter for reporting and data analysis needs.',
+      'about.techstack': 'tech stack',
+      'about.progskills': 'programming skills',
+      'about.progskills.note': '✅ AI-assisted = Developed with the help of ChatGPT / GitHub Copilot',
+      'projects.label': '02 — projects',
+      'projects.title': 'Featured projects',
+      'projects.btn': 'View Proof & Details',
+      'projects.desc1': 'Smart mini car with HC-SR04 ultrasonic sensor to avoid obstacles automatically, equipped with a dust vacuum feature based on a fan dynamo.',
+      'projects.desc2': 'Mobile-based Information System application UI/UX design for SMK Wisata Indonesia. Created using Figma.',
+      'projects.desc3': 'Building virtual servers and networks using Proxmox VE, Mikrotik, Ubuntu, and web hosting using aaPanel.',
+      'projects.desc4': 'Smart door lock system based on ESP32 with RFID RC522 module and solenoid door lock as the locking mechanism.',
+      'projects.desc5': 'Digital restaurant ordering system via QR Code. Customers scan QR at the table, order via phone. Admin dashboard with sales graphs, Excel export, real-time order monitoring.',
+      'projects.desc6': 'Interactive gift based on ESP32 with 2.8" TFT display, buzzer, and button. Displays photo slideshow & messages, plays birthday song automatically.',
+      'experience.label': '03 — experience',
+      'experience.title': 'Work experience',
+      'exp1.role': 'Programmer Intern',
+      'exp1.company': 'PT Solusi Intek Indonesia',
+      'exp1.desc': 'Carried out a 6-month internship program focusing on data collection and analysis to detect potential data leaks for the company and clients.',
+      'exp1.btn': 'View Certificate & Proof',
+      'exp2.role': 'Vocational Graduate',
+      'exp2.company': 'SMK Wisata Indonesia',
+      'exp2.desc': 'Majoring in Computer and Network Engineering. Holds LSP BNSP certification, UKOM, and microcontroller certification.',
+      'exp2.btn': 'View Certificate',
+      'contact.label': '04 — contact',
+      'contact.title': 'Let\'s collaborate.',
+      'contact.desc': 'I am open to job opportunities, freelance work, or just a discussion. Contact me via email or social media.',
+      'footer.copyright': '© 2026 Muhammad Dhiyauddin',
+    }
+  };
+
+  let currentLang = 'id';
+
+  function toggleLang() {
+    currentLang = currentLang === 'id' ? 'en' : 'id';
+    document.getElementById('langBtn').textContent = currentLang === 'id' ? '🇬🇧 EN' : '🇮🇩 ID';
+    updateContent(currentLang);
+  }
+
+  function updateContent(lang) {
+    const t = translations[lang];
+    if (!t) return;
+    document.querySelectorAll('[data-key]').forEach(el => {
+      const key = el.getAttribute('data-key');
+      if (t[key] !== undefined) el.innerHTML = t[key];
+    });
+    document.querySelectorAll('.stat-box span').forEach((el, idx) => {
+      const keys = ['hero.stats1', 'hero.stats2', 'hero.stats3'];
+      if (t[keys[idx]]) el.textContent = t[keys[idx]];
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => updateContent('id'));
 </script>
 
 </body>
