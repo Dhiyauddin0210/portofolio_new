@@ -213,6 +213,19 @@
       transition: all 0.2s;
     }
     .excel-badge:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* Skill tags - small badge style */
+    .skill-badge {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      padding: 3px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      transition: all 0.2s;
+      display: inline-block;
+    }
+    .skill-badge:hover { border-color: var(--accent); color: var(--accent); }
   </style>
 </head>
 <body>
@@ -250,7 +263,7 @@
       <div class="hero-stats">
         <div class="stat-box"><h3>6+</h3><span data-key="hero.stats1">Projects</span></div>
         <div class="stat-box"><h3>3+</h3><span data-key="hero.stats2">Certificates</span></div>
-        <div class="stat-box"><h3>1</h3><span data-key="hero.stats3">Internship</span></div>
+        <div class="stat-box"><h3>2</h3><span data-key="hero.stats3">Internships</span></div>
       </div>
     </div>
     <div class="hero-photo-wrap fade-up delay-5">
@@ -511,6 +524,17 @@
         <button class="detail-btn" onclick="openModal('exp-02')" data-key="exp2.btn">Lihat Sertifikat</button>
       </div>
     </div>
+
+    <!-- PROYEK CCTV SEKOLAH -->
+    <div class="exp-item">
+      <div class="exp-year">2024</div>
+      <div>
+        <div class="exp-role" data-key="exp3.role">Teknisi Instalasi CCTV</div>
+        <div class="exp-company" data-key="exp3.company">Proyek Instalasi CCTV — SMK Wisata Indonesia</div>
+        <p class="exp-desc" data-key="exp3.desc">Terlibat dalam proyek instalasi CCTV di lingkungan sekolah. Melakukan penarikan kabel, pemasangan kamera pada titik yang ditentukan, pemasangan konektor, serta pengecekan koneksi fisik hingga perangkat siap digunakan.</p>
+        <button class="detail-btn" onclick="openModal('exp-03')" data-key="exp3.btn">Lihat Detail &amp; Dokumentasi</button>
+      </div>
+    </div>
   </div>
 </section>
 <div class="divider"></div>
@@ -753,6 +777,66 @@
   </div>
 </div>
 
+<!-- MODAL EXP-03: CCTV -->
+<div class="modal-overlay" id="modal-exp-03">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div><div class="modal-tag">Project · 2025</div><div class="modal-title">Instalasi CCTV Sekolah</div></div>
+      <button class="modal-close" onclick="closeModal('exp-03')">&#x2715;</button>
+    </div>
+    <div class="modal-body">
+
+      <div>
+        <div class="modal-section-label">Dokumentasi</div>
+        <div class="modal-gallery">
+          <div class="gallery-item" data-type="img"><img src="cctv-1.jpeg" alt="Penarikan Kabel"/><div class="media-label">Penarikan Kabel</div></div>
+          <div class="gallery-item" data-type="img"><img src="cctv-2.jpeg" alt="Pemasangan Kamera"/><div class="media-label">Pemasangan Kamera</div></div>
+        </div>
+        <p style="font-size:0.7rem;color:var(--muted);margin-top:0.5rem;">*Foto dokumentasi sebagai bukti pengerjaan proyek</p>
+      </div>
+
+      <div>
+        <div class="modal-section-label">Deskripsi Proyek</div>
+        <p class="modal-desc">Terlibat dalam proyek instalasi CCTV di lingkungan sekolah dengan tugas utama melakukan penarikan kabel, pemasangan perangkat CCTV, serta pengecekan koneksi fisik untuk memastikan perangkat dapat berfungsi dengan baik.</p>
+      </div>
+
+      <div>
+        <div class="modal-section-label">Tanggung Jawab</div>
+        <p class="modal-desc" style="line-height:2;">
+          &bull; Melakukan survey jalur kabel sebelum proses instalasi.<br/>
+          &bull; Melakukan penarikan dan penataan kabel CCTV.<br/>
+          &bull; Membantu pemasangan kamera CCTV pada titik yang telah ditentukan.<br/>
+          &bull; Melakukan pemasangan konektor dan pengecekan koneksi fisik perangkat.<br/>
+          &bull; Membantu proses testing perangkat setelah instalasi selesai.<br/>
+          &bull; Berkoordinasi dengan tim instalasi selama pelaksanaan proyek.
+        </p>
+      </div>
+
+      <div>
+        <div class="modal-section-label">Hasil Pekerjaan</div>
+        <p class="modal-desc" style="line-height:2;">
+          &bull; Instalasi CCTV berhasil dilakukan sesuai kebutuhan lokasi.<br/>
+          &bull; Jalur kabel tertata rapi dan aman.<br/>
+          &bull; Kamera CCTV terpasang dengan baik dan siap digunakan untuk proses konfigurasi lanjutan.
+        </p>
+      </div>
+
+      <div>
+        <div class="modal-section-label">Skill yang Digunakan</div>
+        <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.25rem;">
+          <span class="skill-badge">Instalasi CCTV</span>
+          <span class="skill-badge">Penarikan Kabel Jaringan</span>
+          <span class="skill-badge">Cable Management</span>
+          <span class="skill-badge">Troubleshooting Dasar</span>
+          <span class="skill-badge">Kerja Tim</span>
+          <span class="skill-badge">Dokumentasi Teknis</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="if(event.target===this)closeLightbox()">
   <button class="lightbox-close" onclick="window.closeLightbox()">&#x2715;</button>
@@ -897,7 +981,7 @@
       'hero.scroll': 'scroll to explore',
       'hero.stats1': 'Projects',
       'hero.stats2': 'Certificates',
-      'hero.stats3': 'Internship',
+      'hero.stats3': 'Internships',
       'about.label': '01 — about me',
       'about.title': 'Sedikit tentang saya',
       'about.p1': 'Saya adalah <strong>Network Engineer</strong> yang berpengalaman dalam merancang dan mengelola infrastruktur jaringan.',
@@ -928,6 +1012,10 @@
       'exp2.company': 'SMK Wisata Indonesia',
       'exp2.desc': 'Jurusan Teknik Komputer dan Jaringan. Memiliki sertifikasi LSP BNSP, UKOM, dan sertifikasi mikrokontroler.',
       'exp2.btn': 'Lihat Sertifikat',
+      'exp3.role': 'Teknisi Instalasi CCTV',
+      'exp3.company': 'Proyek Instalasi CCTV — SMK Wisata Indonesia',
+      'exp3.desc': 'Terlibat dalam proyek instalasi CCTV di lingkungan sekolah. Melakukan penarikan kabel, pemasangan kamera pada titik yang ditentukan, pemasangan konektor, serta pengecekan koneksi fisik hingga perangkat siap digunakan.',
+      'exp3.btn': 'Lihat Detail & Dokumentasi',
       'contact.label': '04 — contact',
       'contact.title': 'Mari berkolaborasi.',
       'contact.desc': 'Saya terbuka untuk peluang kerja, freelance, atau sekadar diskusi. Hubungi saya lewat email atau media sosial.',
@@ -942,7 +1030,7 @@
       'hero.scroll': 'scroll to explore',
       'hero.stats1': 'Projects',
       'hero.stats2': 'Certificates',
-      'hero.stats3': 'Internship',
+      'hero.stats3': 'Internships',
       'about.label': '01 — about me',
       'about.title': 'A bit about me',
       'about.p1': 'I am a <strong>Network Engineer</strong> experienced in designing and managing network infrastructure.',
@@ -973,6 +1061,10 @@
       'exp2.company': 'SMK Wisata Indonesia',
       'exp2.desc': 'Majoring in Computer and Network Engineering. Holds LSP BNSP certification, UKOM, and microcontroller certification.',
       'exp2.btn': 'View Certificate',
+      'exp3.role': 'CCTV Installation Technician',
+      'exp3.company': 'CCTV Installation Project — SMK Wisata Indonesia',
+      'exp3.desc': 'Involved in a school CCTV installation project, handling cable pulling, camera installation, connector attachment, and physical connection checking to ensure devices are ready for use.',
+      'exp3.btn': 'View Details & Documentation',
       'contact.label': '04 — contact',
       'contact.title': 'Let\'s collaborate.',
       'contact.desc': 'I am open to job opportunities, freelance work, or just a discussion. Contact me via email or social media.',
