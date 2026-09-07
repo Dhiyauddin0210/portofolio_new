@@ -165,24 +165,22 @@
     .excel-chip {
       position: relative;
       padding: 0.45rem 0.6rem;
-      background: rgba(200,241,53,0.04);
-      border: 1px solid rgba(200,241,53,0.18);
+      background: rgba(200,241,53,0.03);
+      border: 1px solid rgba(200,241,53,0.12);
       border-radius: 6px;
       font-family: var(--font-mono);
       font-size: 0.68rem;
-      color: var(--muted);
+      color: rgba(136,136,136,0.6);
       text-align: center;
       transition: all 0.2s;
       cursor: default;
     }
     .excel-chip:hover {
       background: rgba(200,241,53,0.1);
-      border-color: rgba(200,241,53,0.5);
+      border-color: var(--accent);
       color: var(--accent);
       transform: translateY(-2px);
     }
-    .excel-chip.chip-core { border-color: rgba(200,241,53,0.35); color: #b0c97a; }
-    .excel-chip.chip-core:hover { color: var(--accent); }
 
     /* === PROGSKILLS ── timeline/step style === */
     .progskills-section { margin-top: 2rem; }
@@ -301,14 +299,14 @@
           <span class="excel-section-title" data-key="about.excel">Excel &middot; Data Analysis</span>
         </div>
         <div class="excel-chip-grid">
-          <div class="excel-chip chip-core">SUM</div>
-          <div class="excel-chip chip-core">AVERAGE</div>
-          <div class="excel-chip chip-core">COUNT</div>
-          <div class="excel-chip chip-core">MAX / MIN</div>
-          <div class="excel-chip chip-core">COUNTIF</div>
-          <div class="excel-chip chip-core">SUMIF</div>
-          <div class="excel-chip chip-core">IF</div>
-          <div class="excel-chip chip-core">VLOOKUP</div>
+          <div class="excel-chip">SUM</div>
+          <div class="excel-chip">AVERAGE</div>
+          <div class="excel-chip">COUNT</div>
+          <div class="excel-chip">MAX / MIN</div>
+          <div class="excel-chip">COUNTIF</div>
+          <div class="excel-chip">SUMIF</div>
+          <div class="excel-chip">IF</div>
+          <div class="excel-chip">VLOOKUP</div>
           <div class="excel-chip">HLOOKUP</div>
           <div class="excel-chip">XLOOKUP</div>
           <div class="excel-chip">Pivot Table</div>
@@ -594,7 +592,7 @@
     <div class="modal-body">
       <div>
         <div class="modal-section-label">Deskripsi Lengkap</div>
-        <p class="modal-desc">Proyek infrastruktur jaringan meliputi virtualisasi server dengan Proxmox VE, konfigurasi routing Mikrotik, implementasi server Ubuntu, serta deployment dan hosting web menggunakan aaPanel di lingkungan Linux.</p>
+        <p class="modal-desc">Membangun server dan jaringan virtual menggunakan Proxmox VE. Mengkonfigurasi routing pada Mikrotik, server berbasis Ubuntu, serta melakukan deployment dan hosting web menggunakan aaPanel di lingkungan Linux secara mandiri.</p>
       </div>
     </div>
   </div>
