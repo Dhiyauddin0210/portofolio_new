@@ -231,14 +231,126 @@
       padding: 1px 6px; border-radius: 999px;
       margin-top: 0.25rem;
     }
+
+    /* === CURSOR GLOW === */
+    #cursor-glow {
+      position: fixed; top: 0; left: 0; width: 380px; height: 380px;
+      border-radius: 50%; pointer-events: none; z-index: 2;
+      background: radial-gradient(circle, rgba(200,241,53,0.06) 0%, rgba(200,241,53,0) 70%);
+      transform: translate(-50%, -50%);
+      transition: opacity 0.3s ease;
+      opacity: 0;
+      will-change: transform;
+    }
+    #cursor-glow.active { opacity: 1; }
+    @media (max-width: 768px), (hover: none) { #cursor-glow { display: none; } }
+
+    /* === TERMINAL WIDGET (compact) === */
+    .term-widget {
+      max-width: 350px;
+      background: #0a0a0a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 1.75rem 0 2rem;
+      box-shadow: 0 0 0 1px rgba(200,241,53,0.03), 0 12px 30px -10px rgba(0,0,0,0.6);
+    }
+    .term-titlebar {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.55rem 0.8rem;
+      background: #141414;
+      border-bottom: 1px solid var(--border);
+    }
+    .term-dot { width: 9px; height: 9px; border-radius: 50%; }
+    .term-dot.red { background: #ff5f57; }
+    .term-dot.yellow { background: #febc2e; }
+    .term-dot.green { background: #28c840; }
+    .term-titlebar span {
+      margin-left: 0.4rem;
+      font-family: var(--font-mono); font-size: 0.68rem; color: var(--muted);
+    }
+    .term-body {
+      padding: 0.85rem 1rem 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      line-height: 1.85;
+      color: var(--text);
+      min-height: 108px;
+    }
+    .term-line { display: block; white-space: pre-wrap; word-break: break-word; }
+    .term-prompt { color: var(--accent); }
+    .term-cursor {
+      display: inline-block; width: 6px; height: 1em; background: var(--accent);
+      margin-left: 2px; vertical-align: text-bottom;
+      animation: term-blink 1s step-end infinite;
+    }
+    @keyframes term-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+
+    /* === PROJECT CARD 3D TILT === */
+    .projects-grid { perspective: 1200px; }
+    .project-card { transform-style: preserve-3d; will-change: transform; transition: transform 0.12s ease-out, border-color 0.2s; }
+    .project-card:hover { transition: border-color 0.2s; }
+
+    /* === QUIZ CARD === */
+    .quiz-card {
+      margin-top: 2.5rem;
+      background: rgba(22,22,22,0.85);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem;
+      backdrop-filter: blur(8px);
+    }
+    .quiz-eyebrow {
+      font-family: var(--font-mono); font-size: 0.7rem; color: var(--accent);
+      letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem;
+    }
+    .quiz-question { font-size: 1.1rem; font-weight: 600; margin-bottom: 1.25rem; }
+    .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .quiz-opt {
+      text-align: left; padding: 0.75rem 1rem; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 8px; color: var(--text);
+      font-family: var(--font-main); font-size: 0.88rem; cursor: pointer;
+      transition: all 0.18s;
+    }
+    .quiz-opt:hover:not(:disabled) { border-color: var(--accent); background: rgba(200,241,53,0.06); }
+    .quiz-opt.correct { border-color: var(--accent); background: rgba(200,241,53,0.14); color: var(--accent); }
+    .quiz-opt.wrong { border-color: #ff5f57; background: rgba(255,95,87,0.1); color: #ff8f89; }
+    .quiz-opt:disabled { cursor: default; }
+    .quiz-feedback {
+      margin-top: 1rem; font-family: var(--font-mono); font-size: 0.8rem; min-height: 1.2rem;
+    }
+    .quiz-feedback.ok { color: var(--accent); }
+    .quiz-feedback.no { color: #ff8f89; }
+    .quiz-retry {
+      margin-top: 0.75rem; background: transparent; border: 1px solid var(--border);
+      color: var(--muted); font-family: var(--font-mono); font-size: 0.72rem;
+      padding: 0.4rem 0.9rem; border-radius: 6px; cursor: pointer; display: none;
+    }
+    .quiz-retry:hover { border-color: var(--accent); color: var(--accent); }
+    @media (max-width: 600px) { .quiz-options { grid-template-columns: 1fr; } }
+
+    /* === EASTER EGG CONFETTI CANVAS === */
+    #confetti-canvas {
+      position: fixed; inset: 0; z-index: 2000; pointer-events: none;
+    }
+    .nav-logo { cursor: pointer; user-select: none; }
+
+    /* === STAGGER REVEAL === */
+    .stagger-item {
+      opacity: 0; transform: translateY(18px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .stagger-item.in-view { opacity: 1; transform: translateY(0); }
   </style>
 </head>
 <body>
 
 <canvas id="network-canvas"></canvas>
+<div id="cursor-glow"></div>
+<canvas id="confetti-canvas"></canvas>
 
 <nav>
-  <span class="nav-logo"> > My Portfolio < </span>
+  <span class="nav-logo" id="nav-logo"> > My Portfolio < </span>
   <div style="display:flex; align-items:center;">
     <ul class="nav-links">
       <li><a href="#about">about</a></li>
@@ -257,6 +369,17 @@
       <p class="hero-tag fade-up" data-key="hero.tag">available for work</p>
       <h1 class="fade-up delay-1" data-key="hero.title">Halo, saya<br /><span>Muhammad<br/>Dhiyauddin.</span></h1>
       <p class="hero-sub fade-up delay-2" data-key="hero.sub">Fresh Graduate TJKT yang memiliki pengalaman pada Mikrotik, Linux Server, Proxmox, Arduino, ESP32, UI/UX Figma, dan implementasi jaringan komputer.</p>
+
+      <div class="term-widget fade-up delay-2" id="hero-terminal">
+        <div class="term-titlebar">
+          <div class="term-dot red"></div>
+          <div class="term-dot yellow"></div>
+          <div class="term-dot green"></div>
+          <span>dhiya@portfolio: ~</span>
+        </div>
+        <div class="term-body" id="term-body"></div>
+      </div>
+
       <div class="hero-cta fade-up delay-3">
         <a href="#projects" class="btn btn-primary" data-key="hero.btn1">Lihat proyek saya &rarr;</a>
         <a href="#contact" class="btn btn-outline" data-key="hero.btn2">Hubungi saya</a>
@@ -452,6 +575,19 @@
       <button class="detail-btn" onclick="openModal('proj-06')" data-key="projects.btn">Lihat Bukti &amp; Detail</button>
     </div>
   </div>
+
+  <div class="quiz-card">
+    <p class="quiz-eyebrow">quick check</p>
+    <p class="quiz-question">Apa kepanjangan dari DHCP?</p>
+    <div class="quiz-options" id="quiz-options">
+      <button class="quiz-opt" data-correct="true">Dynamic Host Configuration Protocol</button>
+      <button class="quiz-opt" data-correct="false">Dynamic Host Control Protocol</button>
+      <button class="quiz-opt" data-correct="false">Direct Host Configuration Process</button>
+      <button class="quiz-opt" data-correct="false">Domain Host Connection Protocol</button>
+    </div>
+    <div class="quiz-feedback" id="quiz-feedback"></div>
+    <button class="quiz-retry" id="quiz-retry" onclick="resetQuiz()">Coba lagi &#8635;</button>
+  </div>
 </section>
 <div class="divider"></div>
 
@@ -514,6 +650,7 @@
 
 <footer>
   <span data-key="footer.copyright">&copy; 2026 Muhammad Dhiyauddin</span>
+  <span>// built with &#9749; by Dhiya</span>
 </footer>
 
 <!-- MODALS -->
@@ -921,6 +1058,197 @@
   function toggleLang(){currentLang=currentLang==='id'?'en':'id';document.getElementById('langBtn').textContent=currentLang==='id'?'\uD83C\uDDEC\uD83C\uDDE7 EN':'\uD83C\uDDEE\uD83C\uDDE9 ID';updateContent(currentLang);}
   function updateContent(lang){const t=translations[lang];if(!t)return;document.querySelectorAll('[data-key]').forEach(el=>{const key=el.getAttribute('data-key');if(t[key]!==undefined)el.innerHTML=t[key];});}
   document.addEventListener('DOMContentLoaded',()=>updateContent('id'));
+</script>
+
+<script>
+  /* ===== TERMINAL TYPING EFFECT ===== */
+  (function(){
+    const body=document.getElementById('term-body');
+    if(!body) return;
+    const lines=[
+      {prompt:'$ ', text:'whoami', after:'\u2192 Dhiyauddin'},
+      {prompt:'$ ', text:'cat skills.txt', after:'\u2192 Mikrotik / Linux / Proxmox / ESP32'},
+      {prompt:'$ ', text:'echo $status', after:'\u2192 available for work \u2713'}
+    ];
+    let li=0, ci=0, phase='cmd', out='';
+    function render(cursorOn){
+      body.innerHTML=out+(cursorOn?'<span class="term-cursor"></span>':'');
+    }
+    function step(){
+      if(li>=lines.length){ render(true); return; }
+      const L=lines[li];
+      if(phase==='cmd'){
+        if(ci<=L.text.length){
+          const typed=L.text.slice(0,ci);
+          const doneHTML=out;
+          body.innerHTML=doneHTML+'<span class="term-line"><span class="term-prompt">'+L.prompt+'</span>'+typed+'<span class="term-cursor"></span></span>';
+          ci++;
+          setTimeout(step, 55+Math.random()*45);
+        } else {
+          out += '<span class="term-line"><span class="term-prompt">'+L.prompt+'</span>'+L.text+'</span>';
+          phase='after'; ci=0;
+          setTimeout(step, 260);
+        }
+      } else {
+        out += '<span class="term-line" style="color:var(--accent);">'+L.after+'</span>';
+        render(false);
+        li++; phase='cmd'; ci=0;
+        setTimeout(step, 420);
+      }
+    }
+    setTimeout(step, 500);
+  })();
+
+  /* ===== CURSOR GLOW ===== */
+  (function(){
+    const glow=document.getElementById('cursor-glow');
+    if(!glow) return;
+    let shown=false;
+    window.addEventListener('mousemove', (e)=>{
+      glow.style.transform = 'translate('+e.clientX+'px, '+e.clientY+'px) translate(-50%, -50%)';
+      if(!shown){ glow.classList.add('active'); shown=true; }
+    }, {passive:true});
+    window.addEventListener('mouseleave', ()=>glow.classList.remove('active'));
+  })();
+
+  /* ===== 3D TILT ON PROJECT CARDS ===== */
+  (function(){
+    const cards=document.querySelectorAll('.project-card');
+    const MAX_TILT=7;
+    cards.forEach(card=>{
+      card.addEventListener('mousemove', (e)=>{
+        const r=card.getBoundingClientRect();
+        const px=(e.clientX-r.left)/r.width;
+        const py=(e.clientY-r.top)/r.height;
+        const rotY=(px-0.5)*MAX_TILT*2;
+        const rotX=(0.5-py)*MAX_TILT*2;
+        card.style.transform = `translateY(-3px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+      });
+      card.addEventListener('mouseleave', ()=>{ card.style.transform=''; });
+    });
+  })();
+
+  /* ===== MINI NETWORK QUIZ ===== */
+  function resetQuiz(){
+    const opts=document.querySelectorAll('#quiz-options .quiz-opt');
+    opts.forEach(o=>{o.disabled=false; o.classList.remove('correct','wrong');});
+    document.getElementById('quiz-feedback').textContent='';
+    document.getElementById('quiz-feedback').className='quiz-feedback';
+    document.getElementById('quiz-retry').style.display='none';
+  }
+  window.resetQuiz=resetQuiz;
+  (function(){
+    const opts=document.querySelectorAll('#quiz-options .quiz-opt');
+    const feedback=document.getElementById('quiz-feedback');
+    const retryBtn=document.getElementById('quiz-retry');
+    opts.forEach(opt=>{
+      opt.addEventListener('click', function(){
+        const isCorrect=this.getAttribute('data-correct')==='true';
+        opts.forEach(o=>{
+          o.disabled=true;
+          if(o.getAttribute('data-correct')==='true') o.classList.add('correct');
+        });
+        if(isCorrect){
+          feedback.textContent='Benar! DHCP membagikan alamat IP otomatis ke perangkat di jaringan.';
+          feedback.className='quiz-feedback ok';
+          fireConfetti();
+        } else {
+          this.classList.add('wrong');
+          feedback.textContent='Belum tepat. Jawaban yang benar sudah disorot di atas.';
+          feedback.className='quiz-feedback no';
+        }
+        retryBtn.style.display='inline-block';
+      });
+    });
+  })();
+
+  /* ===== EASTER EGG: click logo 5x ===== */
+  (function(){
+    const logo=document.getElementById('nav-logo');
+    if(!logo) return;
+    let clicks=0, timer=null;
+    logo.addEventListener('click', ()=>{
+      clicks++;
+      clearTimeout(timer);
+      timer=setTimeout(()=>{clicks=0;}, 1500);
+      if(clicks>=5){
+        clicks=0;
+        fireConfetti(true);
+      }
+    });
+  })();
+
+  /* ===== CONFETTI ===== */
+  function fireConfetti(big){
+    const canvas=document.getElementById('confetti-canvas');
+    if(!canvas) return;
+    const ctx=canvas.getContext('2d');
+    canvas.width=window.innerWidth; canvas.height=window.innerHeight;
+    const colors=['#c8f135','#e8e8e8','#d8ff45','#8fae1f'];
+    const count=big?140:70;
+    const particles=[];
+    for(let i=0;i<count;i++){
+      particles.push({
+        x: canvas.width/2 + (Math.random()-0.5)*(big?canvas.width*0.6:200),
+        y: big ? canvas.height*0.15 : 90,
+        vx: (Math.random()-0.5)*6,
+        vy: Math.random()*-4-2,
+        g: 0.18+Math.random()*0.12,
+        size: 4+Math.random()*5,
+        color: colors[Math.floor(Math.random()*colors.length)],
+        rot: Math.random()*Math.PI,
+        vr: (Math.random()-0.5)*0.3,
+        life: 0
+      });
+    }
+    let frame=0;
+    const maxFrames=110;
+    function tick(){
+      frame++;
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      particles.forEach(p=>{
+        p.vy += p.g; p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.life++;
+        ctx.save();
+        ctx.translate(p.x,p.y);
+        ctx.rotate(p.rot);
+        ctx.globalAlpha = Math.max(0, 1 - frame/maxFrames);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size*0.6);
+        ctx.restore();
+      });
+      if(frame<maxFrames){
+        requestAnimationFrame(tick);
+      } else {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+      }
+    }
+    tick();
+  }
+  window.fireConfetti=fireConfetti;
+
+  /* ===== STAGGERED SCROLL REVEAL ===== */
+  (function(){
+    const groups=[
+      document.querySelectorAll('.project-card'),
+      document.querySelectorAll('.skill-tag'),
+      document.querySelectorAll('.exp-item')
+    ];
+    groups.forEach(list=>{
+      list.forEach(el=>el.classList.add('stagger-item'));
+    });
+    const observer=new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          const parent=entry.target.parentElement;
+          const siblings=Array.from(parent.children).filter(c=>c.classList.contains('stagger-item'));
+          const idx=siblings.indexOf(entry.target);
+          setTimeout(()=>entry.target.classList.add('in-view'), idx*90);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {threshold:0.15});
+    document.querySelectorAll('.stagger-item').forEach(el=>observer.observe(el));
+  })();
 </script>
 </body>
 </html>
