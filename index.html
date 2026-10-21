@@ -93,7 +93,6 @@
     .exp-desc { font-size: 0.9rem; color: var(--muted); font-weight: 300; margin-bottom: 0.75rem; }
     .exp-company-logo { width: auto; max-width: 120px; object-fit: contain; opacity: 0.9; border-radius: 6px; }
     .exp-company-logo.intek-logo { height: 75px; }
-    .exp-company-logo.smk-logo { height: 50px; }
     #contact { text-align: center; }
     #contact h2 { margin-bottom: 1rem; }
     #contact p { color: var(--muted); max-width: 480px; margin: 0 auto 2.5rem; font-weight: 300; }
@@ -144,146 +143,64 @@
     .lightbox-close { position: absolute; top: 1.25rem; right: 1.25rem; background: rgba(255,255,255,0.1); border: none; color: #fff; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; z-index: 9999 !important; }
     .lightbox img { pointer-events: none; }
     .lightbox video { pointer-events: auto; }
+    
+    /* === CERTIFICATIONS LIST STYLE (REVISI) === */
+    .cert-list { display: flex; flex-direction: column; gap: 0; margin-top: 2rem; }
+    .cert-card { 
+      background: transparent; border-bottom: 1px solid var(--border); 
+      padding: 1.5rem 0; display: flex; justify-content: space-between; align-items: center; gap: 1.5rem;
+      transition: background 0.2s; cursor: pointer;
+    }
+    .cert-card:first-child { border-top: 1px solid var(--border); }
+    .cert-card:hover { background: rgba(255,255,255,0.02); }
+    .cert-info { display: flex; flex-direction: column; gap: 0.25rem; pointer-events: none; }
+    .cert-title { font-size: 1.05rem; font-weight: 600; color: var(--text); }
+    .cert-issuer { font-size: 0.85rem; color: var(--accent); font-family: var(--font-mono); }
+    .cert-date { font-size: 0.8rem; color: var(--muted); font-family: var(--font-mono); }
+    .cert-arrow { color: var(--muted); transition: transform 0.2s; pointer-events: none; }
+    .cert-card:hover .cert-arrow { transform: translateX(4px); color: var(--accent); }
+
     /* === EXCEL SECTION ── chip grid style === */
     .excel-section { margin-top: 1.75rem; }
-    .excel-section-header {
-      display: flex; align-items: center; gap: 0.6rem;
-      margin-bottom: 1rem;
-    }
-    .excel-section-header .ex-icon {
-      width: 28px; height: 28px; flex-shrink: 0;
-    }
-    .excel-section-title {
-      font-family: var(--font-mono); font-size: 0.72rem;
-      color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase;
-    }
-    .excel-chip-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-      gap: 0.5rem;
-    }
-    .excel-chip {
-      position: relative;
-      padding: 0.45rem 0.6rem;
-      background: rgba(200,241,53,0.03);
-      border: 1px solid rgba(200,241,53,0.12);
-      border-radius: 6px;
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      color: rgba(136,136,136,0.6);
-      text-align: center;
-      transition: all 0.2s;
-      cursor: default;
-    }
-    .excel-chip:hover {
-      background: rgba(200,241,53,0.1);
-      border-color: var(--accent);
-      color: var(--accent);
-      transform: translateY(-2px);
-    }
+    .excel-section-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1rem; }
+    .excel-section-header .ex-icon { width: 28px; height: 28px; flex-shrink: 0; }
+    .excel-section-title { font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; }
+    .excel-chip-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 0.5rem; }
+    .excel-chip { position: relative; padding: 0.45rem 0.6rem; background: rgba(200,241,53,0.03); border: 1px solid rgba(200,241,53,0.12); border-radius: 6px; font-family: var(--font-mono); font-size: 0.68rem; color: rgba(136,136,136,0.6); text-align: center; transition: all 0.2s; cursor: default; }
+    .excel-chip:hover { background: rgba(200,241,53,0.1); border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
 
     /* === PROGSKILLS ── timeline/step style === */
     .progskills-section { margin-top: 2rem; }
-    .progskills-header {
-      font-family: var(--font-mono); font-size: 0.72rem;
-      color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase;
-      margin-bottom: 1rem;
-    }
+    .progskills-header { font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1rem; }
     .progskill-list { display: flex; flex-direction: column; gap: 0; }
-    .progskill-item {
-      display: grid;
-      grid-template-columns: 28px 1fr;
-      gap: 0.75rem;
-      padding: 0.65rem 0;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
-      align-items: start;
-      transition: all 0.2s;
-    }
+    .progskill-item { display: grid; grid-template-columns: 28px 1fr; gap: 0.75rem; padding: 0.65rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); align-items: start; transition: all 0.2s; }
     .progskill-item:last-child { border-bottom: none; }
     .progskill-item:hover .ps-dot { background: var(--accent); box-shadow: 0 0 0 4px rgba(200,241,53,0.15); }
-    .ps-dot-wrap {
-      display: flex; flex-direction: column; align-items: center; padding-top: 6px;
-    }
-    .ps-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: rgba(200,241,53,0.35);
-      transition: all 0.3s; flex-shrink: 0;
-    }
-    .ps-line {
-      width: 1px; flex: 1; background: rgba(200,241,53,0.1);
-      margin-top: 4px; min-height: 24px;
-    }
+    .ps-dot-wrap { display: flex; flex-direction: column; align-items: center; padding-top: 6px; }
+    .ps-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(200,241,53,0.35); transition: all 0.3s; flex-shrink: 0; }
+    .ps-line { width: 1px; flex: 1; background: rgba(200,241,53,0.1); margin-top: 4px; min-height: 24px; }
     .progskill-item:last-child .ps-line { display: none; }
-    .ps-name {
-      font-family: var(--font-mono); font-size: 0.82rem;
-      color: var(--text); font-weight: 500; line-height: 1;
-      margin-bottom: 0.2rem;
-    }
-    .ps-desc {
-      font-size: 0.78rem; color: var(--muted); font-weight: 300;
-    }
-    .ps-badge {
-      display: inline-flex; align-items: center; gap: 0.25rem;
-      font-family: var(--font-mono); font-size: 0.6rem;
-      color: rgba(200,241,53,0.55);
-      background: rgba(200,241,53,0.05);
-      border: 1px solid rgba(200,241,53,0.15);
-      padding: 1px 6px; border-radius: 999px;
-      margin-top: 0.25rem;
-    }
+    .ps-name { font-family: var(--font-mono); font-size: 0.82rem; color: var(--text); font-weight: 500; line-height: 1; margin-bottom: 0.2rem; }
+    .ps-desc { font-size: 0.78rem; color: var(--muted); font-weight: 300; }
+    .ps-badge { display: inline-flex; align-items: center; gap: 0.25rem; font-family: var(--font-mono); font-size: 0.6rem; color: rgba(200,241,53,0.55); background: rgba(200,241,53,0.05); border: 1px solid rgba(200,241,53,0.15); padding: 1px 6px; border-radius: 999px; margin-top: 0.25rem; }
 
     /* === CURSOR GLOW === */
-    #cursor-glow {
-      position: fixed; top: 0; left: 0; width: 380px; height: 380px;
-      border-radius: 50%; pointer-events: none; z-index: 2;
-      background: radial-gradient(circle, rgba(200,241,53,0.06) 0%, rgba(200,241,53,0) 70%);
-      transform: translate(-50%, -50%);
-      transition: opacity 0.3s ease;
-      opacity: 0;
-      will-change: transform;
-    }
+    #cursor-glow { position: fixed; top: 0; left: 0; width: 380px; height: 380px; border-radius: 50%; pointer-events: none; z-index: 2; background: radial-gradient(circle, rgba(200,241,53,0.06) 0%, rgba(200,241,53,0) 70%); transform: translate(-50%, -50%); transition: opacity 0.3s ease; opacity: 0; will-change: transform; }
     #cursor-glow.active { opacity: 1; }
     @media (max-width: 768px), (hover: none) { #cursor-glow { display: none; } }
 
     /* === TERMINAL WIDGET (compact) === */
-    .term-widget {
-      max-width: 350px;
-      background: #0a0a0a;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-      margin: 1.75rem 0 2rem;
-      box-shadow: 0 0 0 1px rgba(200,241,53,0.03), 0 12px 30px -10px rgba(0,0,0,0.6);
-    }
-    .term-titlebar {
-      display: flex; align-items: center; gap: 0.5rem;
-      padding: 0.55rem 0.8rem;
-      background: #141414;
-      border-bottom: 1px solid var(--border);
-    }
+    .term-widget { max-width: 350px; background: #0a0a0a; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin: 1.75rem 0 2rem; box-shadow: 0 0 0 1px rgba(200,241,53,0.03), 0 12px 30px -10px rgba(0,0,0,0.6); }
+    .term-titlebar { display: flex; align-items: center; gap: 0.5rem; padding: 0.55rem 0.8rem; background: #141414; border-bottom: 1px solid var(--border); }
     .term-dot { width: 9px; height: 9px; border-radius: 50%; }
     .term-dot.red { background: #ff5f57; }
     .term-dot.yellow { background: #febc2e; }
     .term-dot.green { background: #28c840; }
-    .term-titlebar span {
-      margin-left: 0.4rem;
-      font-family: var(--font-mono); font-size: 0.68rem; color: var(--muted);
-    }
-    .term-body {
-      padding: 0.85rem 1rem 1rem;
-      font-family: var(--font-mono);
-      font-size: 0.76rem;
-      line-height: 1.85;
-      color: var(--text);
-      min-height: 108px;
-    }
+    .term-titlebar span { margin-left: 0.4rem; font-family: var(--font-mono); font-size: 0.68rem; color: var(--muted); }
+    .term-body { padding: 0.85rem 1rem 1rem; font-family: var(--font-mono); font-size: 0.76rem; line-height: 1.85; color: var(--text); min-height: 108px; }
     .term-line { display: block; white-space: pre-wrap; word-break: break-word; }
     .term-prompt { color: var(--accent); }
-    .term-cursor {
-      display: inline-block; width: 6px; height: 1em; background: var(--accent);
-      margin-left: 2px; vertical-align: text-bottom;
-      animation: term-blink 1s step-end infinite;
-    }
+    .term-cursor { display: inline-block; width: 6px; height: 1em; background: var(--accent); margin-left: 2px; vertical-align: text-bottom; animation: term-blink 1s step-end infinite; }
     @keyframes term-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
 
     /* === PROJECT CARD 3D TILT === */
@@ -292,55 +209,57 @@
     .project-card:hover { transition: border-color 0.2s; }
 
     /* === QUIZ CARD === */
-    .quiz-card {
-      margin-top: 2.5rem;
-      background: rgba(22,22,22,0.85);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.75rem;
-      backdrop-filter: blur(8px);
-    }
-    .quiz-eyebrow {
-      font-family: var(--font-mono); font-size: 0.7rem; color: var(--accent);
-      letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem;
-    }
+    .quiz-card { margin-top: 2.5rem; background: rgba(22,22,22,0.85); border: 1px solid var(--border); border-radius: 12px; padding: 1.75rem; backdrop-filter: blur(8px); }
+    .quiz-eyebrow { font-family: var(--font-mono); font-size: 0.7rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem; }
     .quiz-question { font-size: 1.1rem; font-weight: 600; margin-bottom: 1.25rem; }
     .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-    .quiz-opt {
-      text-align: left; padding: 0.75rem 1rem; background: var(--surface);
-      border: 1px solid var(--border); border-radius: 8px; color: var(--text);
-      font-family: var(--font-main); font-size: 0.88rem; cursor: pointer;
-      transition: all 0.18s;
-    }
+    .quiz-opt { text-align: left; padding: 0.75rem 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: var(--font-main); font-size: 0.88rem; cursor: pointer; transition: all 0.18s; }
     .quiz-opt:hover:not(:disabled) { border-color: var(--accent); background: rgba(200,241,53,0.06); }
     .quiz-opt.correct { border-color: var(--accent); background: rgba(200,241,53,0.14); color: var(--accent); }
     .quiz-opt.wrong { border-color: #ff5f57; background: rgba(255,95,87,0.1); color: #ff8f89; }
     .quiz-opt:disabled { cursor: default; }
-    .quiz-feedback {
-      margin-top: 1rem; font-family: var(--font-mono); font-size: 0.8rem; min-height: 1.2rem;
-    }
+    .quiz-feedback { margin-top: 1rem; font-family: var(--font-mono); font-size: 0.8rem; min-height: 1.2rem; }
     .quiz-feedback.ok { color: var(--accent); }
     .quiz-feedback.no { color: #ff8f89; }
-    .quiz-retry {
-      margin-top: 0.75rem; background: transparent; border: 1px solid var(--border);
-      color: var(--muted); font-family: var(--font-mono); font-size: 0.72rem;
-      padding: 0.4rem 0.9rem; border-radius: 6px; cursor: pointer; display: none;
-    }
+    .quiz-retry { margin-top: 0.75rem; background: transparent; border: 1px solid var(--border); color: var(--muted); font-family: var(--font-mono); font-size: 0.72rem; padding: 0.4rem 0.9rem; border-radius: 6px; cursor: pointer; display: none; }
     .quiz-retry:hover { border-color: var(--accent); color: var(--accent); }
     @media (max-width: 600px) { .quiz-options { grid-template-columns: 1fr; } }
 
     /* === EASTER EGG CONFETTI CANVAS === */
-    #confetti-canvas {
-      position: fixed; inset: 0; z-index: 2000; pointer-events: none;
-    }
+    #confetti-canvas { position: fixed; inset: 0; z-index: 2000; pointer-events: none; }
     .nav-logo { cursor: pointer; user-select: none; }
 
     /* === STAGGER REVEAL === */
-    .stagger-item {
-      opacity: 0; transform: translateY(18px);
-      transition: opacity 0.55s ease, transform 0.55s ease;
-    }
+    .stagger-item { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s ease; }
     .stagger-item.in-view { opacity: 1; transform: translateY(0); }
+
+    /* === NAVBAR REVISI === */
+    .nav-right { display: flex; align-items: center; }
+    .nav-links a { position: relative; padding: 0.25rem 0; }
+    .nav-links a::after { content: ''; position: absolute; left: 0; bottom: -2px; width: 0; height: 1px; background: var(--accent); transition: width 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-links a:hover::after { width: 100%; }
+
+    @media (max-width: 768px) {
+      nav { flex-wrap: wrap; row-gap: 0.6rem; padding: 0.8rem 1.25rem; }
+      .nav-right { display: contents; }
+      .lang-toggle { margin-left: 0; order: 2; }
+      .nav-links { display: flex; order: 3; width: 100%; gap: 1.25rem; overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
+      .nav-links::-webkit-scrollbar { display: none; }
+      #hero { padding-top: 9rem; }
+    }
+
+    /* === CERTIFICATIONS: GRID CARD === */
+    .cert-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 2rem; }
+    .cert-card { background: rgba(22,22,22,0.85); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem 1.5rem; }
+    .cert-card:first-child { border-top: 1px solid var(--border); }
+    .cert-card:hover { background: #161616; border-color: rgba(200,241,53,0.4); }
+    .cert-card.stagger-item { transition: opacity 0.55s ease, transform 0.55s ease, border-color 0.2s, background 0.2s; }
+
+    /* === CSS YANG HILANG === */
+    .skill-badge { font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent); background: rgba(200,241,53,0.06); border: 1px solid rgba(200,241,53,0.2); padding: 0.25rem 0.7rem; border-radius: 999px; }
+    .exp-company-row { display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem; }
+    .exp-company-row .exp-company { margin-bottom: 0; }
   </style>
 </head>
 <body>
@@ -350,12 +269,14 @@
 <canvas id="confetti-canvas"></canvas>
 
 <nav>
-  <span class="nav-logo" id="nav-logo"> > My Portfolio < </span>
-  <div style="display:flex; align-items:center;">
+  <span class="nav-logo" id="nav-logo"> &gt; My Portfolio &lt; </span>
+  <div class="nav-right">
     <ul class="nav-links">
+      <li><a href="#hero">home</a></li>
       <li><a href="#about">about</a></li>
       <li><a href="#projects">projects</a></li>
       <li><a href="#experience">experience</a></li>
+      <li><a href="#certifications" data-key="nav.cert">certs</a></li>
       <li><a href="#contact">contact</a></li>
     </ul>
     <button class="lang-toggle" onclick="toggleLang()" id="langBtn">🇬🇧 EN</button>
@@ -391,7 +312,7 @@
       <div class="hero-stats">
         <div class="stat-box"><h3>7+</h3><span data-key="hero.stats1">Projects</span></div>
         <div class="stat-box"><h3>3+</h3><span data-key="hero.stats2">Certificates</span></div>
-        <div class="stat-box"><h3>2</h3><span data-key="hero.stats3">Internships</span></div>
+        <div class="stat-box"><h3>3</h3><span data-key="hero.stats3">Internships</span></div>
       </div>
     </div>
     <div class="hero-photo-wrap fade-up delay-5">
@@ -582,18 +503,6 @@
     </div>
   </div>
 
-  <div class="quiz-card">
-    <p class="quiz-eyebrow">quick check</p>
-    <p class="quiz-question">Apa kepanjangan dari DHCP?</p>
-    <div class="quiz-options" id="quiz-options">
-      <button class="quiz-opt" data-correct="true">Dynamic Host Configuration Protocol</button>
-      <button class="quiz-opt" data-correct="false">Dynamic Host Control Protocol</button>
-      <button class="quiz-opt" data-correct="false">Direct Host Configuration Process</button>
-      <button class="quiz-opt" data-correct="false">Domain Host Connection Protocol</button>
-    </div>
-    <div class="quiz-feedback" id="quiz-feedback"></div>
-    <button class="quiz-retry" id="quiz-retry" onclick="resetQuiz()">Coba lagi &#8635;</button>
-  </div>
 </section>
 <div class="divider"></div>
 
@@ -602,18 +511,41 @@
   <p class="section-label" data-key="experience.label">03 &mdash; experience</p>
   <h2 data-key="experience.title">Pengalaman kerja</h2>
   <div class="exp-list">
+    <!-- INTERN ADMIN NOC -->
+    <div class="exp-item">
+      <div class="exp-year">2026 (Ongoing)</div>
+      <div>
+        <div class="exp-role" data-key="exp4.role">Intern Admin NOC (Network Operations Center)</div>
+        <div class="exp-company-row" style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;">
+          <img src="remala-logo.png" alt="PT Remala Abadi Tbk" class="exp-company-logo remala-logo" onerror="this.style.display='none';" style="height: 45px; width: auto; object-fit: contain; mix-blend-mode: screen; filter: brightness(1.2);" />
+          <div class="exp-company" data-key="exp4.company">PT Remala Abadi Tbk</div>
+        </div>
+        <p class="exp-desc" data-key="exp4.desc">Mendukung operasional NOC dengan melakukan pengecekan status pelanggan via OLT, memeriksa indikasi gangguan jaringan (LOS), validasi data pelanggan berdasarkan Client ID, serta monitoring melalui Zimbra dan Tachyon.net. Mencatat, melaporkan gangguan, dan mengelola data operasional menggunakan spreadsheet.</p>
+        <button class="detail-btn" onclick="openModal('exp-04')" data-key="exp4.btn">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+          Lihat Detail
+        </button>
+      </div>
+    </div>
+
+    <!-- PROGRAMMER INTERN -->
     <div class="exp-item">
       <div class="exp-year">2024 &mdash; 2025</div>
       <div>
-        <div class="exp-role" data-key="exp1.role">Programmer Intern</div>
+        <div class="exp-role" data-key="exp1.role">Programmer Intern (Data Analyst)</div>
         <div class="exp-company-row">
           <img src="solusi-intek-logo.png" alt="PT Solusi Intek Indonesia" class="exp-company-logo intek-logo" onerror="this.style.display='none';" />
           <div class="exp-company" data-key="exp1.company">PT Solusi Intek Indonesia</div>
         </div>
-        <p class="exp-desc" data-key="exp1.desc">Melaksanakan program PKL selama 6 bulan dengan fokus pada pengumpulan dan analisis data untuk mendeteksi potensi kebocoran data perusahaan dan klien.</p>
-        <button class="detail-btn" onclick="openModal('exp-01')" data-key="exp1.btn">Lihat Sertifikat &amp; Bukti</button>
+        <p class="exp-desc" data-key="exp1.desc">Mengumpulkan tautan (link) sumber data dari dark web, merapikannya ke dalam spreadsheet (Excel), lalu melakukan proses import data ke dalam database menggunakan perintah terminal (CLI). Setelah data terdaftar, saya menjalankan script Python untuk melakukan crawling dan mengambil data keseluruhan dari link tersebut.</p>
+        <button class="detail-btn" onclick="openModal('exp-01')" data-key="exp1.btn">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+          Lihat Detail
+        </button>
       </div>
     </div>
+
+    <!-- FREELANCE CCTV -->
     <div class="exp-item">
       <div class="exp-year">2025</div>
       <div>
@@ -626,16 +558,36 @@
         </button>
       </div>
     </div>
-    <div class="exp-item">
-      <div class="exp-year">2023 &mdash; 2026</div>
-      <div>
-        <div class="exp-role" data-key="exp2.role">Lulusan SMK</div>
-        <div class="exp-company-row">
-          <img src="smk-wisata-logo.png" alt="SMK Wisata Indonesia" class="exp-company-logo smk-logo" onerror="this.style.display='none';" />
-          <div class="exp-company" data-key="exp2.company">SMK Wisata Indonesia</div>
-        </div>
-        <p class="exp-desc" data-key="exp2.desc">Jurusan Teknik Komputer dan Jaringan. Memiliki sertifikasi LSP BNSP, UKOM, dan sertifikasi mikrokontroler.</p>
-        <button class="detail-btn" onclick="openModal('exp-02')" data-key="exp2.btn">Lihat Sertifikat</button>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- CERTIFICATIONS -->
+<section id="certifications">
+  <p class="section-label" data-key="cert.label">04 &mdash; Certifications</p>
+  <h2 data-key="cert.title">Sertifikasi &amp; Lisensi</h2>
+  <div class="cert-list">
+    <!-- Sertifikat BNSP -->
+    <div class="cert-card" onclick="openModal('cert-01')">
+      <div class="cert-info">
+        <div class="cert-title" data-key="cert.bnsp.title">Junior Network Administrator</div>
+        <div class="cert-issuer" data-key="cert.bnsp.issuer">BNSP / LSP Teknologi Digital</div>
+        <div class="cert-date" data-key="cert.bnsp.date">Diterbitkan Apr 2026 · Berlaku s.d. Apr 2029</div>
+      </div>
+      <div class="cert-arrow">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </div>
+
+    <!-- Sertifikat PKL -->
+    <div class="cert-card" onclick="openModal('cert-02')">
+      <div class="cert-info">
+        <div class="cert-title" data-key="cert.pkl.title">Programmer Intern Certificate</div>
+        <div class="cert-issuer" data-key="cert.pkl.issuer">PT Solusi Intek Indonesia</div>
+        <div class="cert-date" data-key="cert.pkl.date">Diterbitkan Jun 2025</div>
+      </div>
+      <div class="cert-arrow">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </div>
     </div>
   </div>
@@ -644,7 +596,7 @@
 
 <!-- CONTACT -->
 <section id="contact">
-  <p class="section-label" data-key="contact.label">04 &mdash; contact</p>
+  <p class="section-label" data-key="contact.label">05 &mdash; contact</p>
   <h2 data-key="contact.title">Mari berkolaborasi.</h2>
   <p data-key="contact.desc">Saya terbuka untuk peluang kerja, freelance, atau sekadar diskusi. Hubungi saya lewat email atau media sosial.</p>
   <div class="contact-links">
@@ -883,43 +835,76 @@
   </div>
 </div>
 
+<!-- MODAL EXP-01: Programmer Intern -->
 <div class="modal-overlay" id="modal-exp-01">
   <div class="modal-box">
     <div class="modal-header">
-      <div><div class="modal-tag">Experience &middot; 2024&ndash;2025</div><div class="modal-title">PT Solusi Intek Indonesia</div></div>
+      <div><div class="modal-tag">Experience &middot; 2024 &mdash; 2025</div><div class="modal-title">PT Solusi Intek Indonesia</div></div>
       <button class="modal-close" onclick="closeModal('exp-01')">&#x2715;</button>
     </div>
     <div class="modal-body">
       <div>
-        <div class="modal-section-label">Sertifikat &amp; Dokumen</div>
-        <div class="modal-gallery">
-          <div class="gallery-item" data-type="img"><img src="cert.jpeg" alt="Sertifikat PKL"/><div class="media-label">Sertifikat PKL</div></div>
-        </div>
+        <div class="modal-section-label">Detail Kegiatan</div>
+        <p class="modal-desc">Menjalani program PKL sebagai Programmer Intern dengan fokus pada pengumpulan dan ekstraksi data (Data Scraping).</p>
       </div>
       <div>
-        <div class="modal-section-label">Detail Kegiatan</div>
-        <p class="modal-desc">Melaksanakan program PKL selama 6 bulan di PT Solusi Intek Indonesia. Fokus pada pengumpulan dan analisis data untuk mendeteksi potensi kebocoran data perusahaan dan klien.</p>
+        <div class="modal-section-label">Alur Kerja</div>
+        <p class="modal-desc" style="line-height:2;">
+          &bull; Mencari dan mengumpulkan tautan (link) sumber data dari dark web.<br/>
+          &bull; Merapikan data link tersebut ke dalam spreadsheet (Excel).<br/>
+          &bull; Melakukan proses import data dari Excel ke database menggunakan perintah terminal (CLI).<br/>
+          &bull; Menjalankan script Python yang telah disediakan untuk melakukan crawling dan mengekstrak data keseluruhan dari link yang sudah terdaftar di database.
+        </p>
+      </div>
+      <div>
+        <div class="modal-section-label">Skill yang Digunakan</div>
+        <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.25rem;">
+          <span class="skill-badge">Python</span>
+          <span class="skill-badge">Data Scraping</span>
+          <span class="skill-badge">MongoDB</span>
+          <span class="skill-badge">Terminal (CLI)</span>
+          <span class="skill-badge">Excel</span>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="modal-overlay" id="modal-exp-02">
+<!-- MODAL EXP-04: Intern Admin NOC -->
+<div class="modal-overlay" id="modal-exp-04">
   <div class="modal-box">
     <div class="modal-header">
-      <div><div class="modal-tag">Education &middot; 2023&ndash;2026</div><div class="modal-title">SMK Wisata Indonesia</div></div>
-      <button class="modal-close" onclick="closeModal('exp-02')">&#x2715;</button>
+      <div><div class="modal-tag">Experience &middot; 2026 (Ongoing)</div><div class="modal-title">PT Remala Abadi Tbk</div></div>
+      <button class="modal-close" onclick="closeModal('exp-04')">&#x2715;</button>
     </div>
     <div class="modal-body">
       <div>
-        <div class="modal-section-label">Sertifikat &amp; Dokumen</div>
-        <div class="modal-gallery">
-          <div class="gallery-item" data-type="img"><img src="sertifikat-bnsp.jpeg" alt="Sertifikat BNSP"/><div class="media-label">Sertifikat BNSP</div></div>
-        </div>
+        <div class="modal-section-label">Detail Kegiatan</div>
+        <p class="modal-desc">
+          Saat ini saya sedang menjalani program internship selama 4 bulan sebagai Intern Admin NOC di PT Remala Abadi Tbk (penempatan di anak perusahaan). Selama periode ini, fokus utama saya adalah mendukung operasional harian NOC.
+        </p>
       </div>
       <div>
-        <div class="modal-section-label">Detail Pendidikan</div>
-        <p class="modal-desc">Jurusan Teknik Komputer dan Jaringan &middot; Sertifikasi LSP BNSP &middot; Sertifikasi Mikrokontroler &middot; UKOM (Virtualisasi Linux, Web Server, WordPress &amp; Mail Server Roundcube).</p>
+        <div class="modal-section-label">Tanggung Jawab</div>
+        <p class="modal-desc" style="line-height:2;">
+          &bull; Melakukan pengecekan status pelanggan (online/offline) melalui OLT.<br/>
+          &bull; Memeriksa indikasi gangguan jaringan, termasuk LOS (Loss of Signal).<br/>
+          &bull; Mencatat dan melaporkan gangguan jaringan kepada tim terkait.<br/>
+          &bull; Melakukan validasi data pelanggan berdasarkan Client ID.<br/>
+          &bull; Memeriksa informasi pelanggan melalui Zimbra dan Tachyon.net.<br/>
+          &bull; Mengelola serta memperbarui data menggunakan spreadsheet.<br/>
+          &bull; Mendukung kegiatan monitoring dan administrasi operasional NOC.
+        </p>
+      </div>
+      <div>
+        <div class="modal-section-label">Skill yang Digunakan</div>
+        <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.25rem;">
+          <span class="skill-badge">NOC Operations</span>
+          <span class="skill-badge">Network Monitoring</span>
+          <span class="skill-badge">OLT Management</span>
+          <span class="skill-badge">Data Validation</span>
+          <span class="skill-badge">Spreadsheet</span>
+        </div>
       </div>
     </div>
   </div>
@@ -988,6 +973,50 @@
   </div>
 </div>
 
+<!-- MODAL CERT-01: BNSP -->
+<div class="modal-overlay" id="modal-cert-01">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div><div class="modal-tag">Certification &middot; 2026</div><div class="modal-title">Junior Network Administrator</div></div>
+      <button class="modal-close" onclick="closeModal('cert-01')">&#x2715;</button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <div class="modal-section-label">Sertifikat &amp; Dokumen</div>
+        <div class="modal-gallery">
+          <div class="gallery-item" data-type="img"><img src="sertifikat-bnsp.jpeg" alt="Sertifikat BNSP"/><div class="media-label">Sertifikat BNSP</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="modal-section-label">Detail Sertifikasi</div>
+        <p class="modal-desc">Sertifikasi Kompetensi BNSP (Badan Nasional Sertifikasi Profesi) bidang Rekayasa Jaringan Komputer (Network Engineer) dengan kualifikasi Network Administrator Muda. Diterbitkan oleh LSP Teknologi Digital. Berlaku 3 tahun (2026-2029).</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CERT-02: PKL -->
+<div class="modal-overlay" id="modal-cert-02">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div><div class="modal-tag">Certification &middot; 2025</div><div class="modal-title">Programmer Intern Certificate</div></div>
+      <button class="modal-close" onclick="closeModal('cert-02')">&#x2715;</button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <div class="modal-section-label">Sertifikat &amp; Dokumen</div>
+        <div class="modal-gallery">
+          <div class="gallery-item" data-type="img"><img src="cert.jpeg" alt="Sertifikat PKL"/><div class="media-label">Sertifikat PKL</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="modal-section-label">Detail Sertifikasi</div>
+        <p class="modal-desc">Sertifikat penyelesaian Program Praktik Kerja Lapangan (PKL) selama 6 bulan di PT Solusi Intek Indonesia sebagai Programmer Intern. Berfokus pada analisis data dan deteksi potensi kebocoran data.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="if(event.target===this)closeLightbox()">
   <button class="lightbox-close" onclick="window.closeLightbox()">&#x2715;</button>
@@ -1042,11 +1071,12 @@
 
   const translations={
     id:{
+      'nav.cert':'certs',
       'hero.tag':'available for work',
       'hero.title':'Halo, saya<br /><span>Muhammad<br/>Dhiyauddin.</span>',
       'hero.sub':'Fresh Graduate TJKT yang memiliki pengalaman pada Mikrotik, Linux Server, Proxmox, Arduino, ESP32, UI/UX Figma, dan implementasi jaringan komputer.',
       'hero.btn1':'Lihat proyek saya \u2192','hero.btn2':'Hubungi saya','hero.scroll':'scroll to explore',
-      'hero.stats1':'Projects','hero.stats2':'Certificates','hero.stats3':'Internship',
+      'hero.stats1':'Projects','hero.stats2':'Certificates','hero.stats3':'Internships',
       'about.label':'01 \u2014 about me','about.title':'Sedikit tentang saya',
       'about.p1':'Saya adalah <strong>Network Engineer</strong> yang berpengalaman dalam merancang dan mengelola infrastruktur jaringan.',
       'about.p2':'Keahlian saya mencakup <strong>konfigurasi Mikrotik &amp; server Linux</strong>, virtualisasi dengan Proxmox, dan pemrograman mikrokontroler.',
@@ -1063,21 +1093,31 @@
       'projects.desc5':'Sistem pemesanan restoran digital via QR Code. Dashboard admin dengan grafik penjualan, export Excel, pemantauan pesanan secara real-time.',
       'projects.desc6':'Hadiah interaktif berbasis ESP32 dengan layar TFT 2.8", buzzer, dan tombol. Menampilkan slideshow foto &amp; pesan, memutar lagu ulang tahun otomatis.',
       'projects.desc7':'Sistem manajemen kos-kosan berbasis web dengan 3 role (Admin, Penghuni, Publik). Fitur: tagihan otomatis, verifikasi pembayaran, QR code, rating & review, email notification, dan export PDF.',
+      
       'experience.label':'03 \u2014 experience','experience.title':'Pengalaman kerja',
-      'exp1.role':'Programmer Intern','exp1.company':'PT Solusi Intek Indonesia',
-      'exp1.desc':'Melaksanakan program PKL selama 6 bulan dengan fokus pada pengumpulan dan analisis data untuk mendeteksi potensi kebocoran data perusahaan dan klien.',
-      'exp1.btn':'Lihat Sertifikat &amp; Bukti','exp2.role':'Lulusan SMK','exp2.company':'SMK Wisata Indonesia',
-      'exp2.desc':'Jurusan Teknik Komputer dan Jaringan. Memiliki sertifikasi LSP BNSP, UKOM, dan sertifikasi mikrokontroler.',
-      'exp2.btn':'Lihat Sertifikat','exp3.role':'Freelance Technician','exp3.company':'Proyek Instalasi CCTV — SMK Wisata Indonesia','exp3.desc':'Terlibat dalam proyek instalasi CCTV di lingkungan sekolah. Melakukan penarikan kabel, pemasangan kamera pada titik yang ditentukan, pemasangan konektor, serta pengecekan koneksi fisik hingga perangkat siap digunakan.','exp3.btn':'Lihat Detail & Dokumentasi','contact.label':'04 \u2014 contact','contact.title':'Mari berkolaborasi.',
+      'exp4.role':'Intern Admin NOC  (Network Operations Center)','exp4.company':'PT Remala Abadi Tbk',
+      'exp4.desc':'Mendukung operasional NOC dengan melakukan pengecekan status pelanggan via OLT, memeriksa indikasi gangguan jaringan (LOS), validasi data pelanggan berdasarkan Client ID, serta monitoring melalui Zimbra dan Tachyon.net. Mencatat, melaporkan gangguan, dan mengelola data operasional menggunakan spreadsheet.',
+      'exp4.btn':'Lihat Detail',
+      'exp1.role':'Programmer Intern (Data Analyst)','exp1.company':'PT Solusi Intek Indonesia',
+      'exp1.desc':'Mengumpulkan tautan (link) sumber data dari dark web, merapikannya ke dalam spreadsheet (Excel), lalu melakukan proses import data ke dalam database menggunakan perintah terminal (CLI). Setelah data terdaftar, saya menjalankan script Python untuk melakukan crawling dan mengambil data keseluruhan dari link tersebut.',
+      'exp1.btn':'Lihat Detail',
+      'exp3.role':'Freelance Technician','exp3.company':'Proyek Instalasi CCTV — SMK Wisata Indonesia','exp3.desc':'Terlibat dalam proyek instalasi CCTV di lingkungan sekolah. Melakukan penarikan kabel, pemasangan kamera pada titik yang ditentukan, pemasangan konektor, serta pengecekan koneksi fisik hingga perangkat siap digunakan.','exp3.btn':'Lihat Detail & Dokumentasi',
+      
+      'cert.label':'04 \u2014 Certifications','cert.title':'Sertifikasi &amp; Lisensi','cert.btn':'Lihat Sertifikat',
+      'cert.bnsp.title':'Junior Network Administrator','cert.bnsp.issuer':'BNSP / LSP Teknologi Digital','cert.bnsp.date':'Diterbitkan Apr 2026 · Berlaku s.d. Apr 2029',
+      'cert.pkl.title':'Programmer Intern Certificate','cert.pkl.issuer':'PT Solusi Intek Indonesia','cert.pkl.date':'Diterbitkan Jun 2025',
+
+      'contact.label':'05 \u2014 contact','contact.title':'Mari berkolaborasi.',
       'contact.desc':'Saya terbuka untuk peluang kerja, freelance, atau sekadar diskusi. Hubungi saya lewat email atau media sosial.',
       'footer.copyright':'\u00A9 2026 Muhammad Dhiyauddin',
     },
     en:{
+      'nav.cert':'certs',
       'hero.tag':'available for work',
       'hero.title':'Hello, I\'m<br /><span>Muhammad<br/>Dhiyauddin.</span>',
       'hero.sub':'Fresh Graduate in Computer and Network Engineering with experience in Mikrotik, Linux Server, Proxmox, Arduino, ESP32, UI/UX Figma, and network implementation.',
       'hero.btn1':'View my projects \u2192','hero.btn2':'Contact me','hero.scroll':'scroll to explore',
-      'hero.stats1':'Projects','hero.stats2':'Certificates','hero.stats3':'Internship',
+      'hero.stats1':'Projects','hero.stats2':'Certificates','hero.stats3':'Internships',
       'about.label':'01 \u2014 about me','about.title':'A bit about me',
       'about.p1':'I am a <strong>Network Engineer</strong> experienced in designing and managing network infrastructure.',
       'about.p2':'My expertise includes <strong>Mikrotik &amp; Linux server configuration</strong>, virtualization with Proxmox, and microcontroller programming.',
@@ -1094,12 +1134,21 @@
       'projects.desc5':'Digital restaurant ordering system via QR Code. Admin dashboard with sales graphs, Excel export, real-time order monitoring.',
       'projects.desc6':'Interactive gift based on ESP32 with 2.8" TFT display, buzzer, and button. Displays photo slideshow &amp; messages, plays birthday song automatically.',
       'projects.desc7':'Web-based boarding house management system with 3 roles (Admin, Tenant, Public). Features: automatic billing, payment verification, QR code, rating & review, email notification, and PDF export.',
+      
       'experience.label':'03 \u2014 experience','experience.title':'Work experience',
-      'exp1.role':'Programmer Intern','exp1.company':'PT Solusi Intek Indonesia',
-      'exp1.desc':'Carried out a 6-month internship program focusing on data collection and analysis to detect potential data leaks for the company and clients.',
-      'exp1.btn':'View Certificate &amp; Proof','exp2.role':'Vocational Graduate','exp2.company':'SMK Wisata Indonesia',
-      'exp2.desc':'Majoring in Computer and Network Engineering. Holds LSP BNSP certification, UKOM, and microcontroller certification.',
-      'exp2.btn':'View Certificate','exp3.role':'Freelance Technician','exp3.company':'CCTV Installation Project — SMK Wisata Indonesia','exp3.desc':'Involved in a school CCTV installation project, handling cable pulling, camera installation, connector attachment, and physical connection checking.','exp3.btn':'View Details & Documentation','contact.label':'04 \u2014 contact','contact.title':'Let\'s collaborate.',
+      'exp4.role':'NOC Admin Intern','exp4.company':'PT Remala Abadi Tbk',
+      'exp4.desc':'Supporting NOC operations by checking customer status via OLT, examining network issue indications (LOS), validating customer data based on Client ID, and monitoring via Zimbra and Tachyon.net. Recording, reporting network issues, and managing operational data using spreadsheets.',
+      'exp4.btn':'View Details',
+      'exp1.role':'Programmer Intern (Data Analyst)','exp1.company':'PT Solusi Intek Indonesia',
+      'exp1.desc':'Collected source links from the dark web, organized them into spreadsheets (Excel), and imported the data into a database using CLI commands. Once the links were registered, I ran the provided Python script to crawl and extract the full data from those links.',
+      'exp1.btn':'View Details',
+      'exp3.role':'Freelance Technician','exp3.company':'CCTV Installation Project — SMK Wisata Indonesia','exp3.desc':'Involved in a school CCTV installation project, handling cable pulling, camera installation, connector attachment, and physical connection checking.','exp3.btn':'View Details & Documentation',
+      
+      'cert.label':'04 \u2014 Certifications','cert.title':'Certifications &amp; Licenses','cert.btn':'View Certificate',
+      'cert.bnsp.title':'Junior Network Administrator','cert.bnsp.issuer':'BNSP / LSP Digital Technology','cert.bnsp.date':'Issued Apr 2026 · Expires Apr 2029',
+      'cert.pkl.title':'Programmer Intern Certificate','cert.pkl.issuer':'PT Solusi Intek Indonesia','cert.pkl.date':'Issued Jun 2025',
+
+      'contact.label':'05 \u2014 contact','contact.title':'Let\'s collaborate.',
       'contact.desc':'I am open to job opportunities, freelance work, or just a discussion. Contact me via email or social media.',
       'footer.copyright':'\u00A9 2026 Muhammad Dhiyauddin',
     }
@@ -1282,7 +1331,8 @@
     const groups=[
       document.querySelectorAll('.project-card'),
       document.querySelectorAll('.skill-tag'),
-      document.querySelectorAll('.exp-item')
+      document.querySelectorAll('.exp-item'),
+      document.querySelectorAll('.cert-card')
     ];
     groups.forEach(list=>{
       list.forEach(el=>el.classList.add('stagger-item'));
