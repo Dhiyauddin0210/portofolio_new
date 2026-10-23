@@ -1,1355 +1,628 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Muhammad Dhiyauddin — Network Engineer</title>
-  <meta name="description" content="Portfolio Muhammad Dhiyauddin — Network Engineer berbasis di Tangerang." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #0d0d0d; --surface: #161616; --border: #2a2a2a;
-      --accent: #c8f135; --text: #e8e8e8; --muted: #888;
-      --font-main: 'Sora', sans-serif; --font-mono: 'DM Mono', monospace;
-    }
-    html { scroll-behavior: smooth; }
-    body { background: var(--bg); color: var(--text); font-family: var(--font-main); font-size: 16px; line-height: 1.7; overflow-x: hidden; }
-    #network-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
-    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 2.5rem; background: rgba(13,13,13,0.75); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
-    .nav-logo { font-family: var(--font-mono); font-size: 0.9rem; color: var(--accent); letter-spacing: 0.05em; }
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
-    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; letter-spacing: 0.04em; transition: color 0.2s; }
-    .nav-links a:hover { color: var(--text); }
-    .lang-toggle {
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 0.3rem 0.8rem;
-      border-radius: 999px;
-      cursor: pointer;
-      transition: all 0.2s;
-      margin-left: 1rem;
-    }
-    .lang-toggle:hover { border-color: var(--accent); color: var(--accent); }
-    section { position: relative; z-index: 1; padding: 6rem 2.5rem; max-width: 960px; margin: 0 auto; }
-    #hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding-top: 8rem; }
-    .hero-inner { display: grid; grid-template-columns: 1fr auto; gap: 3rem; align-items: center; }
-    .hero-photo-wrap { position: relative; flex-shrink: 0; }
-    .hero-photo-frame { width: 220px; height: 260px; position: relative; }
-    .hero-photo-frame::before, .hero-photo-frame::after { content: ''; position: absolute; width: 28px; height: 28px; border-color: var(--accent); border-style: solid; z-index: 2; }
-    .hero-photo-frame::before { top: -6px; left: -6px; border-width: 2px 0 0 2px; }
-    .hero-photo-frame::after { bottom: -6px; right: -6px; border-width: 0 2px 2px 0; }
-    .inner-corners::before, .inner-corners::after { content: ''; position: absolute; width: 28px; height: 28px; border-color: var(--accent); border-style: solid; z-index: 2; }
-    .inner-corners::before { top: -6px; right: -6px; border-width: 2px 2px 0 0; }
-    .inner-corners::after { bottom: -6px; left: -6px; border-width: 0 0 2px 2px; }
-    .hero-photo { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; display: block; filter: grayscale(20%); transition: opacity 0.5s ease-in-out, filter 0.3s; }
-    .hero-photo:hover { filter: grayscale(0%); }
-    .photo-placeholder { width: 100%; height: 100%; border-radius: 4px; background: var(--surface); border: 1px dashed var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; color: var(--muted); font-family: var(--font-mono); font-size: 0.72rem; text-align: center; padding: 1rem; }
-    .status-badge { position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 0.4rem; background: var(--surface); border: 1px solid var(--border); padding: 0.3rem 0.75rem; border-radius: 999px; font-family: var(--font-mono); font-size: 0.7rem; color: var(--accent); white-space: nowrap; z-index: 3; }
-    .status-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse-dot 1.8s ease-in-out infinite; }
-    @keyframes pulse-dot { 0%, 100% { box-shadow: 0 0 0 0 rgba(200,241,53,0.6); } 50% { box-shadow: 0 0 0 5px rgba(200,241,53,0); } }
-    .hero-tag { font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.5rem; }
-    h1 { font-size: clamp(2.4rem, 6vw, 4.8rem); font-weight: 700; line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 1.5rem; }
-    h1 span { color: var(--accent); }
-    .hero-sub { font-size: 1.05rem; color: var(--muted); max-width: 480px; margin-bottom: 2.5rem; font-weight: 300; }
-    .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
-    .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 6px; font-family: var(--font-mono); font-size: 0.85rem; text-decoration: none; transition: all 0.2s; cursor: pointer; border: none; }
-    .btn-primary { background: var(--accent); color: #0d0d0d; font-weight: 500; }
-    .btn-primary:hover { background: #d8ff45; transform: translateY(-1px); }
-    .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
-    .btn-outline:hover { border-color: var(--muted); background: var(--surface); }
-    .hero-scroll { margin-top: 3rem; display: flex; align-items: center; gap: 0.75rem; color: var(--muted); font-size: 0.8rem; font-family: var(--font-mono); }
-    .scroll-line { width: 40px; height: 1px; background: var(--border); }
-    .divider { position: relative; z-index: 1; height: 1px; background: var(--border); max-width: 960px; margin: 0 auto; }
-    .section-label { font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 2rem; }
-    h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 1.5rem; line-height: 1.2; }
-    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
-    .about-text p { color: var(--muted); margin-bottom: 1rem; font-weight: 300; }
-    .about-text p strong { color: var(--text); font-weight: 600; }
-    .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 0.75rem; margin-top: 1.5rem; }
-    .skill-tag { padding: 0.5rem 0.75rem; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); text-align: center; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
-    .skill-tag:hover { border-color: var(--accent); color: var(--accent); }
-    .skill-icon { width: 28px; height: 28px; object-fit: contain; display: block; opacity: 0.85; transition: all 0.2s; }
-    .skill-icon-svg { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; opacity: 0.85; transition: all 0.2s; }
-    .skill-tag:hover .skill-icon-svg { opacity: 1; }
-    .projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
-    .project-card { background: rgba(22,22,22,0.85); backdrop-filter: blur(8px); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; transition: border-color 0.2s, transform 0.2s; }
-    .project-card:hover { border-color: rgba(200,241,53,0.4); transform: translateY(-3px); }
-    .project-num { font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent); }
-    .project-title { font-size: 1.1rem; font-weight: 600; letter-spacing: -0.01em; }
-    .project-desc { font-size: 0.9rem; color: var(--muted); font-weight: 300; flex: 1; }
-    .detail-btn { display: inline-flex; align-items: center; gap: 0.45rem; margin-top: 0.5rem; padding: 0.45rem 1rem; background: transparent; border: 1px solid rgba(200,241,53,0.3); border-radius: 6px; color: var(--accent); font-family: var(--font-mono); font-size: 0.75rem; cursor: pointer; transition: all 0.2s; width: fit-content; }
-    .detail-btn:hover { background: rgba(200,241,53,0.08); border-color: var(--accent); }
-    .exp-list { display: flex; flex-direction: column; margin-top: 2rem; }
-    .exp-item { display: grid; grid-template-columns: 140px 1fr; gap: 2rem; padding: 1.5rem 0; border-top: 1px solid var(--border); }
-    .exp-item:last-child { border-bottom: 1px solid var(--border); }
-    .exp-year { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); padding-top: 0.3rem; }
-    .exp-role { font-weight: 600; font-size: 1rem; }
-    .exp-company { color: var(--accent); font-size: 0.9rem; margin-bottom: 0.5rem; }
-    .exp-desc { font-size: 0.9rem; color: var(--muted); font-weight: 300; margin-bottom: 0.75rem; }
-    .exp-company-logo { width: auto; max-width: 120px; object-fit: contain; opacity: 0.9; border-radius: 6px; }
-    .exp-company-logo.intek-logo { height: 75px; }
-    #contact { text-align: center; }
-    #contact h2 { margin-bottom: 1rem; }
-    #contact p { color: var(--muted); max-width: 480px; margin: 0 auto 2.5rem; font-weight: 300; }
-    .contact-links { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
-    footer { position: relative; z-index: 1; border-top: 1px solid var(--border); padding: 2rem 2.5rem; display: flex; justify-content: space-between; align-items: center; max-width: 960px; margin: 0 auto; font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
-    .hero-stats { display: flex; gap: 15px; margin-top: 30px; flex-wrap: wrap; }
-    .stat-box { background: rgba(255,255,255,.03); border: 1px solid var(--border); padding: 14px 18px; border-radius: 10px; }
-    .stat-box h3 { color: var(--accent); }
-    .stat-box span { color: var(--muted); font-size: .8rem; }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
-    .fade-up { animation: fadeUp 0.7s ease both; }
-    .delay-1 { animation-delay: 0.1s; } .delay-2 { animation-delay: 0.2s; }
-    .delay-3 { animation-delay: 0.3s; } .delay-4 { animation-delay: 0.4s; }
-    .delay-5 { animation-delay: 0.5s; }
-    @media (max-width: 768px) {
-      nav { padding: 1rem 1.25rem; } .nav-links { display: none; }
-      section { padding: 4rem 1.25rem; }
-      .hero-inner { grid-template-columns: 1fr; gap: 2.5rem; }
-      .hero-photo-wrap { order: -1; display: flex; justify-content: center; }
-      .hero-photo-frame { width: 160px; height: 195px; }
-      .about-grid { grid-template-columns: 1fr; gap: 2rem; }
-      .projects-grid { grid-template-columns: 1fr; }
-      .exp-item { grid-template-columns: 1fr; gap: 0.25rem; }
-    }
-    .modal-overlay { display: none; position: fixed; inset: 0; z-index: 999; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 1.5rem; }
-    .modal-overlay.open { display: flex; }
-    .modal-box { background: #111; border: 1px solid var(--border); border-radius: 14px; width: 100%; max-width: 700px; max-height: 90vh; overflow-y: auto; position: relative; animation: modalIn 0.28s cubic-bezier(0.34,1.56,0.64,1) both; }
-    @keyframes modalIn { from { opacity: 0; transform: scale(0.92) translateY(16px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-    .modal-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 1.5rem 1.5rem 1rem; border-bottom: 1px solid var(--border); gap: 1rem; }
-    .modal-tag { font-family: var(--font-mono); font-size: 0.7rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.3rem; }
-    .modal-title { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.02em; }
-    .modal-close { background: var(--surface); border: 1px solid var(--border); color: var(--muted); width: 34px; height: 34px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1.1rem; transition: all 0.2s; }
-    .modal-close:hover { color: var(--text); border-color: var(--muted); }
-    .modal-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
-    .modal-section-label { font-family: var(--font-mono); font-size: 0.7rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem; }
-    .modal-desc { font-size: 0.9rem; color: var(--muted); font-weight: 300; line-height: 1.75; }
-    .modal-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 0.75rem; }
-    .gallery-item { border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: var(--surface); cursor: pointer; transition: border-color 0.2s, transform 0.15s; position: relative; }
-    .gallery-item:hover { border-color: var(--accent); transform: scale(1.02); }
-    .gallery-item img { width: 100%; height: 135px; object-fit: cover; display: block; }
-    .gallery-item video { width: 100%; height: 135px; object-fit: cover; display: block; }
-    .media-label { padding: 0.35rem 0.6rem; font-family: var(--font-mono); font-size: 0.68rem; color: var(--muted); background: var(--surface); }
-    .play-badge { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -65%); background: rgba(0,0,0,0.65); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.9rem; pointer-events: none; }
-    .gallery-portrait .gallery-item img { height: 200px; object-fit: contain; background: #1a1a2e; }
-    .lightbox { display: none; position: fixed; inset: 0; z-index: 1100; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; }
-    .lightbox.open { display: flex; }
-    .lightbox img { max-width: 90vw; max-height: 88vh; border-radius: 8px; object-fit: contain; }
-    .lightbox-close { position: absolute; top: 1.25rem; right: 1.25rem; background: rgba(255,255,255,0.1); border: none; color: #fff; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; z-index: 9999 !important; }
-    .lightbox img { pointer-events: none; }
-    .lightbox video { pointer-events: auto; }
-    
-    /* === CERTIFICATIONS LIST STYLE (REVISI) === */
-    .cert-list { display: flex; flex-direction: column; gap: 0; margin-top: 2rem; }
-    .cert-card { 
-      background: transparent; border-bottom: 1px solid var(--border); 
-      padding: 1.5rem 0; display: flex; justify-content: space-between; align-items: center; gap: 1.5rem;
-      transition: background 0.2s; cursor: pointer;
-    }
-    .cert-card:first-child { border-top: 1px solid var(--border); }
-    .cert-card:hover { background: rgba(255,255,255,0.02); }
-    .cert-info { display: flex; flex-direction: column; gap: 0.25rem; pointer-events: none; }
-    .cert-title { font-size: 1.05rem; font-weight: 600; color: var(--text); }
-    .cert-issuer { font-size: 0.85rem; color: var(--accent); font-family: var(--font-mono); }
-    .cert-date { font-size: 0.8rem; color: var(--muted); font-family: var(--font-mono); }
-    .cert-arrow { color: var(--muted); transition: transform 0.2s; pointer-events: none; }
-    .cert-card:hover .cert-arrow { transform: translateX(4px); color: var(--accent); }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Muhammad Dhiyauddin — Network Engineer</title>
+<meta name="description" content="Portfolio Muhammad Dhiyauddin — Network Engineer berbasis di Jakarta." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;700;800&family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--paper:#f1eee6;--paper2:#e8e4d8;--ink:#121212;--muted:#6c685d;--accent:#ff4d1c;--line:#cfc9b8;
+ --sans:'Bricolage Grotesque',sans-serif;--serif:'Instrument Serif',serif;--mono:'IBM Plex Mono',monospace;--side:400px}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.6;overflow-x:hidden}
+a{color:inherit}
+::selection{background:var(--accent);color:#fff}
 
-    /* === EXCEL SECTION ── chip grid style === */
-    .excel-section { margin-top: 1.75rem; }
-    .excel-section-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1rem; }
-    .excel-section-header .ex-icon { width: 28px; height: 28px; flex-shrink: 0; }
-    .excel-section-title { font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; }
-    .excel-chip-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 0.5rem; }
-    .excel-chip { position: relative; padding: 0.45rem 0.6rem; background: rgba(200,241,53,0.03); border: 1px solid rgba(200,241,53,0.12); border-radius: 6px; font-family: var(--font-mono); font-size: 0.68rem; color: rgba(136,136,136,0.6); text-align: center; transition: all 0.2s; cursor: default; }
-    .excel-chip:hover { background: rgba(200,241,53,0.1); border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+/* ===== SPLIT LAYOUT ===== */
+.app{display:grid;grid-template-columns:var(--side) 1fr;min-height:100vh}
+aside{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;background:var(--ink);color:var(--paper);overflow:hidden}
+.photo{position:relative;flex:1 1 auto;min-height:0;overflow:hidden}
+.photo .ph{position:absolute;inset:0;background-size:cover;background-position:50% 18%;opacity:0;transition:opacity 1.2s ease,filter .5s;filter:grayscale(1) contrast(1.1)}
+.photo .ph.on{opacity:1}
+.photo:hover .ph{filter:grayscale(0) contrast(1)}
+.photo::after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,var(--ink) 0%,rgba(18,18,18,.0) 45%);pointer-events:none}
+.photo .stamp{position:absolute;top:1.2rem;left:1.2rem;z-index:3;font-family:var(--mono);font-size:.68rem;background:var(--accent);color:#fff;padding:.3rem .65rem;display:flex;gap:.45rem;align-items:center}
+.stamp i{width:6px;height:6px;border-radius:50%;background:#fff;animation:bl 1.4s infinite}
+@keyframes bl{50%{opacity:.2}}
+.side-body{padding:0 1.6rem 1.4rem;position:relative;z-index:3;margin-top:-4.5rem}
+.side-name{font-size:2.3rem;font-weight:800;line-height:.95;letter-spacing:-.04em}
+.side-name em{font-family:var(--serif);font-weight:400;color:var(--accent)}
+.side-role{font-family:var(--mono);font-size:.72rem;color:#aaa69a;margin:.7rem 0 1.1rem}
+.snav{display:flex;flex-direction:column;border-top:1px solid #2c2c2c}
+.snav a{display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid #2c2c2c;text-decoration:none;font-size:.95rem;color:#c9c5b8;transition:all .2s}
+.snav a span{font-family:var(--mono);font-size:.68rem;color:#6d695f}
+.snav a:hover,.snav a.act{color:#fff;padding-left:.6rem}
+.snav a.act span,.snav a:hover span{color:var(--accent)}
+.side-foot{display:flex;justify-content:space-between;align-items:center;margin-top:1rem}
+.lang{font-family:var(--mono);font-size:.7rem;background:transparent;border:1px solid #444;color:var(--paper);padding:.35rem .8rem;border-radius:999px;cursor:pointer}
+.lang:hover{border-color:var(--accent);color:var(--accent)}
+.soc{display:flex;gap:.9rem;font-family:var(--mono);font-size:.7rem}
+.soc a{color:#aaa69a;text-decoration:none}.soc a:hover{color:var(--accent)}
 
-    /* === PROGSKILLS ── timeline/step style === */
-    .progskills-section { margin-top: 2rem; }
-    .progskills-header { font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1rem; }
-    .progskill-list { display: flex; flex-direction: column; gap: 0; }
-    .progskill-item { display: grid; grid-template-columns: 28px 1fr; gap: 0.75rem; padding: 0.65rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); align-items: start; transition: all 0.2s; }
-    .progskill-item:last-child { border-bottom: none; }
-    .progskill-item:hover .ps-dot { background: var(--accent); box-shadow: 0 0 0 4px rgba(200,241,53,0.15); }
-    .ps-dot-wrap { display: flex; flex-direction: column; align-items: center; padding-top: 6px; }
-    .ps-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(200,241,53,0.35); transition: all 0.3s; flex-shrink: 0; }
-    .ps-line { width: 1px; flex: 1; background: rgba(200,241,53,0.1); margin-top: 4px; min-height: 24px; }
-    .progskill-item:last-child .ps-line { display: none; }
-    .ps-name { font-family: var(--font-mono); font-size: 0.82rem; color: var(--text); font-weight: 500; line-height: 1; margin-bottom: 0.2rem; }
-    .ps-desc { font-size: 0.78rem; color: var(--muted); font-weight: 300; }
-    .ps-badge { display: inline-flex; align-items: center; gap: 0.25rem; font-family: var(--font-mono); font-size: 0.6rem; color: rgba(200,241,53,0.55); background: rgba(200,241,53,0.05); border: 1px solid rgba(200,241,53,0.15); padding: 1px 6px; border-radius: 999px; margin-top: 0.25rem; }
+main{min-width:0}
+.sec{padding:5.5rem 4vw 5rem;border-bottom:2px solid var(--ink);position:relative}
+.sec-h{display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;margin-bottom:3rem;border-bottom:1px solid var(--line);padding-bottom:1rem}
+.sec-h .lb{font-family:var(--mono);font-size:.74rem;color:var(--accent);letter-spacing:.08em;text-transform:uppercase}
+.big{font-size:clamp(2.6rem,6vw,5.2rem);font-weight:800;letter-spacing:-.045em;line-height:.92}
+.big em{font-family:var(--serif);font-weight:400;font-style:italic}
 
-    /* === CURSOR GLOW === */
-    #cursor-glow { position: fixed; top: 0; left: 0; width: 380px; height: 380px; border-radius: 50%; pointer-events: none; z-index: 2; background: radial-gradient(circle, rgba(200,241,53,0.06) 0%, rgba(200,241,53,0) 70%); transform: translate(-50%, -50%); transition: opacity 0.3s ease; opacity: 0; will-change: transform; }
-    #cursor-glow.active { opacity: 1; }
-    @media (max-width: 768px), (hover: none) { #cursor-glow { display: none; } }
+/* HERO */
+#hero{padding-top:4rem;min-height:100vh;display:flex;flex-direction:column;justify-content:space-between;gap:2.5rem}
+.h-tag{font-family:var(--mono);font-size:.76rem;color:var(--muted);display:flex;align-items:center;gap:.6rem}
+.h-tag b{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:bl 1.4s infinite}
+h1{font-size:clamp(3.2rem,9.5vw,8.6rem);font-weight:800;letter-spacing:-.055em;line-height:.86;margin:1.2rem 0 1.8rem}
+h1 span{font-family:var(--serif);font-weight:400;font-style:italic;color:var(--accent);letter-spacing:-.03em}
+.h-sub{font-family:var(--serif);font-size:clamp(1.3rem,2.2vw,1.9rem);line-height:1.25;max-width:640px}
+.h-row{display:grid;grid-template-columns:auto 1fr;gap:2rem;align-items:end}
+.term{width:310px;background:var(--ink);color:#e8e5da;border-radius:6px;overflow:hidden;box-shadow:6px 6px 0 var(--accent)}
+.tb{display:flex;align-items:center;gap:.4rem;padding:.45rem .7rem;border-bottom:1px solid #2e2e2e}
+.tb i{width:8px;height:8px;border-radius:50%;display:block}.tb i:nth-child(1){background:#ff5f57}.tb i:nth-child(2){background:#febc2e}.tb i:nth-child(3){background:#28c840}
+.tb span{margin-left:.3rem;font-family:var(--mono);font-size:.64rem;color:#888}
+.tt{padding:.7rem .9rem;font-family:var(--mono);font-size:.72rem;line-height:1.85;min-height:100px}
+.tl{display:block}.tp{color:var(--accent)}
+.cur{display:inline-block;width:6px;height:1em;background:var(--accent);margin-left:2px;vertical-align:text-bottom;animation:bl 1s step-end infinite}
+.h-right{display:flex;flex-direction:column;gap:1.2rem;align-items:flex-start}
+.btns{display:flex;gap:.7rem;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.85rem 1.5rem;font-family:var(--mono);font-size:.8rem;text-decoration:none;border:2px solid var(--ink);cursor:pointer;background:transparent;color:var(--ink);transition:all .18s;border-radius:0}
+.btn-p{background:var(--ink);color:var(--paper)}
+.btn:hover{background:var(--accent);border-color:var(--accent);color:#fff;transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--ink)}
+.stats{display:flex;gap:2rem}
+.stat h3{font-size:2.6rem;font-weight:800;letter-spacing:-.04em;line-height:1}
+.stat span{font-family:var(--mono);font-size:.7rem;color:var(--muted)}
+.marq{overflow:hidden;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);margin:0 -4vw;background:var(--accent);color:#fff}
+.marq-in{display:flex;width:max-content;animation:mq 26s linear infinite;padding:.7rem 0}
+.marq-in span{font-size:1.5rem;font-weight:800;letter-spacing:-.02em;padding-right:2rem;white-space:nowrap;text-transform:uppercase}
+@keyframes mq{to{transform:translateX(-50%)}}
 
-    /* === TERMINAL WIDGET (compact) === */
-    .term-widget { max-width: 350px; background: #0a0a0a; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin: 1.75rem 0 2rem; box-shadow: 0 0 0 1px rgba(200,241,53,0.03), 0 12px 30px -10px rgba(0,0,0,0.6); }
-    .term-titlebar { display: flex; align-items: center; gap: 0.5rem; padding: 0.55rem 0.8rem; background: #141414; border-bottom: 1px solid var(--border); }
-    .term-dot { width: 9px; height: 9px; border-radius: 50%; }
-    .term-dot.red { background: #ff5f57; }
-    .term-dot.yellow { background: #febc2e; }
-    .term-dot.green { background: #28c840; }
-    .term-titlebar span { margin-left: 0.4rem; font-family: var(--font-mono); font-size: 0.68rem; color: var(--muted); }
-    .term-body { padding: 0.85rem 1rem 1rem; font-family: var(--font-mono); font-size: 0.76rem; line-height: 1.85; color: var(--text); min-height: 108px; }
-    .term-line { display: block; white-space: pre-wrap; word-break: break-word; }
-    .term-prompt { color: var(--accent); }
-    .term-cursor { display: inline-block; width: 6px; height: 1em; background: var(--accent); margin-left: 2px; vertical-align: text-bottom; animation: term-blink 1s step-end infinite; }
-    @keyframes term-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+/* ABOUT */
+.ab{display:grid;grid-template-columns:1.1fr 1fr;gap:3.5rem}
+.ab-t p{font-size:1.1rem;color:#3b3830;margin-bottom:1rem}
+.ab-t p strong{background:linear-gradient(transparent 60%,rgba(255,77,28,.35) 60%);font-weight:700;color:var(--ink)}
+.ab-t .btn{margin-top:.6rem}
+.mini{font-family:var(--mono);font-size:.72rem;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin:2rem 0 .8rem}
+.pills{display:flex;flex-wrap:wrap;gap:.45rem}
+.pill{font-family:var(--mono);font-size:.74rem;padding:.35rem .8rem;border:1.5px solid var(--ink);border-radius:999px;background:var(--paper);transition:all .15s}
+.pill:hover{background:var(--ink);color:var(--paper);transform:rotate(-3deg)}
+.pill.o{border-color:var(--line);color:var(--muted)}
+.tbl{width:100%;border-collapse:collapse}
+.tbl td{padding:.75rem 0;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl td:first-child{font-family:var(--mono);font-weight:500;width:36%}
+.tbl td span{display:block;color:var(--muted);font-size:.85rem}
+.tbl .ai{font-family:var(--mono);font-size:.62rem;color:var(--accent);text-align:right;white-space:nowrap}
+.note{font-size:.7rem;color:var(--muted);margin-top:.7rem}
 
-    /* === PROJECT CARD 3D TILT === */
-    .projects-grid { perspective: 1200px; }
-    .project-card { transform-style: preserve-3d; will-change: transform; transition: transform 0.12s ease-out, border-color 0.2s; }
-    .project-card:hover { transition: border-color 0.2s; }
+/* PROJECT ROWS */
+.rows{border-top:2px solid var(--ink)}
+.prow{display:grid;grid-template-columns:70px 1.1fr 1.6fr auto;gap:1.5rem;align-items:center;padding:1.5rem 1rem;border-bottom:1px solid var(--ink);cursor:pointer;transition:background .2s,color .2s,padding .2s}
+.prow:hover{background:var(--ink);color:var(--paper);padding-left:1.6rem}
+.pn{font-family:var(--mono);font-size:.9rem;color:var(--accent)}
+.pt{font-size:1.4rem;font-weight:700;letter-spacing:-.025em;line-height:1.1}
+.pd{font-size:.88rem;color:var(--muted);transition:color .2s}
+.prow:hover .pd{color:#b9b5a8}
+.pgo{font-family:var(--mono);font-size:.74rem;border:1.5px solid currentColor;padding:.45rem .9rem;white-space:nowrap;background:none;color:inherit;cursor:pointer}
+.prow:hover .pgo{background:var(--accent);border-color:var(--accent);color:#fff}
 
-    /* === QUIZ CARD === */
-    .quiz-card { margin-top: 2.5rem; background: rgba(22,22,22,0.85); border: 1px solid var(--border); border-radius: 12px; padding: 1.75rem; backdrop-filter: blur(8px); }
-    .quiz-eyebrow { font-family: var(--font-mono); font-size: 0.7rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem; }
-    .quiz-question { font-size: 1.1rem; font-weight: 600; margin-bottom: 1.25rem; }
-    .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-    .quiz-opt { text-align: left; padding: 0.75rem 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: var(--font-main); font-size: 0.88rem; cursor: pointer; transition: all 0.18s; }
-    .quiz-opt:hover:not(:disabled) { border-color: var(--accent); background: rgba(200,241,53,0.06); }
-    .quiz-opt.correct { border-color: var(--accent); background: rgba(200,241,53,0.14); color: var(--accent); }
-    .quiz-opt.wrong { border-color: #ff5f57; background: rgba(255,95,87,0.1); color: #ff8f89; }
-    .quiz-opt:disabled { cursor: default; }
-    .quiz-feedback { margin-top: 1rem; font-family: var(--font-mono); font-size: 0.8rem; min-height: 1.2rem; }
-    .quiz-feedback.ok { color: var(--accent); }
-    .quiz-feedback.no { color: #ff8f89; }
-    .quiz-retry { margin-top: 0.75rem; background: transparent; border: 1px solid var(--border); color: var(--muted); font-family: var(--font-mono); font-size: 0.72rem; padding: 0.4rem 0.9rem; border-radius: 6px; cursor: pointer; display: none; }
-    .quiz-retry:hover { border-color: var(--accent); color: var(--accent); }
-    @media (max-width: 600px) { .quiz-options { grid-template-columns: 1fr; } }
+/* EXPERIENCE */
+.ex{display:grid;grid-template-columns:200px 1fr;gap:2.5rem;padding:2rem 0;border-top:2px solid var(--ink)}
+.ex:last-child{border-bottom:2px solid var(--ink)}
+.ex-y{font-size:2rem;font-weight:800;letter-spacing:-.04em;line-height:1}
+.ex-y small{display:block;font-family:var(--mono);font-weight:400;font-size:.7rem;color:var(--accent);margin-top:.5rem;letter-spacing:0}
+.ex-r{font-size:1.5rem;font-weight:700;letter-spacing:-.025em;line-height:1.15}
+.ex-c{display:flex;align-items:center;gap:.8rem;margin:.5rem 0 .8rem;font-family:var(--serif);font-size:1.3rem;font-style:italic;color:var(--accent)}
+.ex-c img{height:48px;width:auto;max-width:130px;object-fit:contain;background:none;padding:0;border-radius:0}
+.ex-d{color:#3b3830;font-size:.95rem;margin-bottom:1rem;max-width:640px}
 
-    /* === EASTER EGG CONFETTI CANVAS === */
-    #confetti-canvas { position: fixed; inset: 0; z-index: 2000; pointer-events: none; }
-    .nav-logo { cursor: pointer; user-select: none; }
+/* CERT TICKETS */
+.tk{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
+.ticket{position:relative;display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1.6rem 1.6rem 1.6rem 2rem;background:var(--paper2);border:2px solid var(--ink);cursor:pointer;transition:transform .2s,box-shadow .2s}
+.ticket::before,.ticket::after{content:'';position:absolute;left:-12px;width:22px;height:22px;border-radius:50%;background:var(--paper);border:2px solid var(--ink)}
+.ticket::before{top:-12px;clip-path:inset(50% 0 0 50%)}.ticket::after{bottom:-12px;clip-path:inset(0 0 50% 50%)}
+.ticket:hover{transform:translate(-3px,-3px);box-shadow:6px 6px 0 var(--accent)}
+.ticket .ct{font-size:1.2rem;font-weight:700;letter-spacing:-.02em;line-height:1.15}
+.ticket .ci{font-family:var(--mono);font-size:.76rem;color:var(--accent);margin-top:.3rem}
+.ticket .cd{font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+.ticket svg{flex-shrink:0}
 
-    /* === STAGGER REVEAL === */
-    .stagger-item { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s ease; }
-    .stagger-item.in-view { opacity: 1; transform: translateY(0); }
+/* CONTACT */
+#contact{background:var(--ink);color:var(--paper);border-bottom:0;padding-bottom:3rem}
+#contact .sec-h{border-color:#333}
+.mail{display:block;font-size:clamp(1.5rem,4.3vw,3.8rem);font-weight:800;letter-spacing:-.04em;line-height:1.05;text-decoration:none;word-break:break-all;margin:1rem 0 2rem;border-bottom:3px solid var(--accent);width:fit-content;max-width:100%;transition:color .2s}
+.mail:hover{color:var(--accent)}
+.c-desc{font-family:var(--serif);font-size:1.5rem;max-width:560px;margin-bottom:2rem;color:#d8d4c7}
+#contact .btn{border-color:var(--paper);color:var(--paper)}
+#contact .btn:hover{background:var(--accent);border-color:var(--accent);box-shadow:4px 4px 0 var(--paper)}
+.foot{margin-top:4rem;padding-top:1.2rem;border-top:1px solid #333;font-family:var(--mono);font-size:.74rem;color:#8d897c}
 
-    /* === NAVBAR REVISI === */
-    .nav-right { display: flex; align-items: center; }
-    .nav-links a { position: relative; padding: 0.25rem 0; }
-    .nav-links a::after { content: ''; position: absolute; left: 0; bottom: -2px; width: 0; height: 1px; background: var(--accent); transition: width 0.2s; }
-    .nav-links a:hover { color: var(--accent); }
-    .nav-links a:hover::after { width: 100%; }
+.rv{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+.rv.in{opacity:1;transform:none}
 
-    @media (max-width: 768px) {
-      nav { flex-wrap: wrap; row-gap: 0.6rem; padding: 0.8rem 1.25rem; }
-      .nav-right { display: contents; }
-      .lang-toggle { margin-left: 0; order: 2; }
-      .nav-links { display: flex; order: 3; width: 100%; gap: 1.25rem; overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
-      .nav-links::-webkit-scrollbar { display: none; }
-      #hero { padding-top: 9rem; }
-    }
+/* MODALS */
+.mo{display:none;position:fixed;inset:0;z-index:999;background:rgba(18,18,18,.78);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:1.2rem}
+.mo.open{display:flex}
+.mb{background:var(--paper);border:2px solid var(--ink);box-shadow:10px 10px 0 var(--accent);width:100%;max-width:700px;max-height:90vh;overflow-y:auto;animation:mi .25s ease both}
+@keyframes mi{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.mh{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;padding:1.4rem 1.5rem 1rem;border-bottom:2px solid var(--ink)}
+.mtag{font-family:var(--mono);font-size:.7rem;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.3rem}
+.mtitle{font-size:1.4rem;font-weight:800;letter-spacing:-.03em;line-height:1.1}
+.mx{background:var(--ink);color:var(--paper);border:0;width:34px;height:34px;cursor:pointer;flex-shrink:0;font-size:1rem}
+.mx:hover{background:var(--accent)}
+.mbody{padding:1.5rem;display:flex;flex-direction:column;gap:1.5rem}
+.msl{font-family:var(--mono);font-size:.7rem;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.7rem}
+.md{font-size:.92rem;color:#3b3830;line-height:1.75}
+.md strong{color:var(--ink)}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.75rem}
+.gi{border:2px solid var(--ink);background:var(--paper2);cursor:pointer;transition:transform .15s}
+.gi:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--accent)}
+.gi img{width:100%;height:135px;object-fit:cover;display:block}
+.ml{padding:.35rem .6rem;font-family:var(--mono);font-size:.68rem;color:var(--muted);border-top:1px solid var(--line)}
+.gal-p .gi img{height:200px;object-fit:contain;background:#ddd8c9}
+.yt{display:block;text-decoration:none;color:var(--paper);background:var(--ink);padding:2rem 1rem;text-align:center}
+.yt b{display:block;font-size:2.2rem;margin-bottom:.4rem;font-weight:400}
+.yt span{font-family:var(--mono);font-size:.76rem;color:var(--accent)}
+.sb{font-family:var(--mono);font-size:.72rem;border:1.5px solid var(--ink);padding:.25rem .7rem;border-radius:999px}
+.sbs{display:flex;flex-wrap:wrap;gap:.4rem}
+.dbtn{display:inline-flex;align-items:center;gap:.45rem;padding:.55rem 1.1rem;background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:.76rem;text-decoration:none;border:0;cursor:pointer}
+.dbtn:hover{background:var(--accent)}
+.lbox{display:none;position:fixed;inset:0;z-index:1100;background:rgba(0,0,0,.95);align-items:center;justify-content:center}
+.lbox.open{display:flex}
+.lbox img{max-width:90vw;max-height:88vh;pointer-events:none}
+.lbx{position:absolute;top:1.2rem;right:1.2rem;background:var(--accent);border:0;color:#fff;width:40px;height:40px;cursor:pointer;font-size:1.2rem}
 
-    /* === CERTIFICATIONS: GRID CARD === */
-    .cert-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 2rem; }
-    .cert-card { background: rgba(22,22,22,0.85); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem 1.5rem; }
-    .cert-card:first-child { border-top: 1px solid var(--border); }
-    .cert-card:hover { background: #161616; border-color: rgba(200,241,53,0.4); }
-    .cert-card.stagger-item { transition: opacity 0.55s ease, transform 0.55s ease, border-color 0.2s, background 0.2s; }
-
-    /* === CSS YANG HILANG === */
-    .skill-badge { font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent); background: rgba(200,241,53,0.06); border: 1px solid rgba(200,241,53,0.2); padding: 0.25rem 0.7rem; border-radius: 999px; }
-    .exp-company-row { display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem; }
-    .exp-company-row .exp-company { margin-bottom: 0; }
-  </style>
+/* ===== MOBILE ===== */
+@media(max-width:980px){
+  .app{grid-template-columns:1fr}
+  aside{position:relative;height:auto;display:block}
+  .photo{height:62vh;min-height:360px}
+  .side-body{margin-top:-5rem}
+  .snav{flex-direction:row;overflow-x:auto;border-top:1px solid #2c2c2c;scrollbar-width:none}
+  .snav a{border-bottom:0;padding:.7rem 1rem .7rem 0;white-space:nowrap;gap:.4rem}
+  .snav a:hover,.snav a.act{padding-left:0}
+  .h-row{grid-template-columns:1fr}.term{width:100%;max-width:330px}
+  .ab{grid-template-columns:1fr;gap:2rem}
+  .prow{grid-template-columns:44px 1fr;gap:.5rem 1rem}
+  .prow .pd{grid-column:2}.prow .pgo{grid-column:2;width:fit-content}
+  .ex{grid-template-columns:1fr;gap:1rem}
+  .sec{padding:4rem 1.3rem 3.5rem}.marq{margin:0 -1.3rem}
+}
+</style>
 </head>
 <body>
+<div class="app">
 
-<canvas id="network-canvas"></canvas>
-<div id="cursor-glow"></div>
-<canvas id="confetti-canvas"></canvas>
-
-<nav>
-  <span class="nav-logo" id="nav-logo"> &gt; My Portfolio &lt; </span>
-  <div class="nav-right">
-    <ul class="nav-links">
-      <li><a href="#hero">home</a></li>
-      <li><a href="#about">about</a></li>
-      <li><a href="#projects">projects</a></li>
-      <li><a href="#experience">experience</a></li>
-      <li><a href="#certifications" data-key="nav.cert">certs</a></li>
-      <li><a href="#contact">contact</a></li>
-    </ul>
-    <button class="lang-toggle" onclick="toggleLang()" id="langBtn">🇬🇧 EN</button>
+<!-- ===== SIDEBAR ===== -->
+<aside>
+  <div class="photo">
+    <div class="ph on" style="background-image:url('foto_full.jpeg')"></div>
+    <div class="ph" style="background-image:url('ftoadin.jpg')"></div>
+    <div class="stamp"><i></i>available for work</div>
   </div>
-</nav>
+  <div class="side-body">
+    <div class="side-name">Muhammad<br/><em>Dhiyauddin</em></div>
+    <div class="side-role">Network Engineer · Jakarta, ID</div>
+    <nav class="snav">
+      <a href="#hero" class="act">Home <span>00</span></a>
+      <a href="#about">About <span>01</span></a>
+      <a href="#projects">Projects <span>02</span></a>
+      <a href="#experience">Experience <span>03</span></a>
+      <a href="#certifications">Certs <span>04</span></a>
+      <a href="#contact">Contact <span>05</span></a>
+    </nav>
+    <div class="side-foot">
+      <button class="lang" id="langBtn" onclick="toggleLang()">🇬🇧 EN</button>
+      <div class="soc"><a href="https://linkedin.com/in/mdhiyauddin" target="_blank">LinkedIn</a><a href="https://github.com/mdhiyauddin" target="_blank">GitHub</a></div>
+    </div>
+  </div>
+</aside>
 
+<main>
 <!-- HERO -->
-<section id="hero">
-  <div class="hero-inner">
-    <div class="hero-left">
-      <p class="hero-tag fade-up" data-key="hero.tag">available for work</p>
-      <h1 class="fade-up delay-1" data-key="hero.title">Halo, saya<br /><span>Muhammad<br/>Dhiyauddin.</span></h1>
-      <p class="hero-sub fade-up delay-2" data-key="hero.sub">Fresh Graduate TJKT yang memiliki pengalaman pada Mikrotik, Linux Server, Proxmox, Arduino, ESP32, UI/UX Figma, dan implementasi jaringan komputer.</p>
-
-      <div class="term-widget fade-up delay-2" id="hero-terminal">
-        <div class="term-titlebar">
-          <div class="term-dot red"></div>
-          <div class="term-dot yellow"></div>
-          <div class="term-dot green"></div>
-          <span>dhiya@portfolio: ~</span>
-        </div>
-        <div class="term-body" id="term-body"></div>
-      </div>
-
-      <div class="hero-cta fade-up delay-3">
-        <a href="#projects" class="btn btn-primary" data-key="hero.btn1">Lihat proyek saya &rarr;</a>
-        <a href="#contact" class="btn btn-outline" data-key="hero.btn2">Hubungi saya</a>
-      </div>
-      <div class="hero-scroll fade-up delay-4">
-        <div class="scroll-line"></div>
-        <span data-key="hero.scroll">scroll to explore</span>
-      </div>
-      <div class="hero-stats">
-        <div class="stat-box"><h3>7+</h3><span data-key="hero.stats1">Projects</span></div>
-        <div class="stat-box"><h3>3+</h3><span data-key="hero.stats2">Certificates</span></div>
-        <div class="stat-box"><h3>3</h3><span data-key="hero.stats3">Internships</span></div>
-      </div>
+<section class="sec" id="hero">
+  <div>
+    <div class="h-tag"><b></b><span data-key="hero.tag">available for work</span></div>
+    <h1 data-key="hero.title">Halo, saya<br /><span>Muhammad<br/>Dhiyauddin.</span></h1>
+    <p class="h-sub" data-key="hero.sub">Fresh Graduate TJKT yang memiliki pengalaman pada Mikrotik, Linux Server, Proxmox, Arduino, ESP32, UI/UX Figma, dan implementasi jaringan komputer.</p>
+  </div>
+  <div class="h-row">
+    <div class="term">
+      <div class="tb"><i></i><i></i><i></i><span>dhiya@portfolio: ~</span></div>
+      <div class="tt" id="term-body"></div>
     </div>
-    <div class="hero-photo-wrap fade-up delay-5">
-      <div class="hero-photo-frame" onclick="togglePhoto()" style="cursor:pointer;">
-        <div class="inner-corners"></div>
-        <img src="foto_full.jpeg" alt="Muhammad Dhiyauddin" class="hero-photo" id="hero-img" />
+    <div class="h-right">
+      <div class="btns">
+        <a href="#projects" class="btn btn-p" data-key="hero.btn1">Lihat proyek saya →</a>
+        <a href="#contact" class="btn" data-key="hero.btn2">Hubungi saya</a>
       </div>
-      <div class="status-badge"><div class="status-dot"></div>available for work</div>
+      <div class="stats">
+        <div class="stat"><h3>7+</h3><span data-key="hero.stats1">Projects</span></div>
+        <div class="stat"><h3>3+</h3><span data-key="hero.stats2">Certificates</span></div>
+        <div class="stat"><h3>3</h3><span data-key="hero.stats3">Internships</span></div>
+      </div>
     </div>
   </div>
+  <div class="marq"><div class="marq-in">
+    <span>Mikrotik ✦ Linux Server ✦ Proxmox ✦ ESP32 ✦ Arduino ✦ Figma ✦ Laravel ✦ NOC ✦ </span>
+    <span>Mikrotik ✦ Linux Server ✦ Proxmox ✦ ESP32 ✦ Arduino ✦ Figma ✦ Laravel ✦ NOC ✦ </span>
+  </div></div>
 </section>
-<div class="divider"></div>
 
 <!-- ABOUT -->
-<section id="about">
-  <p class="section-label" data-key="about.label">01 &mdash; about me</p>
-  <div class="about-grid">
-    <div class="about-text">
-      <h2 data-key="about.title">Sedikit tentang saya</h2>
+<section class="sec" id="about">
+  <div class="sec-h"><span class="lb" data-key="about.label">01 — about me</span><h2 class="big" data-key="about.title">Sedikit tentang saya</h2></div>
+  <div class="ab">
+    <div class="ab-t rv">
       <p data-key="about.p1">Saya adalah <strong>Network Engineer</strong> yang berpengalaman dalam merancang dan mengelola infrastruktur jaringan.</p>
       <p data-key="about.p2">Keahlian saya mencakup <strong>konfigurasi Mikrotik &amp; server Linux</strong>, virtualisasi dengan Proxmox, dan pemrograman mikrokontroler.</p>
       <p data-key="about.p3">Di luar pekerjaan, saya aktif mengikuti perkembangan teknologi jaringan dan sertifikasi industri.</p>
-      <a href="CV_Muhammad_Dhiyauddin.pdf" class="btn btn-outline" style="margin-top:1rem; display:inline-flex;" download data-key="about.cv">&darr; Lihat CV</a>
-      <!-- EXCEL SECTION — chip grid -->
-      <div class="excel-section">
-        <div class="excel-section-header">
-          <svg class="ex-icon" viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="8" fill="#1a1a1a"/><rect x="8" y="6" width="32" height="36" rx="3" fill="none" stroke="#c8f135" stroke-width="2"/><line x1="8" y1="18" x2="40" y2="18" stroke="#c8f135" stroke-width="1.2" opacity="0.4"/><line x1="8" y1="28" x2="40" y2="28" stroke="#c8f135" stroke-width="1.2" opacity="0.4"/><line x1="24" y1="6" x2="24" y2="42" stroke="#c8f135" stroke-width="1.2" opacity="0.4"/><path d="M13 23 L19 30 M19 23 L13 30" stroke="#c8f135" stroke-width="2.2" stroke-linecap="round"/><rect x="27" y="31" width="3" height="7" fill="#c8f135" opacity="0.65" rx="1"/><rect x="32" y="27" width="3" height="11" fill="#c8f135" opacity="0.85" rx="1"/></svg>
-          <span class="excel-section-title" data-key="about.excel">Excel &middot; Data Analysis</span>
-        </div>
-        <div class="excel-chip-grid">
-          <div class="excel-chip">SUM</div>
-          <div class="excel-chip">AVERAGE</div>
-          <div class="excel-chip">COUNT</div>
-          <div class="excel-chip">MAX / MIN</div>
-          <div class="excel-chip">COUNTIF</div>
-          <div class="excel-chip">SUMIF</div>
-          <div class="excel-chip">IF</div>
-          <div class="excel-chip">VLOOKUP</div>
-          <div class="excel-chip">HLOOKUP</div>
-          <div class="excel-chip">XLOOKUP</div>
-          <div class="excel-chip">Pivot Table</div>
-          <div class="excel-chip">Filter</div>
-        </div>
+      <a href="CV_Muhammad_Dhiyauddin.pdf" class="btn btn-p" download data-key="about.cv">↓ Lihat CV</a>
+      <div class="mini" data-key="about.excel">Excel · Data Analysis</div>
+      <div class="pills">
+        <span class="pill o">SUM</span><span class="pill o">AVERAGE</span><span class="pill o">COUNT</span><span class="pill o">MAX / MIN</span><span class="pill o">COUNTIF</span><span class="pill o">SUMIF</span><span class="pill o">IF</span><span class="pill o">VLOOKUP</span><span class="pill o">HLOOKUP</span><span class="pill o">XLOOKUP</span><span class="pill o">Pivot Table</span><span class="pill o">Filter</span>
       </div>
     </div>
-    <div>
-      <p class="section-label" style="margin-bottom:1rem;" data-key="about.techstack">tech stack</p>
-      <div class="skills-grid">
-        <div class="skill-tag">
-          <span class="skill-icon-svg"><svg width="28" height="28" viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="8" fill="#1a1a1a"/><rect x="6" y="6" width="16" height="16" rx="2" fill="#c8f135" opacity="0.9"/><rect x="26" y="6" width="16" height="16" rx="2" fill="#c8f135" opacity="0.6"/><rect x="6" y="26" width="16" height="16" rx="2" fill="#c8f135" opacity="0.6"/><rect x="26" y="26" width="16" height="16" rx="2" fill="#c8f135" opacity="0.35"/></svg></span>
-          WinBox
-        </div>
-        <div class="skill-tag">
-          <img class="skill-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/arduino/arduino-original.svg" alt="Arduino" />
-          Arduino Ide
-        </div>
-        <div class="skill-tag">
-          <span class="skill-icon-svg"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ff6b35" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9.5 12l1.5 1.5 3.5-3.5" stroke="#ff6b35" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          Firewall
-        </div>
-        <div class="skill-tag">
-          <span class="skill-icon-svg"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="1.8"><path d="M5 12.55a11 11 0 0 1 14.08 0" stroke-linecap="round"/><path d="M1.42 9a16 16 0 0 1 21.16 0" stroke-linecap="round"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0" stroke-linecap="round"/><circle cx="12" cy="20" r="1" fill="#38bdf8"/></svg></span>
-          Access Point
-        </div>
-        <div class="skill-tag">
-          <img class="skill-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/canva/canva-original.svg" alt="Canva" />
-          Canva
-        </div>
-        <div class="skill-tag">
-          <img class="skill-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" alt="Linux" />
-          Linux
-        </div>
-        <div class="skill-tag">
-          <span class="skill-icon-svg"><svg width="28" height="28" viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="8" fill="#1a1a1a"/><path d="M10 8 L38 8 L38 16 L18 16 L18 20 L34 20 L34 28 L18 28 L18 32 L38 32 L38 40 L10 40 Z" fill="#e57000" opacity="0.9"/></svg></span>
-          Proxmox
-        </div>
-        <div class="skill-tag">
-          <span class="skill-icon-svg"><svg width="28" height="28" viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="8" fill="#1a1a1a"/><rect x="8" y="18" width="32" height="12" rx="3" fill="none" stroke="#c8f135" stroke-width="2"/><circle cx="14" cy="24" r="2" fill="#c8f135"/><circle cx="22" cy="24" r="2" fill="#c8f135" opacity="0.6"/><circle cx="30" cy="24" r="2" fill="#c8f135" opacity="0.4"/><line x1="24" y1="18" x2="24" y2="10" stroke="#c8f135" stroke-width="2"/><line x1="18" y1="30" x2="18" y2="38" stroke="#c8f135" stroke-width="2"/><line x1="30" y1="30" x2="30" y2="38" stroke="#c8f135" stroke-width="2"/><circle cx="24" cy="8" r="2.5" fill="#c8f135"/></svg></span>
-          Mikrotik
-        </div>
-        <div class="skill-tag">
-          <img class="skill-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" alt="Figma" />
-          Figma
-        </div>
-        <div class="skill-tag">
-          <span class="skill-icon-svg"><svg width="28" height="28" viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="8" fill="#1a1a1a"/><rect x="6" y="14" width="36" height="20" rx="3" fill="none" stroke="#c8f135" stroke-width="2"/><rect x="10" y="18" width="28" height="12" rx="2" fill="#c8f135" opacity="0.08"/><line x1="12" y1="10" x2="12" y2="14" stroke="#c8f135" stroke-width="2" stroke-linecap="round"/><line x1="18" y1="10" x2="18" y2="14" stroke="#c8f135" stroke-width="2" stroke-linecap="round"/><line x1="24" y1="10" x2="24" y2="14" stroke="#c8f135" stroke-width="2" stroke-linecap="round"/><line x1="30" y1="10" x2="30" y2="14" stroke="#c8f135" stroke-width="2" stroke-linecap="round"/><line x1="36" y1="10" x2="36" y2="14" stroke="#c8f135" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="34" x2="12" y2="38" stroke="#c8f135" stroke-width="2" stroke-linecap="round"/><line x1="18" y1="34" x2="18" y2="38" stroke="#c8f135" stroke-width="2" stroke-linecap="round"/><line x1="24" y1="34" x2="24" y2="38" stroke="#c8f135" stroke-width="2" stroke-linecap="round"/><line x1="30" y1="34" x2="30" y2="38" stroke="#c8f135" stroke-width="2" stroke-linecap="round"/><line x1="36" y1="34" x2="36" y2="38" stroke="#c8f135" stroke-width="2" stroke-linecap="round"/><circle cx="24" cy="24" r="4" fill="none" stroke="#c8f135" stroke-width="1.8"/><circle cx="24" cy="24" r="1.5" fill="#c8f135"/></svg></span>
-          ESP32
-        </div>
-        <div class="skill-tag">
-          <span class="skill-icon-svg"><svg width="28" height="28" viewBox="0 0 24 24" fill="#c8f135" opacity="0.85"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.579.688.481C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg></span>
-          GitHub
-        </div>
-        <div class="skill-tag">
-          <span class="skill-icon-svg"><svg width="28" height="28" viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="8" fill="#1a1a1a"/><rect x="8" y="6" width="32" height="36" rx="3" fill="none" stroke="#c8f135" stroke-width="2.5"/><line x1="8" y1="18" x2="40" y2="18" stroke="#c8f135" stroke-width="1.5" opacity="0.5"/><line x1="8" y1="28" x2="40" y2="28" stroke="#c8f135" stroke-width="1.5" opacity="0.5"/><line x1="24" y1="6" x2="24" y2="42" stroke="#c8f135" stroke-width="1.5" opacity="0.5"/><path d="M13 23 L19 30 M19 23 L13 30" stroke="#c8f135" stroke-width="2.5" stroke-linecap="round"/><rect x="27" y="32" width="3" height="6" fill="#c8f135" opacity="0.7" rx="1"/><rect x="32" y="28" width="3" height="10" fill="#c8f135" opacity="0.9" rx="1"/></svg></span>
-          Excel
-        </div>
+    <div class="rv">
+      <div class="mini" style="margin-top:0" data-key="about.techstack">tech stack</div>
+      <div class="pills">
+        <span class="pill">WinBox</span><span class="pill">Arduino IDE</span><span class="pill">Firewall</span><span class="pill">Access Point</span><span class="pill">Canva</span><span class="pill">Linux</span><span class="pill">Proxmox</span><span class="pill">Mikrotik</span><span class="pill">Figma</span><span class="pill">ESP32</span><span class="pill">GitHub</span><span class="pill">Excel</span>
       </div>
-      <!-- PROGSKILLS — timeline style -->
-      <div class="progskills-section">
-        <p class="progskills-header" data-key="about.progskills">programming skills</p>
-        <div class="progskill-list">
-          <div class="progskill-item">
-            <div class="ps-dot-wrap"><div class="ps-dot"></div><div class="ps-line"></div></div>
-            <div class="ps-body">
-              <div class="ps-name">Laravel</div>
-              <div class="ps-desc">Framework PHP untuk web development</div>
-              <span class="ps-badge">&#10003; AI-assisted</span>
-            </div>
-          </div>
-          <div class="progskill-item">
-            <div class="ps-dot-wrap"><div class="ps-dot"></div><div class="ps-line"></div></div>
-            <div class="ps-body">
-              <div class="ps-name">Arduino IDE</div>
-              <div class="ps-desc">Pemrograman mikrokontroler (C++)</div>
-              <span class="ps-badge">&#10003; AI-assisted</span>
-            </div>
-          </div>
-          <div class="progskill-item">
-            <div class="ps-dot-wrap"><div class="ps-dot"></div><div class="ps-line"></div></div>
-            <div class="ps-body">
-              <div class="ps-name">ESP32</div>
-              <div class="ps-desc">IoT &amp; embedded system</div>
-              <span class="ps-badge">&#10003; AI-assisted</span>
-            </div>
-          </div>
-          <div class="progskill-item">
-            <div class="ps-dot-wrap"><div class="ps-dot"></div><div class="ps-line"></div></div>
-            <div class="ps-body">
-              <div class="ps-name">PHP 8.2</div>
-              <div class="ps-desc">Backend web development</div>
-              <span class="ps-badge">&#10003; AI-assisted</span>
-            </div>
-          </div>
-        </div>
-        <p style="margin-top:0.6rem; font-size:0.65rem; color:rgba(136,136,136,0.6);" data-key="about.progskills.note">&#10003; AI-assisted = Dikembangkan dengan bantuan ChatGPT / GitHub Copilot</p>
-      </div>
+      <div class="mini" data-key="about.progskills">programming skills</div>
+      <table class="tbl">
+        <tr><td>Laravel</td><td><span>Framework PHP untuk web development</span></td><td class="ai">✓ AI-assisted</td></tr>
+        <tr><td>Arduino IDE</td><td><span>Pemrograman mikrokontroler (C++)</span></td><td class="ai">✓ AI-assisted</td></tr>
+        <tr><td>ESP32</td><td><span>IoT &amp; embedded system</span></td><td class="ai">✓ AI-assisted</td></tr>
+        <tr><td>PHP 8.2</td><td><span>Backend web development</span></td><td class="ai">✓ AI-assisted</td></tr>
+      </table>
+      <p class="note" data-key="about.progskills.note">✓ AI-assisted = Dikembangkan dengan bantuan ChatGPT / GitHub Copilot</p>
     </div>
   </div>
 </section>
-<div class="divider"></div>
 
 <!-- PROJECTS -->
-<section id="projects">
-  <p class="section-label" data-key="projects.label">02 &mdash; projects</p>
-  <h2 data-key="projects.title">Proyek pilihan</h2>
-  <div class="projects-grid">
-    <div class="project-card">
-      <span class="project-num">01</span>
-      <div class="project-title">Smart Car Mini</div>
-      <p class="project-desc" data-key="projects.desc1">Mobil mini cerdas dengan sensor ultrasonik HC-SR04 untuk menghindari rintangan secara otomatis, dilengkapi fitur penyedot debu berbasis dinamo kipas.</p>
-      <button class="detail-btn" onclick="openModal('proj-01')" data-key="projects.btn">Lihat Bukti &amp; Detail</button>
-    </div>
-    <div class="project-card">
-      <span class="project-num">02</span>
-      <div class="project-title">Kos Adin - Sistem Manajemen Kos-Kosan</div>
-      <p class="project-desc" data-key="projects.desc7">Sistem manajemen kos-kosan berbasis web dengan 3 role (Admin, Penghuni, Publik). Fitur: tagihan otomatis, verifikasi pembayaran, QR code, rating &amp; review, email notification, dan export PDF.</p>
-      <button class="detail-btn" onclick="openModal('proj-07')" data-key="projects.btn">Lihat Bukti &amp; Detail</button>
-    </div>
-    <div class="project-card">
-      <span class="project-num">03</span>
-      <div class="project-title">UI/UX Aplikasi TJKT – SI Wistek</div>
-      <p class="project-desc" data-key="projects.desc2">Desain antarmuka aplikasi Sistem Informasi Jurusan berbasis mobile untuk SMK Wisata Indonesia. Dibuat menggunakan Figma.</p>
-      <button class="detail-btn" onclick="openModal('proj-02')" data-key="projects.btn">Lihat Bukti &amp; Detail</button>
-    </div>
-    <div class="project-card">
-      <span class="project-num">04</span>
-      <div class="project-title">Caffe Adin - QR Code Restoran</div>
-      <p class="project-desc" data-key="projects.desc5">Sistem pemesanan restoran digital via QR Code. Pelanggan scan QR di meja, pesan mandiri via HP. Dashboard admin dengan grafik penjualan, export Excel hasil penjualan, pemantauan pesanan secara real-time</p>
-      <button class="detail-btn" onclick="openModal('proj-05')" data-key="projects.btn">Lihat Bukti &amp; Detail</button>
-    </div>
-    <div class="project-card">
-      <span class="project-num">05</span>
-      <div class="project-title">Server dan Jaringan Virtual</div>
-      <p class="project-desc" data-key="projects.desc3">Membangun server dan jaringan virtual menggunakan Proxmox VE, Mikrotik, Ubuntu, dan hosting web menggunakan aaPanel.</p>
-      <button class="detail-btn" onclick="openModal('proj-03')" data-key="projects.btn">Lihat Bukti &amp; Detail</button>
-    </div>
-    <div class="project-card">
-      <span class="project-num">06</span>
-      <div class="project-title">Smart Door Lock Berbasis ESP32 &amp; RFID</div>
-      <p class="project-desc" data-key="projects.desc4">Sistem keamanan pintu pintar berbasis ESP32 dengan modul RFID RC522 dan solenoid door lock sebagai mekanisme pengunci.</p>
-      <button class="detail-btn" onclick="openModal('proj-04')" data-key="projects.btn">Lihat Bukti &amp; Detail</button>
-    </div>
-    <div class="project-card">
-      <span class="project-num">07</span>
-      <div class="project-title">Kado Digital ESP32 - Happy Birthday Bunda</div>
-      <p class="project-desc" data-key="projects.desc6">Hadiah interaktif berbasis ESP32 dengan layar TFT 2.8", buzzer, dan tombol. Menampilkan slideshow foto &amp; pesan, memutar lagu ulang tahun otomatis.</p>
-      <button class="detail-btn" onclick="openModal('proj-06')" data-key="projects.btn">Lihat Bukti &amp; Detail</button>
-    </div>
+<section class="sec" id="projects">
+  <div class="sec-h"><span class="lb" data-key="projects.label">02 — projects</span><h2 class="big" data-key="projects.title">Proyek pilihan</h2></div>
+  <div class="rows">
+    <div class="prow rv" onclick="openModal('proj-01')"><span class="pn">01</span><div class="pt">Smart Car Mini</div><p class="pd" data-key="projects.desc1">Mobil mini cerdas dengan sensor ultrasonik HC-SR04 untuk menghindari rintangan secara otomatis, dilengkapi fitur penyedot debu berbasis dinamo kipas.</p><button class="pgo" data-key="projects.btn">Lihat Bukti &amp; Detail</button></div>
+    <div class="prow rv" onclick="openModal('proj-07')"><span class="pn">02</span><div class="pt">Kos Adin — Sistem Manajemen Kos-Kosan</div><p class="pd" data-key="projects.desc7">Sistem manajemen kos-kosan berbasis web dengan 3 role (Admin, Penghuni, Publik). Fitur: tagihan otomatis, verifikasi pembayaran, QR code, rating &amp; review, email notification, dan export PDF.</p><button class="pgo" data-key="projects.btn">Lihat Bukti &amp; Detail</button></div>
+    <div class="prow rv" onclick="openModal('proj-02')"><span class="pn">03</span><div class="pt">UI/UX Aplikasi TJKT – SI Wistek</div><p class="pd" data-key="projects.desc2">Desain antarmuka aplikasi Sistem Informasi Jurusan berbasis mobile untuk SMK Wisata Indonesia. Dibuat menggunakan Figma.</p><button class="pgo" data-key="projects.btn">Lihat Bukti &amp; Detail</button></div>
+    <div class="prow rv" onclick="openModal('proj-05')"><span class="pn">04</span><div class="pt">Caffe Adin — QR Code Restoran</div><p class="pd" data-key="projects.desc5">Sistem pemesanan restoran digital via QR Code. Pelanggan scan QR di meja, pesan mandiri via HP. Dashboard admin dengan grafik penjualan, export Excel hasil penjualan, pemantauan pesanan secara real-time</p><button class="pgo" data-key="projects.btn">Lihat Bukti &amp; Detail</button></div>
+    <div class="prow rv" onclick="openModal('proj-03')"><span class="pn">05</span><div class="pt">Server dan Jaringan Virtual</div><p class="pd" data-key="projects.desc3">Membangun server dan jaringan virtual menggunakan Proxmox VE, Mikrotik, Ubuntu, dan hosting web menggunakan aaPanel.</p><button class="pgo" data-key="projects.btn">Lihat Bukti &amp; Detail</button></div>
+    <div class="prow rv" onclick="openModal('proj-04')"><span class="pn">06</span><div class="pt">Smart Door Lock Berbasis ESP32 &amp; RFID</div><p class="pd" data-key="projects.desc4">Sistem keamanan pintu pintar berbasis ESP32 dengan modul RFID RC522 dan solenoid door lock sebagai mekanisme pengunci.</p><button class="pgo" data-key="projects.btn">Lihat Bukti &amp; Detail</button></div>
+    <div class="prow rv" onclick="openModal('proj-06')"><span class="pn">07</span><div class="pt">Kado Digital ESP32 — Happy Birthday Bunda</div><p class="pd" data-key="projects.desc6">Hadiah interaktif berbasis ESP32 dengan layar TFT 2.8", buzzer, dan tombol. Menampilkan slideshow foto &amp; pesan, memutar lagu ulang tahun otomatis.</p><button class="pgo" data-key="projects.btn">Lihat Bukti &amp; Detail</button></div>
   </div>
-
 </section>
-<div class="divider"></div>
 
 <!-- EXPERIENCE -->
-<section id="experience">
-  <p class="section-label" data-key="experience.label">03 &mdash; experience</p>
-  <h2 data-key="experience.title">Pengalaman kerja</h2>
-  <div class="exp-list">
-    <!-- INTERN ADMIN NOC -->
-    <div class="exp-item">
-      <div class="exp-year">2026 (Ongoing)</div>
-      <div>
-        <div class="exp-role" data-key="exp4.role">Intern Admin NOC (Network Operations Center)</div>
-        <div class="exp-company-row" style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;">
-          <img src="remala-logo.png" alt="PT Remala Abadi Tbk" class="exp-company-logo remala-logo" onerror="this.style.display='none';" style="height: 45px; width: auto; object-fit: contain; mix-blend-mode: screen; filter: brightness(1.2);" />
-          <div class="exp-company" data-key="exp4.company">PT Remala Abadi Tbk</div>
-        </div>
-        <p class="exp-desc" data-key="exp4.desc">Mendukung operasional NOC dengan melakukan pengecekan status pelanggan via OLT, memeriksa indikasi gangguan jaringan (LOS), validasi data pelanggan berdasarkan Client ID, serta monitoring melalui Zimbra dan Tachyon.net. Mencatat, melaporkan gangguan, dan mengelola data operasional menggunakan spreadsheet.</p>
-        <button class="detail-btn" onclick="openModal('exp-04')" data-key="exp4.btn">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
-          Lihat Detail
-        </button>
-      </div>
+<section class="sec" id="experience">
+  <div class="sec-h"><span class="lb" data-key="experience.label">03 — experience</span><h2 class="big" data-key="experience.title">Pengalaman kerja</h2></div>
+  <div class="ex rv">
+    <div class="ex-y">2026<small>Ongoing</small></div>
+    <div>
+      <div class="ex-r" data-key="exp4.role">Intern Admin NOC (Network Operations Center)</div>
+      <div class="ex-c"><img src="remala-logo.png" alt="PT Remala Abadi Tbk" onerror="this.style.display='none'"/><span data-key="exp4.company">PT Remala Abadi Tbk</span></div>
+      <p class="ex-d" data-key="exp4.desc">Mendukung operasional NOC dengan melakukan pengecekan status pelanggan via OLT, memeriksa indikasi gangguan jaringan (LOS), validasi data pelanggan berdasarkan Client ID, serta monitoring melalui Zimbra dan Tachyon.net. Mencatat, melaporkan gangguan, dan mengelola data operasional menggunakan spreadsheet.</p>
+      <button class="dbtn" onclick="openModal('exp-04')" data-key="exp4.btn">Lihat Detail</button>
     </div>
-
-    <!-- PROGRAMMER INTERN -->
-    <div class="exp-item">
-      <div class="exp-year">2024 &mdash; 2025</div>
-      <div>
-        <div class="exp-role" data-key="exp1.role">Programmer Intern (Data Analyst)</div>
-        <div class="exp-company-row">
-          <img src="solusi-intek-logo.png" alt="PT Solusi Intek Indonesia" class="exp-company-logo intek-logo" onerror="this.style.display='none';" />
-          <div class="exp-company" data-key="exp1.company">PT Solusi Intek Indonesia</div>
-        </div>
-        <p class="exp-desc" data-key="exp1.desc">Mengumpulkan tautan (link) sumber data dari dark web, merapikannya ke dalam spreadsheet (Excel), lalu melakukan proses import data ke dalam database menggunakan perintah terminal (CLI). Setelah data terdaftar, saya menjalankan script Python untuk melakukan crawling dan mengambil data keseluruhan dari link tersebut.</p>
-        <button class="detail-btn" onclick="openModal('exp-01')" data-key="exp1.btn">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
-          Lihat Detail
-        </button>
-      </div>
+  </div>
+  <div class="ex rv">
+    <div class="ex-y">2024—25<small>6 bulan</small></div>
+    <div>
+      <div class="ex-r" data-key="exp1.role">Programmer Intern (Data Analyst)</div>
+      <div class="ex-c"><img src="solusi-intek-logo.png" alt="PT Solusi Intek Indonesia" onerror="this.style.display='none'"/><span data-key="exp1.company">PT Solusi Intek Indonesia</span></div>
+      <p class="ex-d" data-key="exp1.desc">Mengumpulkan tautan (link) sumber data dari dark web, merapikannya ke dalam spreadsheet (Excel), lalu melakukan proses import data ke dalam database menggunakan perintah terminal (CLI). Setelah data terdaftar, saya menjalankan script Python untuk melakukan crawling dan mengambil data keseluruhan dari link tersebut.</p>
+      <button class="dbtn" onclick="openModal('exp-01')" data-key="exp1.btn">Lihat Detail</button>
     </div>
-
-    <!-- FREELANCE CCTV -->
-    <div class="exp-item">
-      <div class="exp-year">2025</div>
-      <div>
-        <div class="exp-role" data-key="exp3.role">Freelance Technician</div>
-        <div class="exp-company" data-key="exp3.company">Proyek Instalasi CCTV &mdash; SMK Wisata Indonesia</div>
-        <p class="exp-desc" data-key="exp3.desc">Terlibat dalam proyek instalasi CCTV di lingkungan sekolah. Melakukan penarikan kabel, pemasangan kamera pada titik yang ditentukan, pemasangan konektor, serta pengecekan koneksi fisik hingga perangkat siap digunakan.</p>
-        <button class="detail-btn" onclick="openModal('exp-03')" data-key="exp3.btn">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
-          Lihat Detail &amp; Dokumentasi
-        </button>
-      </div>
+  </div>
+  <div class="ex rv">
+    <div class="ex-y">2025<small>Freelance</small></div>
+    <div>
+      <div class="ex-r" data-key="exp3.role">Freelance Technician</div>
+      <div class="ex-c"><span data-key="exp3.company">Proyek Instalasi CCTV — SMK Wisata Indonesia</span></div>
+      <p class="ex-d" data-key="exp3.desc">Terlibat dalam proyek instalasi CCTV di lingkungan sekolah. Melakukan penarikan kabel, pemasangan kamera pada titik yang ditentukan, pemasangan konektor, serta pengecekan koneksi fisik hingga perangkat siap digunakan.</p>
+      <button class="dbtn" onclick="openModal('exp-03')" data-key="exp3.btn">Lihat Detail &amp; Dokumentasi</button>
     </div>
   </div>
 </section>
-<div class="divider"></div>
 
-<!-- CERTIFICATIONS -->
-<section id="certifications">
-  <p class="section-label" data-key="cert.label">04 &mdash; Certifications</p>
-  <h2 data-key="cert.title">Sertifikasi &amp; Lisensi</h2>
-  <div class="cert-list">
-    <!-- Sertifikat BNSP -->
-    <div class="cert-card" onclick="openModal('cert-01')">
-      <div class="cert-info">
-        <div class="cert-title" data-key="cert.bnsp.title">Junior Network Administrator</div>
-        <div class="cert-issuer" data-key="cert.bnsp.issuer">BNSP / LSP Teknologi Digital</div>
-        <div class="cert-date" data-key="cert.bnsp.date">Diterbitkan Apr 2026 · Berlaku s.d. Apr 2029</div>
-      </div>
-      <div class="cert-arrow">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </div>
+<!-- CERTS -->
+<section class="sec" id="certifications">
+  <div class="sec-h"><span class="lb" data-key="cert.label">04 — Certifications</span><h2 class="big" data-key="cert.title">Sertifikasi &amp; Lisensi</h2></div>
+  <div class="tk">
+    <div class="ticket rv" onclick="openModal('cert-01')">
+      <div><div class="ct" data-key="cert.bnsp.title">Junior Network Administrator</div><div class="ci" data-key="cert.bnsp.issuer">BNSP / LSP Teknologi Digital</div><div class="cd" data-key="cert.bnsp.date">Diterbitkan Apr 2026 · Berlaku s.d. Apr 2029</div></div>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </div>
-
-    <!-- Sertifikat PKL -->
-    <div class="cert-card" onclick="openModal('cert-02')">
-      <div class="cert-info">
-        <div class="cert-title" data-key="cert.pkl.title">Programmer Intern Certificate</div>
-        <div class="cert-issuer" data-key="cert.pkl.issuer">PT Solusi Intek Indonesia</div>
-        <div class="cert-date" data-key="cert.pkl.date">Diterbitkan Jun 2025</div>
-      </div>
-      <div class="cert-arrow">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </div>
+    <div class="ticket rv" onclick="openModal('cert-02')">
+      <div><div class="ct" data-key="cert.pkl.title">Programmer Intern Certificate</div><div class="ci" data-key="cert.pkl.issuer">PT Solusi Intek Indonesia</div><div class="cd" data-key="cert.pkl.date">Diterbitkan Jun 2025</div></div>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </div>
   </div>
 </section>
-<div class="divider"></div>
 
 <!-- CONTACT -->
-<section id="contact">
-  <p class="section-label" data-key="contact.label">05 &mdash; contact</p>
-  <h2 data-key="contact.title">Mari berkolaborasi.</h2>
-  <p data-key="contact.desc">Saya terbuka untuk peluang kerja, freelance, atau sekadar diskusi. Hubungi saya lewat email atau media sosial.</p>
-  <div class="contact-links">
-    <a href="https://mail.google.com/mail/?view=cm&to=dhiyauddintjkt@gmail.com" class="btn btn-primary" target="_blank">dhiyauddintjkt@gmail.com &rarr;</a>
-    <a href="https://linkedin.com/in/mdhiyauddin" class="btn btn-outline" target="_blank">LinkedIn</a>
-    <a href="https://github.com/mdhiyauddin" class="btn btn-outline" target="_blank">GitHub</a>
+<section class="sec" id="contact">
+  <div class="sec-h"><span class="lb" data-key="contact.label">05 — contact</span><h2 class="big" data-key="contact.title">Mari berkolaborasi.</h2></div>
+  <p class="c-desc" data-key="contact.desc">Saya terbuka untuk peluang kerja, freelance, atau sekadar diskusi. Hubungi saya lewat email atau media sosial.</p>
+  <a class="mail" href="https://mail.google.com/mail/?view=cm&to=dhiyauddintjkt@gmail.com" target="_blank">dhiyauddintjkt@gmail.com ↗</a>
+  <div class="btns">
+    <a href="https://linkedin.com/in/mdhiyauddin" class="btn" target="_blank">LinkedIn</a>
+    <a href="https://github.com/mdhiyauddin" class="btn" target="_blank">GitHub</a>
   </div>
+  <div class="foot" data-key="footer.copyright">© 2026 Muhammad Dhiyauddin</div>
 </section>
-
-<footer>
-  <span data-key="footer.copyright">&copy; 2026 Muhammad Dhiyauddin</span>
-</footer>
+</main>
+</div>
 
 <!-- MODALS -->
-<div class="modal-overlay" id="modal-proj-01">
-  <div class="modal-box">
-    <div class="modal-header">
-      <div><div class="modal-tag">Project 01</div><div class="modal-title">Smart Car Mini</div></div>
-      <button class="modal-close" onclick="closeModal('proj-01')">&#x2715;</button>
-    </div>
-    <div class="modal-body">
-      <div>
-        <div class="modal-section-label">Foto &amp; Video Proyek</div>
-        <div class="modal-gallery">
-          <div class="gallery-item" data-type="img"><img src="car1.jpg" alt="Foto 1"/><div class="media-label">Foto 1</div></div>
-          <div class="gallery-item" data-type="vid">
-            <a href="https://youtube.com/shorts/lNb6Mr2K8M8?feature=share" target="_blank" style="display:block;text-decoration:none;color:var(--text);">
-              <div style="background:#1a1a2e;border-radius:8px;padding:2rem 1rem;text-align:center;border:1px solid var(--border);">
-                <div style="font-size:3rem;margin-bottom:0.5rem;">&#x25B6;&#xFE0F;</div>
-                <div style="font-family:var(--font-mono);font-size:0.8rem;color:var(--accent);">Klik untuk nonton di YouTube</div>
-              </div>
-            </a>
-            <div class="media-label">Video Demo (YouTube Shorts)</div>
-          </div>
-          <div class="gallery-item" data-type="vid">
-            <a href="https://youtube.com/shorts/EVVFEc6twj0?feature=share" target="_blank" style="display:block;text-decoration:none;color:var(--text);">
-              <div style="background:#1a1a2e;border-radius:8px;padding:2rem 1rem;text-align:center;border:1px solid var(--border);">
-                <div style="font-size:3rem;margin-bottom:0.5rem;">&#x25B6;&#xFE0F;</div>
-                <div style="font-family:var(--font-mono);font-size:0.8rem;color:var(--accent);">Klik untuk nonton di YouTube</div>
-              </div>
-            </a>
-            <div class="media-label">Video Demo 2 (YouTube Shorts)</div>
-          </div>
-        </div>
-      </div>
-      <div>
-        <div class="modal-section-label">Deskripsi Lengkap</div>
-        <p class="modal-desc">Mobil mini cerdas berbasis Arduino Uno dengan sensor ultrasonik HC-SR04 untuk deteksi dan penghindaran rintangan otomatis. Dilengkapi fitur penyedot debu di bagian bawah sebagai prototipe smart cleaning robot.</p>
-      </div>
-    </div>
+<div class="mo" id="modal-proj-01"><div class="mb">
+  <div class="mh"><div><div class="mtag">Project 01</div><div class="mtitle">Smart Car Mini</div></div><button class="mx" onclick="closeModal('proj-01')">✕</button></div>
+  <div class="mbody">
+    <div><div class="msl">Foto &amp; Video Proyek</div><div class="gal">
+      <div class="gi"><img src="car1.jpg" alt="Foto 1"/><div class="ml">Foto 1</div></div>
+      <div class="gi"><a class="yt" href="https://youtube.com/shorts/lNb6Mr2K8M8?feature=share" target="_blank"><b>▶️</b><span>Klik untuk nonton di YouTube</span></a><div class="ml">Video Demo (YouTube Shorts)</div></div>
+      <div class="gi"><a class="yt" href="https://youtube.com/shorts/EVVFEc6twj0?feature=share" target="_blank"><b>▶️</b><span>Klik untuk nonton di YouTube</span></a><div class="ml">Video Demo 2 (YouTube Shorts)</div></div>
+    </div></div>
+    <div><div class="msl">Deskripsi Lengkap</div><p class="md">Mobil mini cerdas berbasis Arduino Uno dengan sensor ultrasonik HC-SR04 untuk deteksi dan penghindaran rintangan otomatis. Dilengkapi fitur penyedot debu di bagian bawah sebagai prototipe smart cleaning robot.</p></div>
   </div>
+</div></div>
+
+<div class="mo" id="modal-proj-02"><div class="mb">
+  <div class="mh"><div><div class="mtag">Project 03 · UI/UX Design</div><div class="mtitle">Aplikasi SI Wistek – TJKT</div></div><button class="mx" onclick="closeModal('proj-02')">✕</button></div>
+  <div class="mbody">
+    <div><div class="msl">Tampilan UI Aplikasi</div><div class="gal gal-p">
+      <div class="gi"><img src="ui-1-welcome.png" alt="Welcome"/><div class="ml">Welcome</div></div>
+      <div class="gi"><img src="ui-2-login.png" alt="Login"/><div class="ml">Login</div></div>
+      <div class="gi"><img src="ui-3-home.png" alt="Dashboard"/><div class="ml">Dashboard</div></div>
+      <div class="gi"><img src="ui-4-profile.png" alt="Profil"/><div class="ml">Profil Siswa</div></div>
+      <div class="gi"><img src="ui-5-info.png" alt="Info"/><div class="ml">Info Aplikasi</div></div>
+      <div class="gi"><img src="ui-6-kalender.png" alt="Kalender"/><div class="ml">Kalender Jurusan</div></div>
+    </div></div>
+    <div><div class="msl">Deskripsi Lengkap</div><p class="md">Desain UI/UX aplikasi mobile Sistem Informasi Jurusan (SI Wistek) untuk SMK Wisata Indonesia jurusan TJKT. Dibuat menggunakan Figma dengan pendekatan mobile-first.</p>
+    <a href="https://www.figma.com/design/jo2iNYlK98NIi0x6qfa5vJ/" target="_blank" class="dbtn" style="margin-top:.6rem">Buka di Figma</a></div>
+  </div>
+</div></div>
+
+<div class="mo" id="modal-proj-03"><div class="mb">
+  <div class="mh"><div><div class="mtag">Project 05</div><div class="mtitle">Server dan Jaringan Virtual</div></div><button class="mx" onclick="closeModal('proj-03')">✕</button></div>
+  <div class="mbody"><div><div class="msl">Deskripsi Lengkap</div><p class="md">Membangun server dan jaringan virtual menggunakan Proxmox VE. Mengkonfigurasi routing pada Mikrotik, server berbasis Ubuntu, serta melakukan deployment dan hosting web menggunakan aaPanel di lingkungan Linux secara mandiri.</p></div></div>
+</div></div>
+
+<div class="mo" id="modal-proj-04"><div class="mb">
+  <div class="mh"><div><div class="mtag">Project 06</div><div class="mtitle">Smart Door Lock Berbasis ESP32 &amp; RFID</div></div><button class="mx" onclick="closeModal('proj-04')">✕</button></div>
+  <div class="mbody">
+    <div><div class="msl">Foto &amp; Video Proyek</div><div class="gal">
+      <div class="gi"><img src="prj41.jpeg" alt="Foto 1"/><div class="ml">Foto 1</div></div>
+      <div class="gi"><img src="prj42.jpeg" alt="Foto 2"/><div class="ml">Foto 2</div></div>
+    </div></div>
+    <div><div class="msl">Deskripsi Lengkap</div><p class="md">Sistem keamanan pintu pintar berbasis ESP32 dengan modul RFID RC522 dan Solenoid Door Lock. Hanya kartu RFID terdaftar yang dapat membuka pintu secara otomatis.</p></div>
+  </div>
+</div></div>
+
+<div class="mo" id="modal-proj-05"><div class="mb">
+  <div class="mh"><div><div class="mtag">Project 04 · Fullstack Web</div><div class="mtitle">Caffe Adin - QR Code Restoran</div></div><button class="mx" onclick="closeModal('proj-05')">✕</button></div>
+  <div class="mbody">
+    <div><div class="msl">Foto &amp; Video Proyek</div><div class="gal">
+      <div class="gi"><img src="caffe-login.jpg" alt="login"/><div class="ml">login</div></div>
+      <div class="gi"><img src="caffe-dashboard.png" alt="Dashboard"/><div class="ml">Dashboard</div></div>
+      <div class="gi"><img src="caffe-menu.png" alt="Menu"/><div class="ml">Halaman Menu</div></div>
+      <div class="gi"><img src="caffe-qr.png" alt="QR Code"/><div class="ml">QR Code Meja</div></div>
+      <div class="gi"><a class="yt" href="https://youtu.be/3doNaotOeCw" target="_blank"><b>▶️</b><span>Klik untuk nonton di YouTube</span></a><div class="ml">Video Demo (YouTube)</div></div>
+    </div></div>
+    <div><div class="msl">Deskripsi Lengkap</div><p class="md">
+      <strong>Caffe Adin</strong> adalah sistem pemesanan restoran digital yang memungkinkan pelanggan memesan makanan secara mandiri melalui scan QR Code di meja.<br/><br/>
+      <strong>💡 Pengembangan:</strong><br/>Project ini dikembangkan dengan memanfaatkan AI (ChatGPT/GitHub Copilot) sebagai asisten pemrograman. Saya bertanggung jawab penuh atas arsitektur sistem, desain database, integrasi fitur, pengujian, dan deployment.<br/><br/>
+      <strong>⚡ Fitur Unggulan:</strong><br/>QR Code per meja (8 meja) · Pemesanan mandiri via HP · Dashboard admin dengan grafik penjualan · Manajemen menu (CRUD + upload gambar) · Export laporan Excel/CSV · Filter pesanan by tanggal · Pencarian menu · Cetak invoice/struk · Login admin · Responsive design<br/><br/>
+      <strong>🛠️ Teknologi:</strong><br/>Backend: PHP 8.2, MySQL · Frontend: Tailwind CSS, JavaScript · Library: Chart.js, QRCode.js, Font Awesome · AI Tools: ChatGPT, GitHub Copilot</p>
+    <a href="https://github.com/Dhiyauddin0210/caffe_adin" target="_blank" class="dbtn" style="margin-top:.6rem">Buka di GitHub</a></div>
+  </div>
+</div></div>
+
+<div class="mo" id="modal-proj-06"><div class="mb">
+  <div class="mh"><div><div class="mtag">Project 07 · Embedded System</div><div class="mtitle">Kado Digital ESP32 - Happy Birthday Bunda</div></div><button class="mx" onclick="closeModal('proj-06')">✕</button></div>
+  <div class="mbody">
+    <div><div class="msl">Foto &amp; Video Proyek</div><div class="gal">
+      <div class="gi"><img src="kado-cover.jpg" alt="Cover"/><div class="ml">Cover</div></div>
+      <div class="gi"><a class="yt" href="https://youtube.com/shorts/B3zeqS7JX2U?feature=share" target="_blank"><b>▶️</b><span>Klik untuk nonton di YouTube</span></a><div class="ml">Video Demo (YouTube Shorts)</div></div>
+    </div></div>
+    <div><div class="msl">Deskripsi Lengkap</div><p class="md">
+      <strong>Kado Digital ESP32</strong> adalah hadiah ulang tahun personal berbasis ESP32 dengan layar TFT 2.8" ILI9341, buzzer pasif, dan tombol push.<br/><br/>
+      <strong>🛠️ Teknologi:</strong><br/>ESP32 · C++ (Arduino IDE) · TFT_eSPI · SPI · PWM Buzzer<br/><br/>
+      <strong>⚡ Fitur:</strong><br/>Slideshow interaktif · Tampilan foto full color · Kontrol satu tombol</p></div>
+  </div>
+</div></div>
+
+<div class="mo" id="modal-proj-07"><div class="mb">
+  <div class="mh"><div><div class="mtag">Project 02 · Fullstack Web</div><div class="mtitle">Kos Adin - Sistem Manajemen Kos-Kosan</div></div><button class="mx" onclick="closeModal('proj-07')">✕</button></div>
+  <div class="mbody">
+    <div><div class="msl">Foto &amp; Video Proyek</div><div class="gal">
+      <div class="gi"><img src="landing.png" alt="Landing Page"/><div class="ml">Landing Page</div></div>
+      <div class="gi"><img src="login.png" alt="Login Page"/><div class="ml">Login Page</div></div>
+      <div class="gi"><img src="admindsh.png" alt="Admin Dashboard"/><div class="ml">Admin Dashboard</div></div>
+      <div class="gi"><img src="pnghuni.png" alt="Penghuni Dashboard"/><div class="ml">Penghuni Dashboard</div></div>
+      <div class="gi"><a class="yt" href="https://youtu.be/gr_H8QldiKk" target="_blank"><b>▶️</b><span>Klik untuk nonton di YouTube</span></a><div class="ml">Video Demo (YouTube)</div></div>
+    </div></div>
+    <div><div class="msl">Deskripsi Lengkap</div><p class="md">
+      <strong>Kos Adin</strong> adalah sistem manajemen kos-kosan berbasis web dengan 3 role: Admin (pemilik kos), Penghuni (penyewa), dan Publik (calon penghuni).<br/><br/>
+      <strong>💡 Pengembangan:</strong><br/>Project ini dikembangkan dengan memanfaatkan AI (ChatGPT/Claude) sebagai asisten pemrograman. Saya bertanggung jawab penuh atas arsitektur sistem, desain database, integrasi fitur, pengujian, dan deployment.<br/><br/>
+      <strong>⚡ Fitur Unggulan:</strong><br/>3 role user (Admin, Penghuni, Publik) · 11 modul admin (dashboard, properti, kamar, penghuni, tagihan, pembayaran, leads, maintenance, perpanjangan, ulasan, pengaturan) · 6 modul penghuni · Landing page publik + QR code · Tagihan otomatis via scheduler · Email notification (4 template) · Rating &amp; review dengan moderasi · Export PDF · Notification bell · Responsive design<br/><br/>
+      <strong>🛠️ Teknologi:</strong><br/>Backend: Laravel 13, PHP 8.3, MySQL 8.4 · Frontend: Tailwind CSS 3, Alpine.js, Blade · Library: Chart.js, DomPDF, Simple QrCode · Build Tool: Vite · AI Tools: ChatGPT, Claude</p>
+    <a href="https://github.com/Dhiyauddin0210/kos-management" target="_blank" class="dbtn" style="margin-top:.6rem">Buka di GitHub</a></div>
+  </div>
+</div></div>
+
+<div class="mo" id="modal-exp-01"><div class="mb">
+  <div class="mh"><div><div class="mtag">Experience · 2024 — 2025</div><div class="mtitle">PT Solusi Intek Indonesia</div></div><button class="mx" onclick="closeModal('exp-01')">✕</button></div>
+  <div class="mbody">
+    <div><div class="msl">Detail Kegiatan</div><p class="md">Menjalani program PKL sebagai Programmer Intern dengan fokus pada pengumpulan dan ekstraksi data (Data Scraping).</p></div>
+    <div><div class="msl">Alur Kerja</div><p class="md" style="line-height:2">• Mencari dan mengumpulkan tautan (link) sumber data dari dark web.<br/>• Merapikan data link tersebut ke dalam spreadsheet (Excel).<br/>• Melakukan proses import data dari Excel ke database menggunakan perintah terminal (CLI).<br/>• Menjalankan script Python yang telah disediakan untuk melakukan crawling dan mengekstrak data keseluruhan dari link yang sudah terdaftar di database.</p></div>
+    <div><div class="msl">Skill yang Digunakan</div><div class="sbs"><span class="sb">Python</span><span class="sb">Data Scraping</span><span class="sb">MongoDB</span><span class="sb">Terminal (CLI)</span><span class="sb">Excel</span></div></div>
+  </div>
+</div></div>
+
+<div class="mo" id="modal-exp-04"><div class="mb">
+  <div class="mh"><div><div class="mtag">Experience · 2026 (Ongoing)</div><div class="mtitle">PT Remala Abadi Tbk</div></div><button class="mx" onclick="closeModal('exp-04')">✕</button></div>
+  <div class="mbody">
+    <div><div class="msl">Detail Kegiatan</div><p class="md">Saat ini saya sedang menjalani program internship selama 4 bulan sebagai Intern Admin NOC di PT Remala Abadi Tbk (penempatan di anak perusahaan). Selama periode ini, fokus utama saya adalah mendukung operasional harian NOC.</p></div>
+    <div><div class="msl">Tanggung Jawab</div><p class="md" style="line-height:2">• Melakukan pengecekan status pelanggan (online/offline) melalui OLT.<br/>• Memeriksa indikasi gangguan jaringan, termasuk LOS (Loss of Signal).<br/>• Mencatat dan melaporkan gangguan jaringan kepada tim terkait.<br/>• Melakukan validasi data pelanggan berdasarkan Client ID.<br/>• Memeriksa informasi pelanggan melalui Zimbra dan Tachyon.net.<br/>• Mengelola serta memperbarui data menggunakan spreadsheet.<br/>• Mendukung kegiatan monitoring dan administrasi operasional NOC.</p></div>
+    <div><div class="msl">Skill yang Digunakan</div><div class="sbs"><span class="sb">NOC Operations</span><span class="sb">Network Monitoring</span><span class="sb">OLT Management</span><span class="sb">Data Validation</span><span class="sb">Spreadsheet</span></div></div>
+  </div>
+</div></div>
+
+<div class="mo" id="modal-exp-03"><div class="mb">
+  <div class="mh"><div><div class="mtag">Project · 2025</div><div class="mtitle">Instalasi CCTV Sekolah</div></div><button class="mx" onclick="closeModal('exp-03')">✕</button></div>
+  <div class="mbody">
+    <div><div class="msl">Dokumentasi</div><div class="gal">
+      <div class="gi"><img src="cctv-1.jpeg" alt="Penarikan Kabel"/><div class="ml">Penarikan Kabel</div></div>
+      <div class="gi"><img src="cctv-2.jpeg" alt="Pemasangan Kamera"/><div class="ml">Pemasangan Kamera</div></div>
+      <div class="gi"><a class="yt" href="https://youtube.com/shorts/6SfIis50l60?feature=share" target="_blank"><b>▶️</b><span>Klik untuk nonton di YouTube</span></a><div class="ml">Video Proses Penataan Kabel</div></div>
+    </div><p style="font-size:.7rem;color:var(--muted);margin-top:.5rem">*Foto &amp; video dokumentasi sebagai bukti pengerjaan proyek</p></div>
+    <div><div class="msl">Deskripsi Proyek</div><p class="md">Terlibat dalam proyek instalasi CCTV di lingkungan sekolah dengan tugas utama melakukan penarikan kabel, pemasangan perangkat CCTV, serta pengecekan koneksi fisik untuk memastikan perangkat dapat berfungsi dengan baik.</p></div>
+    <div><div class="msl">Tanggung Jawab</div><p class="md" style="line-height:2">• Melakukan survey jalur kabel sebelum proses instalasi.<br/>• Melakukan penarikan dan penataan kabel CCTV.<br/>• Membantu pemasangan kamera CCTV pada titik yang telah ditentukan.<br/>• Melakukan pemasangan konektor dan pengecekan koneksi fisik perangkat.<br/>• Membantu proses testing perangkat setelah instalasi selesai.<br/>• Berkoordinasi dengan tim instalasi selama pelaksanaan proyek.</p></div>
+    <div><div class="msl">Hasil Pekerjaan</div><p class="md" style="line-height:2">• Instalasi CCTV berhasil dilakukan sesuai kebutuhan lokasi.<br/>• Jalur kabel tertata rapi dan aman.<br/>• Kamera CCTV terpasang dengan baik dan siap digunakan untuk proses konfigurasi lanjutan.</p></div>
+    <div><div class="msl">Skill yang Digunakan</div><div class="sbs"><span class="sb">Instalasi CCTV</span><span class="sb">Penarikan Kabel Jaringan</span><span class="sb">Cable Management</span><span class="sb">Troubleshooting Dasar</span><span class="sb">Kerja Tim</span><span class="sb">Dokumentasi Teknis</span></div></div>
+  </div>
+</div></div>
+
+<div class="mo" id="modal-cert-01"><div class="mb">
+  <div class="mh"><div><div class="mtag">Certification · 2026</div><div class="mtitle">Junior Network Administrator</div></div><button class="mx" onclick="closeModal('cert-01')">✕</button></div>
+  <div class="mbody">
+    <div><div class="msl">Sertifikat &amp; Dokumen</div><div class="gal"><div class="gi"><img src="sertifikat-bnsp.jpeg" alt="Sertifikat BNSP"/><div class="ml">Sertifikat BNSP</div></div></div></div>
+    <div><div class="msl">Detail Sertifikasi</div><p class="md">Sertifikasi Kompetensi BNSP (Badan Nasional Sertifikasi Profesi) bidang Rekayasa Jaringan Komputer (Network Engineer) dengan kualifikasi Network Administrator Muda. Diterbitkan oleh LSP Teknologi Digital. Berlaku 3 tahun (2026-2029).</p></div>
+  </div>
+</div></div>
+
+<div class="mo" id="modal-cert-02"><div class="mb">
+  <div class="mh"><div><div class="mtag">Certification · 2025</div><div class="mtitle">Programmer Intern Certificate</div></div><button class="mx" onclick="closeModal('cert-02')">✕</button></div>
+  <div class="mbody">
+    <div><div class="msl">Sertifikat &amp; Dokumen</div><div class="gal"><div class="gi"><img src="cert.jpeg" alt="Sertifikat PKL"/><div class="ml">Sertifikat PKL</div></div></div></div>
+    <div><div class="msl">Detail Sertifikasi</div><p class="md">Sertifikat penyelesaian Program Praktik Kerja Lapangan (PKL) selama 6 bulan di PT Solusi Intek Indonesia sebagai Programmer Intern. Berfokus pada analisis data dan deteksi potensi kebocoran data.</p></div>
+  </div>
+</div></div>
+
+<div class="lbox" id="lightbox" onclick="if(event.target===this)closeLightbox()">
+  <button class="lbx" onclick="closeLightbox()">✕</button>
+  <img id="lb-img" src="" alt=""/>
 </div>
 
-<div class="modal-overlay" id="modal-proj-02">
-  <div class="modal-box">
-    <div class="modal-header">
-      <div><div class="modal-tag">Project 03 &middot; UI/UX Design</div><div class="modal-title">Aplikasi SI Wistek &ndash; TJKT</div></div>
-      <button class="modal-close" onclick="closeModal('proj-02')">&#x2715;</button>
-    </div>
-    <div class="modal-body">
-      <div>
-        <div class="modal-section-label">Tampilan UI Aplikasi</div>
-        <div class="modal-gallery gallery-portrait">
-          <div class="gallery-item" data-type="img"><img src="ui-1-welcome.png" alt="Welcome"/><div class="media-label">Welcome</div></div>
-          <div class="gallery-item" data-type="img"><img src="ui-2-login.png" alt="Login"/><div class="media-label">Login</div></div>
-          <div class="gallery-item" data-type="img"><img src="ui-3-home.png" alt="Dashboard"/><div class="media-label">Dashboard</div></div>
-          <div class="gallery-item" data-type="img"><img src="ui-4-profile.png" alt="Profil"/><div class="media-label">Profil Siswa</div></div>
-          <div class="gallery-item" data-type="img"><img src="ui-5-info.png" alt="Info"/><div class="media-label">Info Aplikasi</div></div>
-          <div class="gallery-item" data-type="img"><img src="ui-6-kalender.png" alt="Kalender"/><div class="media-label">Kalender Jurusan</div></div>
-        </div>
-      </div>
-      <div>
-        <div class="modal-section-label">Deskripsi Lengkap</div>
-        <p class="modal-desc">Desain UI/UX aplikasi mobile Sistem Informasi Jurusan (SI Wistek) untuk SMK Wisata Indonesia jurusan TJKT. Dibuat menggunakan Figma dengan pendekatan mobile-first.</p>
-        <a href="https://www.figma.com/design/jo2iNYlK98NIi0x6qfa5vJ/" target="_blank" class="detail-btn" style="margin-top:0.5rem; text-decoration:none;">Buka di Figma</a>
-      </div>
-    </div>
-  </div>
-</div>
 
-<div class="modal-overlay" id="modal-proj-03">
-  <div class="modal-box">
-    <div class="modal-header">
-      <div><div class="modal-tag">Project 05</div><div class="modal-title">Server dan Jaringan Virtual</div></div>
-      <button class="modal-close" onclick="closeModal('proj-03')">&#x2715;</button>
-    </div>
-    <div class="modal-body">
-      <div>
-        <div class="modal-section-label">Deskripsi Lengkap</div>
-        <p class="modal-desc">Membangun server dan jaringan virtual menggunakan Proxmox VE. Mengkonfigurasi routing pada Mikrotik, server berbasis Ubuntu, serta melakukan deployment dan hosting web menggunakan aaPanel di lingkungan Linux secara mandiri.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="modal-proj-04">
-  <div class="modal-box">
-    <div class="modal-header">
-      <div><div class="modal-tag">Project 06</div><div class="modal-title">Smart Door Lock Berbasis ESP32 &amp; RFID</div></div>
-      <button class="modal-close" onclick="closeModal('proj-04')">&#x2715;</button>
-    </div>
-    <div class="modal-body">
-      <div>
-        <div class="modal-section-label">Foto &amp; Video Proyek</div>
-        <div class="modal-gallery">
-          <div class="gallery-item" data-type="img"><img src="prj41.jpeg" alt="Foto 1"/><div class="media-label">Foto 1</div></div>
-          <div class="gallery-item" data-type="img"><img src="prj42.jpeg" alt="Foto 2"/><div class="media-label">Foto 2</div></div>
-        </div>
-      </div>
-      <div>
-        <div class="modal-section-label">Deskripsi Lengkap</div>
-        <p class="modal-desc">Sistem keamanan pintu pintar berbasis ESP32 dengan modul RFID RC522 dan Solenoid Door Lock. Hanya kartu RFID terdaftar yang dapat membuka pintu secara otomatis.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="modal-proj-05">
-  <div class="modal-box">
-    <div class="modal-header">
-      <div><div class="modal-tag">Project 04 &middot; Fullstack Web</div><div class="modal-title">Caffe Adin - QR Code Restoran</div></div>
-      <button class="modal-close" onclick="closeModal('proj-05')">&#x2715;</button>
-    </div>
-    <div class="modal-body">
-      <div>
-        <div class="modal-section-label">Foto &amp; Video Proyek</div>
-        <div class="modal-gallery">
-          <div class="gallery-item" data-type="img"><img src="caffe-login.jpg" alt="login"/><div class="media-label">login</div></div>
-          <div class="gallery-item" data-type="img"><img src="caffe-dashboard.png" alt="Dashboard"/><div class="media-label">Dashboard</div></div>
-          <div class="gallery-item" data-type="img"><img src="caffe-menu.png" alt="Menu"/><div class="media-label">Halaman Menu</div></div>
-          <div class="gallery-item" data-type="img"><img src="caffe-qr.png" alt="QR Code"/><div class="media-label">QR Code Meja</div></div>
-          <div class="gallery-item" data-type="vid">
-            <a href="https://youtu.be/3doNaotOeCw" target="_blank" style="display:block;text-decoration:none;color:var(--text);">
-              <div style="background:#1a1a2e;border-radius:8px;padding:2rem 1rem;text-align:center;border:1px solid var(--border);">
-                <div style="font-size:3rem;margin-bottom:0.5rem;">&#x25B6;&#xFE0F;</div>
-                <div style="font-family:var(--font-mono);font-size:0.8rem;color:var(--accent);">Klik untuk nonton di YouTube</div>
-              </div>
-            </a>
-            <div class="media-label">Video Demo (YouTube)</div>
-          </div>
-        </div>
-      </div>
-      <div>
-        <div class="modal-section-label">Deskripsi Lengkap</div>
-        <p class="modal-desc">
-          <strong>Caffe Adin</strong> adalah sistem pemesanan restoran digital yang memungkinkan pelanggan memesan makanan secara mandiri melalui scan QR Code di meja.<br/><br/>
-          <strong>&#x1F4A1; Pengembangan:</strong><br/>
-          Project ini dikembangkan dengan memanfaatkan AI (ChatGPT/GitHub Copilot) sebagai asisten pemrograman. Saya bertanggung jawab penuh atas arsitektur sistem, desain database, integrasi fitur, pengujian, dan deployment.<br/><br/>
-          <strong>&#x26A1; Fitur Unggulan:</strong><br/>
-          QR Code per meja (8 meja) &middot; Pemesanan mandiri via HP &middot; Dashboard admin dengan grafik penjualan &middot; Manajemen menu (CRUD + upload gambar) &middot; Export laporan Excel/CSV &middot; Filter pesanan by tanggal &middot; Pencarian menu &middot; Cetak invoice/struk &middot; Login admin &middot; Responsive design<br/><br/>
-          <strong>&#x1F6E0;&#xFE0F; Teknologi:</strong><br/>
-          Backend: PHP 8.2, MySQL &middot; Frontend: Tailwind CSS, JavaScript &middot; Library: Chart.js, QRCode.js, Font Awesome &middot; AI Tools: ChatGPT, GitHub Copilot
-        </p>
-        <a href="https://github.com/Dhiyauddin0210/caffe_adin" target="_blank" class="detail-btn" style="margin-top:0.5rem; text-decoration:none;">Buka di GitHub</a>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="modal-proj-06">
-  <div class="modal-box">
-    <div class="modal-header">
-      <div><div class="modal-tag">Project 07 &middot; Embedded System</div><div class="modal-title">Kado Digital ESP32 - Happy Birthday Bunda</div></div>
-      <button class="modal-close" onclick="closeModal('proj-06')">&#x2715;</button>
-    </div>
-    <div class="modal-body">
-      <div>
-        <div class="modal-section-label">Foto &amp; Video Proyek</div>
-        <div class="modal-gallery">
-          <div class="gallery-item" data-type="img"><img src="kado-cover.jpg" alt="Cover"/><div class="media-label">Cover</div></div>
-          <div class="gallery-item" data-type="vid">
-            <a href="https://youtube.com/shorts/B3zeqS7JX2U?feature=share" target="_blank" style="display:block;text-decoration:none;color:var(--text);">
-              <div style="background:#1a1a2e;border-radius:8px;padding:2rem 1rem;text-align:center;border:1px solid var(--border);">
-                <div style="font-size:3rem;margin-bottom:0.5rem;">&#x25B6;&#xFE0F;</div>
-                <div style="font-family:var(--font-mono);font-size:0.8rem;color:var(--accent);">Klik untuk nonton di YouTube</div>
-              </div>
-            </a>
-            <div class="media-label">Video Demo (YouTube Shorts)</div>
-          </div>
-        </div>
-      </div>
-      <div>
-        <div class="modal-section-label">Deskripsi Lengkap</div>
-        <p class="modal-desc">
-          <strong>Kado Digital ESP32</strong> adalah hadiah ulang tahun personal berbasis ESP32 dengan layar TFT 2.8" ILI9341, buzzer pasif, dan tombol push.<br/><br/>
-          <strong>&#x1F6E0;&#xFE0F; Teknologi:</strong><br/>
-          ESP32 &middot; C++ (Arduino IDE) &middot; TFT_eSPI &middot; SPI &middot; PWM Buzzer<br/><br/>
-          <strong>&#x26A1; Fitur:</strong><br/>
-          Slideshow interaktif &middot; Tampilan foto full color &middot; Kontrol satu tombol
-        </p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL PROJ-07: Kos Adin -->
-<div class="modal-overlay" id="modal-proj-07">
-  <div class="modal-box">
-    <div class="modal-header">
-      <div><div class="modal-tag">Project 02 &middot; Fullstack Web</div><div class="modal-title">Kos Adin - Sistem Manajemen Kos-Kosan</div></div>
-      <button class="modal-close" onclick="closeModal('proj-07')">&#x2715;</button>
-    </div>
-    <div class="modal-body">
-      <div>
-        <div class="modal-section-label">Foto &amp; Video Proyek</div>
-        <div class="modal-gallery">
-          <div class="gallery-item" data-type="img"><img src="landing.png" alt="Landing Page"/><div class="media-label">Landing Page</div></div>
-          <div class="gallery-item" data-type="img"><img src="login.png" alt="Login Page"/><div class="media-label">Login Page</div></div>
-          <div class="gallery-item" data-type="img"><img src="admindsh.png" alt="Admin Dashboard"/><div class="media-label">Admin Dashboard</div></div>
-          <div class="gallery-item" data-type="img"><img src="pnghuni.png" alt="Penghuni Dashboard"/><div class="media-label">Penghuni Dashboard</div></div>
-          <div class="gallery-item" data-type="vid">
-            <a href="https://youtu.be/gr_H8QldiKk" target="_blank" style="display:block;text-decoration:none;color:var(--text);">
-              <div style="background:#1a1a2e;border-radius:8px;padding:2rem 1rem;text-align:center;border:1px solid var(--border);">
-                <div style="font-size:3rem;margin-bottom:0.5rem;">&#x25B6;&#xFE0F;</div>
-                <div style="font-family:var(--font-mono);font-size:0.8rem;color:var(--accent);">Klik untuk nonton di YouTube</div>
-              </div>
-            </a>
-            <div class="media-label">Video Demo (YouTube)</div>
-          </div>
-        </div>
-      </div>
-      <div>
-        <div class="modal-section-label">Deskripsi Lengkap</div>
-        <p class="modal-desc">
-          <strong>Kos Adin</strong> adalah sistem manajemen kos-kosan berbasis web dengan 3 role: Admin (pemilik kos), Penghuni (penyewa), dan Publik (calon penghuni).<br/><br/>
-          <strong>&#x1F4A1; Pengembangan:</strong><br/>
-          Project ini dikembangkan dengan memanfaatkan AI (ChatGPT/Claude) sebagai asisten pemrograman. Saya bertanggung jawab penuh atas arsitektur sistem, desain database, integrasi fitur, pengujian, dan deployment.<br/><br/>
-          <strong>&#x26A1; Fitur Unggulan:</strong><br/>
-          3 role user (Admin, Penghuni, Publik) &middot; 11 modul admin (dashboard, properti, kamar, penghuni, tagihan, pembayaran, leads, maintenance, perpanjangan, ulasan, pengaturan) &middot; 6 modul penghuni &middot; Landing page publik + QR code &middot; Tagihan otomatis via scheduler &middot; Email notification (4 template) &middot; Rating &amp; review dengan moderasi &middot; Export PDF &middot; Notification bell &middot; Responsive design<br/><br/>
-          <strong>&#x1F6E0;&#xFE0F; Teknologi:</strong><br/>
-          Backend: Laravel 13, PHP 8.3, MySQL 8.4 &middot; Frontend: Tailwind CSS 3, Alpine.js, Blade &middot; Library: Chart.js, DomPDF, Simple QrCode &middot; Build Tool: Vite &middot; AI Tools: ChatGPT, Claude
-        </p>
-        <a href="https://github.com/Dhiyauddin0210/kos-management" target="_blank" class="detail-btn" style="margin-top:0.5rem; text-decoration:none;">Buka di GitHub</a>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL EXP-01: Programmer Intern -->
-<div class="modal-overlay" id="modal-exp-01">
-  <div class="modal-box">
-    <div class="modal-header">
-      <div><div class="modal-tag">Experience &middot; 2024 &mdash; 2025</div><div class="modal-title">PT Solusi Intek Indonesia</div></div>
-      <button class="modal-close" onclick="closeModal('exp-01')">&#x2715;</button>
-    </div>
-    <div class="modal-body">
-      <div>
-        <div class="modal-section-label">Detail Kegiatan</div>
-        <p class="modal-desc">Menjalani program PKL sebagai Programmer Intern dengan fokus pada pengumpulan dan ekstraksi data (Data Scraping).</p>
-      </div>
-      <div>
-        <div class="modal-section-label">Alur Kerja</div>
-        <p class="modal-desc" style="line-height:2;">
-          &bull; Mencari dan mengumpulkan tautan (link) sumber data dari dark web.<br/>
-          &bull; Merapikan data link tersebut ke dalam spreadsheet (Excel).<br/>
-          &bull; Melakukan proses import data dari Excel ke database menggunakan perintah terminal (CLI).<br/>
-          &bull; Menjalankan script Python yang telah disediakan untuk melakukan crawling dan mengekstrak data keseluruhan dari link yang sudah terdaftar di database.
-        </p>
-      </div>
-      <div>
-        <div class="modal-section-label">Skill yang Digunakan</div>
-        <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.25rem;">
-          <span class="skill-badge">Python</span>
-          <span class="skill-badge">Data Scraping</span>
-          <span class="skill-badge">MongoDB</span>
-          <span class="skill-badge">Terminal (CLI)</span>
-          <span class="skill-badge">Excel</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL EXP-04: Intern Admin NOC -->
-<div class="modal-overlay" id="modal-exp-04">
-  <div class="modal-box">
-    <div class="modal-header">
-      <div><div class="modal-tag">Experience &middot; 2026 (Ongoing)</div><div class="modal-title">PT Remala Abadi Tbk</div></div>
-      <button class="modal-close" onclick="closeModal('exp-04')">&#x2715;</button>
-    </div>
-    <div class="modal-body">
-      <div>
-        <div class="modal-section-label">Detail Kegiatan</div>
-        <p class="modal-desc">
-          Saat ini saya sedang menjalani program internship selama 4 bulan sebagai Intern Admin NOC di PT Remala Abadi Tbk (penempatan di anak perusahaan). Selama periode ini, fokus utama saya adalah mendukung operasional harian NOC.
-        </p>
-      </div>
-      <div>
-        <div class="modal-section-label">Tanggung Jawab</div>
-        <p class="modal-desc" style="line-height:2;">
-          &bull; Melakukan pengecekan status pelanggan (online/offline) melalui OLT.<br/>
-          &bull; Memeriksa indikasi gangguan jaringan, termasuk LOS (Loss of Signal).<br/>
-          &bull; Mencatat dan melaporkan gangguan jaringan kepada tim terkait.<br/>
-          &bull; Melakukan validasi data pelanggan berdasarkan Client ID.<br/>
-          &bull; Memeriksa informasi pelanggan melalui Zimbra dan Tachyon.net.<br/>
-          &bull; Mengelola serta memperbarui data menggunakan spreadsheet.<br/>
-          &bull; Mendukung kegiatan monitoring dan administrasi operasional NOC.
-        </p>
-      </div>
-      <div>
-        <div class="modal-section-label">Skill yang Digunakan</div>
-        <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.25rem;">
-          <span class="skill-badge">NOC Operations</span>
-          <span class="skill-badge">Network Monitoring</span>
-          <span class="skill-badge">OLT Management</span>
-          <span class="skill-badge">Data Validation</span>
-          <span class="skill-badge">Spreadsheet</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL EXP-03: CCTV -->
-<div class="modal-overlay" id="modal-exp-03">
-  <div class="modal-box">
-    <div class="modal-header">
-      <div><div class="modal-tag">Project &middot; 2025</div><div class="modal-title">Instalasi CCTV Sekolah</div></div>
-      <button class="modal-close" onclick="closeModal('exp-03')">&#x2715;</button>
-    </div>
-    <div class="modal-body">
-      <div>
-        <div class="modal-section-label">Dokumentasi</div>
-        <div class="modal-gallery">
-          <div class="gallery-item" data-type="img"><img src="cctv-1.jpeg" alt="Penarikan Kabel"/><div class="media-label">Penarikan Kabel</div></div>
-          <div class="gallery-item" data-type="img"><img src="cctv-2.jpeg" alt="Pemasangan Kamera"/><div class="media-label">Pemasangan Kamera</div></div>
-          <div class="gallery-item" data-type="vid">
-            <a href="https://youtube.com/shorts/6SfIis50l60?feature=share" target="_blank" style="display:block;text-decoration:none;color:var(--text);">
-              <div style="background:#1a1a2e;border-radius:8px;padding:2rem 1rem;text-align:center;border:1px solid var(--border);">
-                <div style="font-size:3rem;margin-bottom:0.5rem;">&#x25B6;&#xFE0F;</div>
-                <div style="font-family:var(--font-mono);font-size:0.8rem;color:var(--accent);">Klik untuk nonton di YouTube</div>
-              </div>
-            </a>
-            <div class="media-label">Video Proses Penataan Kabel</div>
-          </div>
-        </div>
-        <p style="font-size:0.7rem;color:var(--muted);margin-top:0.5rem;">*Foto &amp; video dokumentasi sebagai bukti pengerjaan proyek</p>
-      </div>
-      <div>
-        <div class="modal-section-label">Deskripsi Proyek</div>
-        <p class="modal-desc">Terlibat dalam proyek instalasi CCTV di lingkungan sekolah dengan tugas utama melakukan penarikan kabel, pemasangan perangkat CCTV, serta pengecekan koneksi fisik untuk memastikan perangkat dapat berfungsi dengan baik.</p>
-      </div>
-      <div>
-        <div class="modal-section-label">Tanggung Jawab</div>
-        <p class="modal-desc" style="line-height:2;">
-          &bull; Melakukan survey jalur kabel sebelum proses instalasi.<br/>
-          &bull; Melakukan penarikan dan penataan kabel CCTV.<br/>
-          &bull; Membantu pemasangan kamera CCTV pada titik yang telah ditentukan.<br/>
-          &bull; Melakukan pemasangan konektor dan pengecekan koneksi fisik perangkat.<br/>
-          &bull; Membantu proses testing perangkat setelah instalasi selesai.<br/>
-          &bull; Berkoordinasi dengan tim instalasi selama pelaksanaan proyek.
-        </p>
-      </div>
-      <div>
-        <div class="modal-section-label">Hasil Pekerjaan</div>
-        <p class="modal-desc" style="line-height:2;">
-          &bull; Instalasi CCTV berhasil dilakukan sesuai kebutuhan lokasi.<br/>
-          &bull; Jalur kabel tertata rapi dan aman.<br/>
-          &bull; Kamera CCTV terpasang dengan baik dan siap digunakan untuk proses konfigurasi lanjutan.
-        </p>
-      </div>
-      <div>
-        <div class="modal-section-label">Skill yang Digunakan</div>
-        <div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.25rem;">
-          <span class="skill-badge">Instalasi CCTV</span>
-          <span class="skill-badge">Penarikan Kabel Jaringan</span>
-          <span class="skill-badge">Cable Management</span>
-          <span class="skill-badge">Troubleshooting Dasar</span>
-          <span class="skill-badge">Kerja Tim</span>
-          <span class="skill-badge">Dokumentasi Teknis</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL CERT-01: BNSP -->
-<div class="modal-overlay" id="modal-cert-01">
-  <div class="modal-box">
-    <div class="modal-header">
-      <div><div class="modal-tag">Certification &middot; 2026</div><div class="modal-title">Junior Network Administrator</div></div>
-      <button class="modal-close" onclick="closeModal('cert-01')">&#x2715;</button>
-    </div>
-    <div class="modal-body">
-      <div>
-        <div class="modal-section-label">Sertifikat &amp; Dokumen</div>
-        <div class="modal-gallery">
-          <div class="gallery-item" data-type="img"><img src="sertifikat-bnsp.jpeg" alt="Sertifikat BNSP"/><div class="media-label">Sertifikat BNSP</div></div>
-        </div>
-      </div>
-      <div>
-        <div class="modal-section-label">Detail Sertifikasi</div>
-        <p class="modal-desc">Sertifikasi Kompetensi BNSP (Badan Nasional Sertifikasi Profesi) bidang Rekayasa Jaringan Komputer (Network Engineer) dengan kualifikasi Network Administrator Muda. Diterbitkan oleh LSP Teknologi Digital. Berlaku 3 tahun (2026-2029).</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL CERT-02: PKL -->
-<div class="modal-overlay" id="modal-cert-02">
-  <div class="modal-box">
-    <div class="modal-header">
-      <div><div class="modal-tag">Certification &middot; 2025</div><div class="modal-title">Programmer Intern Certificate</div></div>
-      <button class="modal-close" onclick="closeModal('cert-02')">&#x2715;</button>
-    </div>
-    <div class="modal-body">
-      <div>
-        <div class="modal-section-label">Sertifikat &amp; Dokumen</div>
-        <div class="modal-gallery">
-          <div class="gallery-item" data-type="img"><img src="cert.jpeg" alt="Sertifikat PKL"/><div class="media-label">Sertifikat PKL</div></div>
-        </div>
-      </div>
-      <div>
-        <div class="modal-section-label">Detail Sertifikasi</div>
-        <p class="modal-desc">Sertifikat penyelesaian Program Praktik Kerja Lapangan (PKL) selama 6 bulan di PT Solusi Intek Indonesia sebagai Programmer Intern. Berfokus pada analisis data dan deteksi potensi kebocoran data.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- LIGHTBOX -->
-<div class="lightbox" id="lightbox" onclick="if(event.target===this)closeLightbox()">
-  <button class="lightbox-close" onclick="window.closeLightbox()">&#x2715;</button>
-  <img id="lb-img" src="" alt="" style="display:none;" />
-  <video id="lb-vid" controls style="display:none;max-width:90vw;max-height:88vh;border-radius:8px;"></video>
-</div>
 
 <script>
-  (function(){
-    const canvas=document.getElementById('network-canvas');
-    if(!canvas)return;
-    const ctx=canvas.getContext('2d');
-    let w,h;
-    function resize(){w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight;}
-    window.addEventListener('resize',resize);resize();
-    const nodes=[];const COUNT=75;
-    for(let i=0;i<COUNT;i++){nodes.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3});}
-    function draw(){
-      ctx.clearRect(0,0,w,h);
-      for(let n of nodes){n.x+=n.vx;n.y+=n.vy;if(n.x<0||n.x>w)n.vx*=-1;if(n.y<0||n.y>h)n.vy*=-1;ctx.beginPath();ctx.arc(n.x,n.y,1.2,0,Math.PI*2);ctx.fillStyle='rgba(200,241,53,0.4)';ctx.fill();}
-      for(let i=0;i<nodes.length;i++){for(let j=i+1;j<nodes.length;j++){const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y;const dist=Math.sqrt(dx*dx+dy*dy);if(dist<120){ctx.beginPath();ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(nodes[j].x,nodes[j].y);ctx.strokeStyle=`rgba(200,241,53,${0.08*(1-dist/120)})`;ctx.lineWidth=0.6;ctx.stroke();}}}
-      requestAnimationFrame(draw);
-    }
-    draw();
-  })();
+/* modals */
+function openModal(id){const e=document.getElementById('modal-'+id);if(e)e.classList.add('open');document.body.style.overflow='hidden'}
+function closeModal(id){const e=document.getElementById('modal-'+id);if(e)e.classList.remove('open');document.body.style.overflow=''}
+document.querySelectorAll('.mo').forEach(m=>m.addEventListener('click',e=>{if(e.target===m){m.classList.remove('open');document.body.style.overflow=''}}));
+function openLightbox(src){const i=document.getElementById('lb-img');i.src=src;document.getElementById('lightbox').classList.add('open')}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open')}
+document.querySelectorAll('.gi').forEach(el=>el.addEventListener('click',function(){const i=this.querySelector('img');if(i)openLightbox(i.src)}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLightbox();document.querySelectorAll('.mo.open').forEach(m=>m.classList.remove('open'));document.body.style.overflow=''}});
 
-  function openModal(id){const el=document.getElementById('modal-'+id);if(el)el.classList.add('open');document.body.style.overflow='hidden';}
-  function closeModal(id){const el=document.getElementById('modal-'+id);if(el)el.classList.remove('open');document.body.style.overflow='auto';}
-  window.openModal=openModal;window.closeModal=closeModal;
+/* i18n */
+const T={
+id:{
+'hero.tag':'available for work','hero.title':'Halo, saya<br /><span>Muhammad<br/>Dhiyauddin.</span>',
+'hero.sub':'Fresh Graduate TJKT yang memiliki pengalaman pada Mikrotik, Linux Server, Proxmox, Arduino, ESP32, UI/UX Figma, dan implementasi jaringan komputer.',
+'hero.btn1':'Lihat proyek saya →','hero.btn2':'Hubungi saya','hero.scroll':'scroll to explore',
+'hero.stats1':'Projects','hero.stats2':'Certificates','hero.stats3':'Internships',
+'about.label':'01 — about me','about.title':'Sedikit tentang saya',
+'about.p1':'Saya adalah <strong>Network Engineer</strong> yang berpengalaman dalam merancang dan mengelola infrastruktur jaringan.',
+'about.p2':'Keahlian saya mencakup <strong>konfigurasi Mikrotik &amp; server Linux</strong>, virtualisasi dengan Proxmox, dan pemrograman mikrokontroler.',
+'about.p3':'Di luar pekerjaan, saya aktif mengikuti perkembangan teknologi jaringan dan sertifikasi industri.',
+'about.cv':'↓ Lihat CV','about.excel':'Excel · Data Analysis','about.techstack':'tech stack','about.progskills':'programming skills',
+'about.progskills.note':'✓ AI-assisted = Dikembangkan dengan bantuan ChatGPT / GitHub Copilot',
+'projects.label':'02 — projects','projects.title':'Proyek pilihan','projects.btn':'Lihat Bukti &amp; Detail',
+'projects.desc1':'Mobil mini cerdas dengan sensor ultrasonik HC-SR04 untuk menghindari rintangan secara otomatis, dilengkapi fitur penyedot debu berbasis dinamo kipas.',
+'projects.desc2':'Desain antarmuka aplikasi Sistem Informasi Jurusan berbasis mobile untuk SMK Wisata Indonesia. Dibuat menggunakan Figma.',
+'projects.desc3':'Membangun server dan jaringan virtual menggunakan Proxmox VE, Mikrotik, Ubuntu, dan hosting web menggunakan aaPanel.',
+'projects.desc4':'Sistem keamanan pintu pintar berbasis ESP32 dengan modul RFID RC522 dan solenoid door lock sebagai mekanisme pengunci.',
+'projects.desc5':'Sistem pemesanan restoran digital via QR Code. Dashboard admin dengan grafik penjualan, export Excel, pemantauan pesanan secara real-time.',
+'projects.desc6':'Hadiah interaktif berbasis ESP32 dengan layar TFT 2.8", buzzer, dan tombol. Menampilkan slideshow foto &amp; pesan, memutar lagu ulang tahun otomatis.',
+'projects.desc7':'Sistem manajemen kos-kosan berbasis web dengan 3 role (Admin, Penghuni, Publik). Fitur: tagihan otomatis, verifikasi pembayaran, QR code, rating &amp; review, email notification, dan export PDF.',
+'experience.label':'03 — experience','experience.title':'Pengalaman kerja',
+'exp4.role':'Intern Admin NOC (Network Operations Center)','exp4.company':'PT Remala Abadi Tbk',
+'exp4.desc':'Mendukung operasional NOC dengan melakukan pengecekan status pelanggan via OLT, memeriksa indikasi gangguan jaringan (LOS), validasi data pelanggan berdasarkan Client ID, serta monitoring melalui Zimbra dan Tachyon.net. Mencatat, melaporkan gangguan, dan mengelola data operasional menggunakan spreadsheet.','exp4.btn':'Lihat Detail',
+'exp1.role':'Programmer Intern (Data Analyst)','exp1.company':'PT Solusi Intek Indonesia',
+'exp1.desc':'Mengumpulkan tautan (link) sumber data dari dark web, merapikannya ke dalam spreadsheet (Excel), lalu melakukan proses import data ke dalam database menggunakan perintah terminal (CLI). Setelah data terdaftar, saya menjalankan script Python untuk melakukan crawling dan mengambil data keseluruhan dari link tersebut.','exp1.btn':'Lihat Detail',
+'exp3.role':'Freelance Technician','exp3.company':'Proyek Instalasi CCTV — SMK Wisata Indonesia',
+'exp3.desc':'Terlibat dalam proyek instalasi CCTV di lingkungan sekolah. Melakukan penarikan kabel, pemasangan kamera pada titik yang ditentukan, pemasangan konektor, serta pengecekan koneksi fisik hingga perangkat siap digunakan.','exp3.btn':'Lihat Detail &amp; Dokumentasi',
+'cert.label':'04 — Certifications','cert.title':'Sertifikasi &amp; Lisensi',
+'cert.bnsp.title':'Junior Network Administrator','cert.bnsp.issuer':'BNSP / LSP Teknologi Digital','cert.bnsp.date':'Diterbitkan Apr 2026 · Berlaku s.d. Apr 2029',
+'cert.pkl.title':'Programmer Intern Certificate','cert.pkl.issuer':'PT Solusi Intek Indonesia','cert.pkl.date':'Diterbitkan Jun 2025',
+'contact.label':'05 — contact','contact.title':'Mari berkolaborasi.',
+'contact.desc':'Saya terbuka untuk peluang kerja, freelance, atau sekadar diskusi. Hubungi saya lewat email atau media sosial.',
+'footer.copyright':'© 2026 Muhammad Dhiyauddin'},
+en:{
+'hero.tag':'available for work','hero.title':'Hello, I\'m<br /><span>Muhammad<br/>Dhiyauddin.</span>',
+'hero.sub':'Fresh Graduate in Computer and Network Engineering with experience in Mikrotik, Linux Server, Proxmox, Arduino, ESP32, UI/UX Figma, and network implementation.',
+'hero.btn1':'View my projects →','hero.btn2':'Contact me','hero.scroll':'scroll to explore',
+'hero.stats1':'Projects','hero.stats2':'Certificates','hero.stats3':'Internships',
+'about.label':'01 — about me','about.title':'A bit about me',
+'about.p1':'I am a <strong>Network Engineer</strong> experienced in designing and managing network infrastructure.',
+'about.p2':'My expertise includes <strong>Mikrotik &amp; Linux server configuration</strong>, virtualization with Proxmox, and microcontroller programming.',
+'about.p3':'Outside of work, I actively follow developments in network technology and industry certifications.',
+'about.cv':'↓ View CV','about.excel':'Excel · Data Analysis','about.techstack':'tech stack','about.progskills':'programming skills',
+'about.progskills.note':'✓ AI-assisted = Developed with the help of ChatGPT / GitHub Copilot',
+'projects.label':'02 — projects','projects.title':'Featured projects','projects.btn':'View Proof &amp; Details',
+'projects.desc1':'Smart mini car with HC-SR04 ultrasonic sensor to avoid obstacles automatically, equipped with a dust vacuum feature.',
+'projects.desc2':'Mobile-based Information System application UI/UX design for SMK Wisata Indonesia. Created using Figma.',
+'projects.desc3':'Building virtual servers and networks using Proxmox VE, Mikrotik, Ubuntu, and web hosting using aaPanel.',
+'projects.desc4':'Smart door lock system based on ESP32 with RFID RC522 module and solenoid door lock as the locking mechanism.',
+'projects.desc5':'Digital restaurant ordering system via QR Code. Admin dashboard with sales graphs, Excel export, real-time order monitoring.',
+'projects.desc6':'Interactive gift based on ESP32 with 2.8" TFT display, buzzer, and button. Displays photo slideshow &amp; messages, plays birthday song automatically.',
+'projects.desc7':'Web-based boarding house management system with 3 roles (Admin, Tenant, Public). Features: automatic billing, payment verification, QR code, rating &amp; review, email notification, and PDF export.',
+'experience.label':'03 — experience','experience.title':'Work experience',
+'exp4.role':'NOC Admin Intern','exp4.company':'PT Remala Abadi Tbk',
+'exp4.desc':'Supporting NOC operations by checking customer status via OLT, examining network issue indications (LOS), validating customer data based on Client ID, and monitoring via Zimbra and Tachyon.net. Recording, reporting network issues, and managing operational data using spreadsheets.','exp4.btn':'View Details',
+'exp1.role':'Programmer Intern (Data Analyst)','exp1.company':'PT Solusi Intek Indonesia',
+'exp1.desc':'Collected source links from the dark web, organized them into spreadsheets (Excel), and imported the data into a database using CLI commands. Once the links were registered, I ran the provided Python script to crawl and extract the full data from those links.','exp1.btn':'View Details',
+'exp3.role':'Freelance Technician','exp3.company':'CCTV Installation Project — SMK Wisata Indonesia',
+'exp3.desc':'Involved in a school CCTV installation project, handling cable pulling, camera installation, connector attachment, and physical connection checking.','exp3.btn':'View Details &amp; Documentation',
+'cert.label':'04 — Certifications','cert.title':'Certifications &amp; Licenses',
+'cert.bnsp.title':'Junior Network Administrator','cert.bnsp.issuer':'BNSP / LSP Digital Technology','cert.bnsp.date':'Issued Apr 2026 · Expires Apr 2029',
+'cert.pkl.title':'Programmer Intern Certificate','cert.pkl.issuer':'PT Solusi Intek Indonesia','cert.pkl.date':'Issued Jun 2025',
+'contact.label':'05 — contact','contact.title':'Let\'s collaborate.',
+'contact.desc':'I am open to job opportunities, freelance work, or just a discussion. Contact me via email or social media.',
+'footer.copyright':'© 2026 Muhammad Dhiyauddin'}
+};
+let lang='id';
+function toggleLang(){lang=lang==='id'?'en':'id';document.getElementById('langBtn').textContent=lang==='id'?'🇬🇧 EN':'🇮🇩 ID';
+  document.querySelectorAll('[data-key]').forEach(e=>{const v=T[lang][e.getAttribute('data-key')];if(v!==undefined)e.innerHTML=v})}
 
-  function openLightbox(src,type){const lb=document.getElementById('lightbox');const img=document.getElementById('lb-img');const vid=document.getElementById('lb-vid');img.style.display='none';vid.style.display='none';if(type==='img'){img.src=src;img.style.display='block';}else if(type==='vid'){vid.src=src;vid.style.display='block';vid.load();}lb.classList.add('open');}
-  function closeLightbox(){const lb=document.getElementById('lightbox');const vid=document.getElementById('lb-vid');vid.pause();lb.classList.remove('open');}
-  window.openLightbox=openLightbox;window.closeLightbox=closeLightbox;
+/* photo crossfade */
+(function(){const p=document.querySelectorAll('.photo .ph');let i=0;setInterval(()=>{p[i].classList.remove('on');i=(i+1)%p.length;p[i].classList.add('on')},4500)})();
 
-  document.querySelectorAll('.gallery-item').forEach(el=>{
-    el.addEventListener('click',function(){const img=this.querySelector('img');const vid=this.querySelector('video');if(img){openLightbox(img.src,'img');}else if(vid){const src=vid.querySelector('source')?.src||vid.src;if(src)openLightbox(src,'vid');}});
-  });
-
-  document.addEventListener('DOMContentLoaded',function(){
-    const els=document.querySelectorAll('.fade-up');
-    const observer=new IntersectionObserver((entries)=>{entries.forEach(entry=>{if(entry.isIntersecting){entry.target.style.animationPlayState='running';}});},{threshold:0.1});
-    els.forEach(el=>{el.style.animationPlayState='paused';observer.observe(el);});
-  });
-
-  (function(){
-    const images=['foto_full.jpeg','ftoadin.jpg'];
-    let currentIndex=0;
-    const imgElement=document.getElementById('hero-img');
-    function changeImage(){currentIndex=(currentIndex+1)%images.length;imgElement.style.opacity='0';setTimeout(()=>{imgElement.src=images[currentIndex];imgElement.style.opacity='1';},300);}
-    setInterval(changeImage,3000);
-  })();
-
-  const translations={
-    id:{
-      'nav.cert':'certs',
-      'hero.tag':'available for work',
-      'hero.title':'Halo, saya<br /><span>Muhammad<br/>Dhiyauddin.</span>',
-      'hero.sub':'Fresh Graduate TJKT yang memiliki pengalaman pada Mikrotik, Linux Server, Proxmox, Arduino, ESP32, UI/UX Figma, dan implementasi jaringan komputer.',
-      'hero.btn1':'Lihat proyek saya \u2192','hero.btn2':'Hubungi saya','hero.scroll':'scroll to explore',
-      'hero.stats1':'Projects','hero.stats2':'Certificates','hero.stats3':'Internships',
-      'about.label':'01 \u2014 about me','about.title':'Sedikit tentang saya',
-      'about.p1':'Saya adalah <strong>Network Engineer</strong> yang berpengalaman dalam merancang dan mengelola infrastruktur jaringan.',
-      'about.p2':'Keahlian saya mencakup <strong>konfigurasi Mikrotik &amp; server Linux</strong>, virtualisasi dengan Proxmox, dan pemrograman mikrokontroler.',
-      'about.p3':'Di luar pekerjaan, saya aktif mengikuti perkembangan teknologi jaringan dan sertifikasi industri.',
-      'about.cv':'\u2193 Lihat CV','about.excel':'Excel \u00B7 Data Analysis',
-      'about.excel.desc':'Mampu mengolah dan menganalisis data menggunakan <strong style="color:var(--text);">SUM, AVERAGE, COUNTIF, SUMIF, IF, VLOOKUP, XLOOKUP</strong>, Pivot Table, dan Filter untuk kebutuhan laporan dan analisis data.',
-      'about.techstack':'tech stack','about.progskills':'programming skills',
-      'about.progskills.note':'\u2713 AI-assisted = Dikembangkan dengan bantuan ChatGPT / GitHub Copilot',
-      'projects.label':'02 \u2014 projects','projects.title':'Proyek pilihan','projects.btn':'Lihat Bukti &amp; Detail',
-      'projects.desc1':'Mobil mini cerdas dengan sensor ultrasonik HC-SR04 untuk menghindari rintangan secara otomatis, dilengkapi fitur penyedot debu berbasis dinamo kipas.',
-      'projects.desc2':'Desain antarmuka aplikasi Sistem Informasi Jurusan berbasis mobile untuk SMK Wisata Indonesia. Dibuat menggunakan Figma.',
-      'projects.desc3':'Membangun server dan jaringan virtual menggunakan Proxmox VE, Mikrotik, Ubuntu, dan hosting web menggunakan aaPanel.',
-      'projects.desc4':'Sistem keamanan pintu pintar berbasis ESP32 dengan modul RFID RC522 dan solenoid door lock sebagai mekanisme pengunci.',
-      'projects.desc5':'Sistem pemesanan restoran digital via QR Code. Dashboard admin dengan grafik penjualan, export Excel, pemantauan pesanan secara real-time.',
-      'projects.desc6':'Hadiah interaktif berbasis ESP32 dengan layar TFT 2.8", buzzer, dan tombol. Menampilkan slideshow foto &amp; pesan, memutar lagu ulang tahun otomatis.',
-      'projects.desc7':'Sistem manajemen kos-kosan berbasis web dengan 3 role (Admin, Penghuni, Publik). Fitur: tagihan otomatis, verifikasi pembayaran, QR code, rating & review, email notification, dan export PDF.',
-      
-      'experience.label':'03 \u2014 experience','experience.title':'Pengalaman kerja',
-      'exp4.role':'Intern Admin NOC  (Network Operations Center)','exp4.company':'PT Remala Abadi Tbk',
-      'exp4.desc':'Mendukung operasional NOC dengan melakukan pengecekan status pelanggan via OLT, memeriksa indikasi gangguan jaringan (LOS), validasi data pelanggan berdasarkan Client ID, serta monitoring melalui Zimbra dan Tachyon.net. Mencatat, melaporkan gangguan, dan mengelola data operasional menggunakan spreadsheet.',
-      'exp4.btn':'Lihat Detail',
-      'exp1.role':'Programmer Intern (Data Analyst)','exp1.company':'PT Solusi Intek Indonesia',
-      'exp1.desc':'Mengumpulkan tautan (link) sumber data dari dark web, merapikannya ke dalam spreadsheet (Excel), lalu melakukan proses import data ke dalam database menggunakan perintah terminal (CLI). Setelah data terdaftar, saya menjalankan script Python untuk melakukan crawling dan mengambil data keseluruhan dari link tersebut.',
-      'exp1.btn':'Lihat Detail',
-      'exp3.role':'Freelance Technician','exp3.company':'Proyek Instalasi CCTV — SMK Wisata Indonesia','exp3.desc':'Terlibat dalam proyek instalasi CCTV di lingkungan sekolah. Melakukan penarikan kabel, pemasangan kamera pada titik yang ditentukan, pemasangan konektor, serta pengecekan koneksi fisik hingga perangkat siap digunakan.','exp3.btn':'Lihat Detail & Dokumentasi',
-      
-      'cert.label':'04 \u2014 Certifications','cert.title':'Sertifikasi &amp; Lisensi','cert.btn':'Lihat Sertifikat',
-      'cert.bnsp.title':'Junior Network Administrator','cert.bnsp.issuer':'BNSP / LSP Teknologi Digital','cert.bnsp.date':'Diterbitkan Apr 2026 · Berlaku s.d. Apr 2029',
-      'cert.pkl.title':'Programmer Intern Certificate','cert.pkl.issuer':'PT Solusi Intek Indonesia','cert.pkl.date':'Diterbitkan Jun 2025',
-
-      'contact.label':'05 \u2014 contact','contact.title':'Mari berkolaborasi.',
-      'contact.desc':'Saya terbuka untuk peluang kerja, freelance, atau sekadar diskusi. Hubungi saya lewat email atau media sosial.',
-      'footer.copyright':'\u00A9 2026 Muhammad Dhiyauddin',
-    },
-    en:{
-      'nav.cert':'certs',
-      'hero.tag':'available for work',
-      'hero.title':'Hello, I\'m<br /><span>Muhammad<br/>Dhiyauddin.</span>',
-      'hero.sub':'Fresh Graduate in Computer and Network Engineering with experience in Mikrotik, Linux Server, Proxmox, Arduino, ESP32, UI/UX Figma, and network implementation.',
-      'hero.btn1':'View my projects \u2192','hero.btn2':'Contact me','hero.scroll':'scroll to explore',
-      'hero.stats1':'Projects','hero.stats2':'Certificates','hero.stats3':'Internships',
-      'about.label':'01 \u2014 about me','about.title':'A bit about me',
-      'about.p1':'I am a <strong>Network Engineer</strong> experienced in designing and managing network infrastructure.',
-      'about.p2':'My expertise includes <strong>Mikrotik &amp; Linux server configuration</strong>, virtualization with Proxmox, and microcontroller programming.',
-      'about.p3':'Outside of work, I actively follow developments in network technology and industry certifications.',
-      'about.cv':'\u2193 View CV','about.excel':'Excel \u00B7 Data Analysis',
-      'about.excel.desc':'Able to process and analyze data using <strong style="color:var(--text);">SUM, AVERAGE, COUNTIF, SUMIF, IF, VLOOKUP, XLOOKUP</strong>, Pivot Table, and Filter for reporting and data analysis needs.',
-      'about.techstack':'tech stack','about.progskills':'programming skills',
-      'about.progskills.note':'\u2713 AI-assisted = Developed with the help of ChatGPT / GitHub Copilot',
-      'projects.label':'02 \u2014 projects','projects.title':'Featured projects','projects.btn':'View Proof &amp; Details',
-      'projects.desc1':'Smart mini car with HC-SR04 ultrasonic sensor to avoid obstacles automatically, equipped with a dust vacuum feature.',
-      'projects.desc2':'Mobile-based Information System application UI/UX design for SMK Wisata Indonesia. Created using Figma.',
-      'projects.desc3':'Building virtual servers and networks using Proxmox VE, Mikrotik, Ubuntu, and web hosting using aaPanel.',
-      'projects.desc4':'Smart door lock system based on ESP32 with RFID RC522 module and solenoid door lock as the locking mechanism.',
-      'projects.desc5':'Digital restaurant ordering system via QR Code. Admin dashboard with sales graphs, Excel export, real-time order monitoring.',
-      'projects.desc6':'Interactive gift based on ESP32 with 2.8" TFT display, buzzer, and button. Displays photo slideshow &amp; messages, plays birthday song automatically.',
-      'projects.desc7':'Web-based boarding house management system with 3 roles (Admin, Tenant, Public). Features: automatic billing, payment verification, QR code, rating & review, email notification, and PDF export.',
-      
-      'experience.label':'03 \u2014 experience','experience.title':'Work experience',
-      'exp4.role':'NOC Admin Intern','exp4.company':'PT Remala Abadi Tbk',
-      'exp4.desc':'Supporting NOC operations by checking customer status via OLT, examining network issue indications (LOS), validating customer data based on Client ID, and monitoring via Zimbra and Tachyon.net. Recording, reporting network issues, and managing operational data using spreadsheets.',
-      'exp4.btn':'View Details',
-      'exp1.role':'Programmer Intern (Data Analyst)','exp1.company':'PT Solusi Intek Indonesia',
-      'exp1.desc':'Collected source links from the dark web, organized them into spreadsheets (Excel), and imported the data into a database using CLI commands. Once the links were registered, I ran the provided Python script to crawl and extract the full data from those links.',
-      'exp1.btn':'View Details',
-      'exp3.role':'Freelance Technician','exp3.company':'CCTV Installation Project — SMK Wisata Indonesia','exp3.desc':'Involved in a school CCTV installation project, handling cable pulling, camera installation, connector attachment, and physical connection checking.','exp3.btn':'View Details & Documentation',
-      
-      'cert.label':'04 \u2014 Certifications','cert.title':'Certifications &amp; Licenses','cert.btn':'View Certificate',
-      'cert.bnsp.title':'Junior Network Administrator','cert.bnsp.issuer':'BNSP / LSP Digital Technology','cert.bnsp.date':'Issued Apr 2026 · Expires Apr 2029',
-      'cert.pkl.title':'Programmer Intern Certificate','cert.pkl.issuer':'PT Solusi Intek Indonesia','cert.pkl.date':'Issued Jun 2025',
-
-      'contact.label':'05 \u2014 contact','contact.title':'Let\'s collaborate.',
-      'contact.desc':'I am open to job opportunities, freelance work, or just a discussion. Contact me via email or social media.',
-      'footer.copyright':'\u00A9 2026 Muhammad Dhiyauddin',
-    }
-  };
-
-  let currentLang='id';
-  function toggleLang(){currentLang=currentLang==='id'?'en':'id';document.getElementById('langBtn').textContent=currentLang==='id'?'\uD83C\uDDEC\uD83C\uDDE7 EN':'\uD83C\uDDEE\uD83C\uDDE9 ID';updateContent(currentLang);}
-  function updateContent(lang){const t=translations[lang];if(!t)return;document.querySelectorAll('[data-key]').forEach(el=>{const key=el.getAttribute('data-key');if(t[key]!==undefined)el.innerHTML=t[key];});}
-  document.addEventListener('DOMContentLoaded',()=>updateContent('id'));
-</script>
-
-<script>
-  /* ===== TERMINAL TYPING EFFECT ===== */
-  (function(){
-    const body=document.getElementById('term-body');
-    if(!body) return;
-    const lines=[
-      {prompt:'$ ', text:'whoami', after:'\u2192 Dhiyauddin'},
-      {prompt:'$ ', text:'cat skills.txt', after:'\u2192 Mikrotik / Linux / Proxmox / ESP32'},
-      {prompt:'$ ', text:'echo $status', after:'\u2192 available for work \u2713'}
-    ];
-    let li=0, ci=0, phase='cmd', out='';
-    function render(cursorOn){
-      body.innerHTML=out+(cursorOn?'<span class="term-cursor"></span>':'');
-    }
-    function step(){
-      if(li>=lines.length){ render(true); return; }
-      const L=lines[li];
-      if(phase==='cmd'){
-        if(ci<=L.text.length){
-          const typed=L.text.slice(0,ci);
-          const doneHTML=out;
-          body.innerHTML=doneHTML+'<span class="term-line"><span class="term-prompt">'+L.prompt+'</span>'+typed+'<span class="term-cursor"></span></span>';
-          ci++;
-          setTimeout(step, 55+Math.random()*45);
-        } else {
-          out += '<span class="term-line"><span class="term-prompt">'+L.prompt+'</span>'+L.text+'</span>';
-          phase='after'; ci=0;
-          setTimeout(step, 260);
-        }
-      } else {
-        out += '<span class="term-line" style="color:var(--accent);">'+L.after+'</span>';
-        render(false);
-        li++; phase='cmd'; ci=0;
-        setTimeout(step, 420);
-      }
-    }
-    setTimeout(step, 500);
-  })();
-
-  /* ===== CURSOR GLOW ===== */
-  (function(){
-    const glow=document.getElementById('cursor-glow');
-    if(!glow) return;
-    let shown=false;
-    window.addEventListener('mousemove', (e)=>{
-      glow.style.transform = 'translate('+e.clientX+'px, '+e.clientY+'px) translate(-50%, -50%)';
-      if(!shown){ glow.classList.add('active'); shown=true; }
-    }, {passive:true});
-    window.addEventListener('mouseleave', ()=>glow.classList.remove('active'));
-  })();
-
-  /* ===== 3D TILT ON PROJECT CARDS ===== */
-  (function(){
-    const cards=document.querySelectorAll('.project-card');
-    const MAX_TILT=7;
-    cards.forEach(card=>{
-      card.addEventListener('mousemove', (e)=>{
-        const r=card.getBoundingClientRect();
-        const px=(e.clientX-r.left)/r.width;
-        const py=(e.clientY-r.top)/r.height;
-        const rotY=(px-0.5)*MAX_TILT*2;
-        const rotX=(0.5-py)*MAX_TILT*2;
-        card.style.transform = `translateY(-3px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
-      });
-      card.addEventListener('mouseleave', ()=>{ card.style.transform=''; });
-    });
-  })();
-
-  /* ===== MINI NETWORK QUIZ ===== */
-  function resetQuiz(){
-    const opts=document.querySelectorAll('#quiz-options .quiz-opt');
-    opts.forEach(o=>{o.disabled=false; o.classList.remove('correct','wrong');});
-    document.getElementById('quiz-feedback').textContent='';
-    document.getElementById('quiz-feedback').className='quiz-feedback';
-    document.getElementById('quiz-retry').style.display='none';
+/* terminal */
+(function(){
+  const b=document.getElementById('term-body');
+  const L=[{t:'whoami',a:'→ Dhiyauddin'},{t:'cat skills.txt',a:'→ Mikrotik / Linux / Proxmox / ESP32'},{t:'echo $status',a:'→ available for work ✓'}];
+  let li=0,ci=0,ph='c',out='';
+  function s(){
+    if(li>=L.length){b.innerHTML=out+'<span class="cur"></span>';return}
+    const l=L[li];
+    if(ph==='c'){
+      if(ci<=l.t.length){b.innerHTML=out+'<span class="tl"><span class="tp">$ </span>'+l.t.slice(0,ci)+'<span class="cur"></span></span>';ci++;setTimeout(s,55+Math.random()*45)}
+      else{out+='<span class="tl"><span class="tp">$ </span>'+l.t+'</span>';ph='a';ci=0;setTimeout(s,260)}
+    }else{out+='<span class="tl" style="color:var(--accent)">'+l.a+'</span>';b.innerHTML=out;li++;ph='c';ci=0;setTimeout(s,420)}
   }
-  window.resetQuiz=resetQuiz;
-  (function(){
-    const opts=document.querySelectorAll('#quiz-options .quiz-opt');
-    const feedback=document.getElementById('quiz-feedback');
-    const retryBtn=document.getElementById('quiz-retry');
-    opts.forEach(opt=>{
-      opt.addEventListener('click', function(){
-        const isCorrect=this.getAttribute('data-correct')==='true';
-        opts.forEach(o=>{
-          o.disabled=true;
-          if(o.getAttribute('data-correct')==='true') o.classList.add('correct');
-        });
-        if(isCorrect){
-          feedback.textContent='Benar! DHCP membagikan alamat IP otomatis ke perangkat di jaringan.';
-          feedback.className='quiz-feedback ok';
-          fireConfetti();
-        } else {
-          this.classList.add('wrong');
-          feedback.textContent='Belum tepat. Jawaban yang benar sudah disorot di atas.';
-          feedback.className='quiz-feedback no';
-        }
-        retryBtn.style.display='inline-block';
-      });
-    });
-  })();
+  setTimeout(s,500);
+})();
 
-  /* ===== EASTER EGG: click logo 5x ===== */
-  (function(){
-    const logo=document.getElementById('nav-logo');
-    if(!logo) return;
-    let clicks=0, timer=null;
-    logo.addEventListener('click', ()=>{
-      clicks++;
-      clearTimeout(timer);
-      timer=setTimeout(()=>{clicks=0;}, 1500);
-      if(clicks>=5){
-        clicks=0;
-        fireConfetti(true);
-      }
-    });
-  })();
+/* reveal */
+(function(){
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){
+    const sib=[...e.target.parentElement.children].filter(c=>c.classList.contains('rv'));
+    setTimeout(()=>e.target.classList.add('in'),sib.indexOf(e.target)*80);io.unobserve(e.target)}}),{threshold:.1});
+  document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+})();
 
-  /* ===== CONFETTI ===== */
-  function fireConfetti(big){
-    const canvas=document.getElementById('confetti-canvas');
-    if(!canvas) return;
-    const ctx=canvas.getContext('2d');
-    canvas.width=window.innerWidth; canvas.height=window.innerHeight;
-    const colors=['#c8f135','#e8e8e8','#d8ff45','#8fae1f'];
-    const count=big?140:70;
-    const particles=[];
-    for(let i=0;i<count;i++){
-      particles.push({
-        x: canvas.width/2 + (Math.random()-0.5)*(big?canvas.width*0.6:200),
-        y: big ? canvas.height*0.15 : 90,
-        vx: (Math.random()-0.5)*6,
-        vy: Math.random()*-4-2,
-        g: 0.18+Math.random()*0.12,
-        size: 4+Math.random()*5,
-        color: colors[Math.floor(Math.random()*colors.length)],
-        rot: Math.random()*Math.PI,
-        vr: (Math.random()-0.5)*0.3,
-        life: 0
-      });
-    }
-    let frame=0;
-    const maxFrames=110;
-    function tick(){
-      frame++;
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      particles.forEach(p=>{
-        p.vy += p.g; p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.life++;
-        ctx.save();
-        ctx.translate(p.x,p.y);
-        ctx.rotate(p.rot);
-        ctx.globalAlpha = Math.max(0, 1 - frame/maxFrames);
-        ctx.fillStyle = p.color;
-        ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size*0.6);
-        ctx.restore();
-      });
-      if(frame<maxFrames){
-        requestAnimationFrame(tick);
-      } else {
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-      }
-    }
-    tick();
-  }
-  window.fireConfetti=fireConfetti;
-
-  /* ===== STAGGERED SCROLL REVEAL ===== */
-  (function(){
-    const groups=[
-      document.querySelectorAll('.project-card'),
-      document.querySelectorAll('.skill-tag'),
-      document.querySelectorAll('.exp-item'),
-      document.querySelectorAll('.cert-card')
-    ];
-    groups.forEach(list=>{
-      list.forEach(el=>el.classList.add('stagger-item'));
-    });
-    const observer=new IntersectionObserver((entries)=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting){
-          const parent=entry.target.parentElement;
-          const siblings=Array.from(parent.children).filter(c=>c.classList.contains('stagger-item'));
-          const idx=siblings.indexOf(entry.target);
-          setTimeout(()=>entry.target.classList.add('in-view'), idx*90);
-          observer.unobserve(entry.target);
-        }
-      });
-    }, {threshold:0.15});
-    document.querySelectorAll('.stagger-item').forEach(el=>observer.observe(el));
-  })();
+/* scroll spy */
+(function(){
+  const links=[...document.querySelectorAll('.snav a')];
+  const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){
+    links.forEach(l=>l.classList.toggle('act',l.getAttribute('href')==='#'+e.target.id))}}),{rootMargin:'-45% 0px -50% 0px'});
+  secs.forEach(s=>s&&io.observe(s));
+})();
 </script>
 </body>
 </html>
