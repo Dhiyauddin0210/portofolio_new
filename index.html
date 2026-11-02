@@ -2,10 +2,12 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#121212" />
 <title>Muhammad Dhiyauddin — Network Engineer</title>
 <meta name="description" content="Portfolio Muhammad Dhiyauddin — Network Engineer berbasis di Jakarta." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;700;800&family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -136,8 +138,6 @@ h1 span{font-family:var(--serif);font-weight:400;font-style:italic;color:var(--a
 #contact .btn:hover{background:var(--accent);border-color:var(--accent);box-shadow:4px 4px 0 var(--paper)}
 .foot{margin-top:4rem;padding-top:1.2rem;border-top:1px solid #333;font-family:var(--mono);font-size:.74rem;color:#8d897c}
 
-.rv{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
-.rv.in{opacity:1;transform:none}
 
 /* MODALS */
 .mo{display:none;position:fixed;inset:0;z-index:999;background:rgba(18,18,18,.78);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:1.2rem}
@@ -171,36 +171,216 @@ h1 span{font-family:var(--serif);font-weight:400;font-style:italic;color:var(--a
 .lbox img{max-width:90vw;max-height:88vh;pointer-events:none}
 .lbx{position:absolute;top:1.2rem;right:1.2rem;background:var(--accent);border:0;color:#fff;width:40px;height:40px;cursor:pointer;font-size:1.2rem}
 
-/* ===== MOBILE ===== */
+
+/* ===== VIBE / SMOOTH LAYER ===== */
+:root{--ease:cubic-bezier(.22,1,.36,1);--green:#1f9d63}
+html{-webkit-text-size-adjust:100%}
+body{-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body.lock{overflow:hidden}
+.app{overflow-x:clip}
+img{max-width:100%}
+button{font-family:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+main{background-image:radial-gradient(rgba(18,18,18,.085) 1px,transparent 1px);background-size:22px 22px}
+
+/* scroll progress + cursor glow */
+#progress{position:fixed;top:0;left:0;height:3px;width:100%;background:var(--accent);transform-origin:0 50%;transform:scaleX(0);z-index:1200;will-change:transform;pointer-events:none}
+#glow{position:fixed;left:0;top:0;width:560px;height:560px;margin:-280px 0 0 -280px;border-radius:50%;pointer-events:none;z-index:2;background:radial-gradient(circle,rgba(255,77,28,.12),rgba(255,77,28,0) 62%);opacity:0;transition:opacity .5s;will-change:transform}
+
+/* smoother reveal (animation, so hover transforms keep working afterwards) */
+@keyframes rvIn{from{opacity:0;transform:translateY(28px);filter:blur(7px)}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes rvLite{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.rv{opacity:0}
+.rv.in{opacity:1;animation:rvIn .85s var(--ease) var(--d,0ms) backwards}
+
+/* interactions */
+.marq:hover .marq-in{animation-play-state:paused}
+.btn:active{transform:translate(1px,1px);box-shadow:none}
+.photo{cursor:pointer;-webkit-user-select:none;user-select:none}
+.photo .tap{position:absolute;top:1.2rem;right:1.2rem;z-index:3;font-family:var(--mono);font-size:.66rem;color:var(--paper);border:1px solid rgba(255,255,255,.4);padding:.3rem .65rem;border-radius:999px;background:rgba(0,0,0,.28);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:opacity .5s;pointer-events:none}
+.photo .tap.gone{opacity:0}
+.term{transition:transform .18s ease-out}
+.ticket{will-change:transform}
+.side-name{cursor:default;-webkit-user-select:none;user-select:none}
+
+/* terminal input */
+.tt{max-height:190px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#444 transparent}
+.tt .o{display:block;color:#bdb9ad}
+.tin{display:flex;align-items:center;gap:.5rem;padding:.5rem .9rem;border-top:1px solid #2e2e2e;font-family:var(--mono);font-size:.74rem;cursor:text}
+.tin input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:#e8e5da;font:inherit;caret-color:var(--accent)}
+.tin input::placeholder{color:#5d5a50}
+
+/* footer, toast, confetti, dock */
+.foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.6rem 1.5rem}
+.built{display:inline-flex;align-items:center;gap:.5rem;color:#a29e90}
+.built i{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,77,28,.7)}70%,100%{box-shadow:0 0 0 9px rgba(255,77,28,0)}}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,24px);opacity:0;background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:.78rem;padding:.75rem 1.1rem;border-left:4px solid var(--accent);z-index:1300;transition:opacity .4s,transform .5s var(--ease);pointer-events:none;max-width:90vw;text-align:center}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1500}
+.dock{display:none}
+.grab{display:none}
+.mo.open{animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.mb{overscroll-behavior:contain}
+
+/* ===== MOBILE / TABLET ===== */
 @media(max-width:980px){
   .app{grid-template-columns:1fr}
   aside{position:relative;height:auto;display:block}
-  .photo{height:62vh;min-height:360px}
-  .side-body{margin-top:-5rem}
-  .snav{flex-direction:row;overflow-x:auto;border-top:1px solid #2c2c2c;scrollbar-width:none}
-  .snav a{border-bottom:0;padding:.7rem 1rem .7rem 0;white-space:nowrap;gap:.4rem}
-  .snav a:hover,.snav a.act{padding-left:0}
-  .h-row{grid-template-columns:1fr}.term{width:100%;max-width:330px}
-  .ab{grid-template-columns:1fr;gap:2rem}
-  .prow{grid-template-columns:44px 1fr;gap:.5rem 1rem}
-  .prow .pd{grid-column:2}.prow .pgo{grid-column:2;width:fit-content}
-  .ex{grid-template-columns:1fr;gap:1rem}
-  .sec{padding:4rem 1.3rem 3.5rem}.marq{margin:0 -1.3rem}
+  .photo{flex:none;height:72vh;height:72svh;min-height:390px;max-height:680px}
+  .photo .ph{background-position:50% 12%;filter:none}
+  .side-body{margin-top:-6.2rem;padding:0 1.3rem 1.3rem}
+  .side-name{font-size:clamp(2.5rem,12vw,3.4rem)}
+  .side-role{font-size:.76rem;margin:.8rem 0 1.2rem}
+  .snav{display:none}
+  .side-foot{margin-top:0;gap:1rem}
+  .lang{padding:.6rem 1.1rem;min-height:42px;font-size:.76rem}
+  .soc{gap:1.1rem;font-size:.78rem}
+  .soc a{padding:.6rem 0}
+
+  .dock{display:flex;position:fixed;left:50%;bottom:calc(12px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:600;width:min(94vw,460px);padding:6px;gap:2px;justify-content:space-between;background:rgba(18,18,18,.84);-webkit-backdrop-filter:blur(14px) saturate(1.5);backdrop-filter:blur(14px) saturate(1.5);border:1px solid rgba(255,255,255,.13);border-radius:22px;box-shadow:0 12px 34px rgba(0,0,0,.38);transition:transform .45s var(--ease)}
+  .dock a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:50px;border-radius:16px;text-decoration:none;color:#9f9b8e;font-family:var(--mono);font-size:.58rem;transition:color .25s,background .25s,transform .2s}
+  .dock a:active{transform:scale(.92)}
+  .dock a.act{color:#fff;background:var(--accent)}
+  .dock svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  body.lock .dock{transform:translate(-50%,170%)}
+  #toast{bottom:calc(86px + env(safe-area-inset-bottom))}
+
+  .sec{padding:4rem 1.3rem 3.5rem}
+  .marq{margin:0 -1.3rem}
+  .marq-in span{font-size:1.2rem}
+  .sec-h{flex-direction:column;align-items:flex-start;gap:.8rem;margin-bottom:2rem}
+  .big{font-size:clamp(2.3rem,11.5vw,3.6rem)}
+  .rv.in{animation-name:rvLite;animation-duration:.7s}
+
+  #hero{min-height:0;padding-top:3.2rem;gap:2.2rem}
+  h1{font-size:clamp(3rem,15vw,5rem);margin:1rem 0 1.4rem}
+  .h-sub{font-size:1.28rem}
+  .h-row{grid-template-columns:1fr;gap:1.8rem}
+  .term{width:100%;max-width:none}
+  .tin input{font-size:16px}
+  .tin{padding:.4rem .9rem}
+  .h-right{width:100%;gap:1.6rem}
+  .btns{width:100%}
+  .btns .btn{flex:1 1 100%;justify-content:center;padding:1rem 1.2rem}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;width:100%;border-top:1px solid var(--line);padding-top:1.2rem}
+  .stat h3{font-size:2rem}
+  .stat span{font-size:.62rem;display:block;line-height:1.3;margin-top:.2rem}
+
+  .ab{grid-template-columns:1fr;gap:2.2rem}
+  .ab-t p{font-size:1.04rem}
+  .pill{font-size:.76rem;padding:.45rem .85rem}
+  .tbl,.tbl tbody{display:block}
+  .tbl tr{display:grid;grid-template-columns:1fr auto;gap:.15rem .8rem;padding:.75rem 0;border-bottom:1px solid var(--line)}
+  .tbl td{display:block;padding:0;border:0}
+  .tbl td:first-child{width:auto}
+  .tbl td:nth-child(2){grid-column:1/-1;grid-row:2}
+  .tbl .ai{grid-column:2;grid-row:1}
+
+  .prow{grid-template-columns:34px 1fr;gap:.45rem .8rem;padding:1.3rem .3rem;align-items:start}
+  .prow:hover{padding-left:.3rem}
+  .pn{padding-top:.3rem;font-size:.82rem}
+  .pt{font-size:1.22rem}
+  .prow .pd,.prow .pgo{grid-column:2}
+  .pgo{width:fit-content;margin-top:.4rem;padding:.6rem 1rem;min-height:42px}
+
+  .ex{grid-template-columns:1fr;gap:1rem;padding:1.6rem 0}
+  .ex-y{font-size:1.7rem}
+  .ex-r{font-size:1.3rem}
+  .ex-c{font-size:1.15rem;flex-wrap:wrap}
+  .dbtn{min-height:44px;padding:.7rem 1.2rem}
+
+  .tk{grid-template-columns:1fr}
+  .ticket{padding:1.3rem 1.2rem 1.3rem 1.6rem}
+
+  #contact{padding-bottom:7.5rem}
+  .mail{font-size:clamp(1.2rem,6.3vw,3.4rem)}
+  .c-desc{font-size:1.3rem}
+  #contact .btns .btn{flex:1 1 calc(50% - .4rem)}
+  .foot{margin-top:3rem}
+
+  .qz{padding:1.2rem;box-shadow:5px 5px 0 var(--accent)}
+  .qz-q{font-size:1.15rem}
+}
+
+@media(max-width:700px){
+  .mo{align-items:flex-end;padding:0}
+  .mb{max-width:none;max-height:92vh;max-height:92svh;border-width:2px 0 0;border-radius:20px 20px 0 0;box-shadow:none;animation:sheet .42s var(--ease) backwards}
+  .grab{display:block;width:44px;height:4px;border-radius:4px;background:var(--line);margin:9px auto 0}
+  .mh{position:sticky;top:0;z-index:2;background:var(--paper);padding:1rem 1.1rem .9rem}
+  .mtitle{font-size:1.2rem}
+  .mx{width:42px;height:42px;font-size:1.1rem}
+  .mbody{padding:1.2rem 1.1rem calc(1.6rem + env(safe-area-inset-bottom))}
+  .gal{grid-template-columns:repeat(2,1fr);gap:.6rem}
+  .gi img{height:115px}
+  .gal-p .gi img{height:175px}
+  .yt{padding:1.4rem .6rem}
+  .yt b{font-size:1.8rem}
+  .lbox img{max-width:97vw;max-height:84vh}
+}
+@keyframes sheet{from{transform:translateY(100%)}to{transform:none}}
+
+@media(max-width:380px){
+  .stats{grid-template-columns:repeat(2,1fr);gap:1rem}
+  .gal{grid-template-columns:1fr}
+  .dock a{font-size:.54rem}
+}
+
+/* touch devices: no sticky hover states */
+@media(hover:none){
+  .prow:hover{background:transparent;color:inherit;padding-left:.3rem}
+  .prow:hover .pd{color:var(--muted)}
+  .prow:hover .pgo{background:none;border-color:currentColor;color:inherit}
+  .prow:active{background:var(--ink);color:var(--paper)}
+  .prow:active .pd{color:#b9b5a8}
+  .prow:active .pgo{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn:hover{background:transparent;border-color:var(--ink);color:var(--ink);transform:none;box-shadow:none}
+  .btn-p:hover{background:var(--ink);color:var(--paper)}
+  #contact .btn:hover{background:transparent;border-color:var(--paper);color:var(--paper);box-shadow:none}
+  .btn:active{background:var(--accent);border-color:var(--accent);color:#fff}
+  .ticket:hover{transform:none;box-shadow:none}
+  .ticket:active{background:var(--paper);box-shadow:4px 4px 0 var(--accent)}
+  .pill:hover{background:var(--paper);color:var(--ink);transform:none}
+  .gi:hover{transform:none;box-shadow:none}
+  .photo:hover .ph{filter:grayscale(1) contrast(1.1)}
+}
+@media(hover:none) and (max-width:980px){.photo:hover .ph{filter:none}}
+
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .marq-in{animation:none!important}
+  .rv{opacity:1!important}
 }
 </style>
+<noscript><style>.rv{opacity:1!important}</style></noscript>
 </head>
 <body>
+<div id="progress"></div>
+<div id="glow"></div>
+<canvas id="confetti"></canvas>
+<div id="toast" role="status"></div>
+<nav class="dock" aria-label="Navigasi">
+  <a href="#hero" class="act"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Home</a>
+  <a href="#about"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>About</a>
+  <a href="#projects"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 14h4"/></svg>Work</a>
+  <a href="#experience"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V4h6v3"/></svg>Exp</a>
+  <a href="#certifications"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M8.5 14L7 21l5-3 5 3-1.500-7"/></svg>Certs</a>
+  <a href="#contact"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>Contact</a>
+</nav>
 <div class="app">
 
 <!-- ===== SIDEBAR ===== -->
 <aside>
-  <div class="photo">
+  <div class="photo" onclick="togglePhoto()" title="Tap / klik untuk ganti foto">
     <div class="ph on" style="background-image:url('foto_full.jpeg')"></div>
     <div class="ph" style="background-image:url('ftoadin.jpg')"></div>
     <div class="stamp"><i></i>available for work</div>
+    <div class="tap" aria-hidden="true">↻ tap</div>
   </div>
   <div class="side-body">
-    <div class="side-name">Muhammad<br/><em>Dhiyauddin</em></div>
+    <div class="side-name" id="side-name">Muhammad<br/><em>Dhiyauddin</em></div>
     <div class="side-role">Network Engineer · Jakarta, ID</div>
     <nav class="snav">
       <a href="#hero" class="act">Home <span>00</span></a>
@@ -221,14 +401,15 @@ h1 span{font-family:var(--serif);font-weight:400;font-style:italic;color:var(--a
 <!-- HERO -->
 <section class="sec" id="hero">
   <div>
-    <div class="h-tag"><b></b><span data-key="hero.tag">available for work</span></div>
-    <h1 data-key="hero.title">Halo, saya<br /><span>Muhammad<br/>Dhiyauddin.</span></h1>
-    <p class="h-sub" data-key="hero.sub">Fresh Graduate TJKT yang memiliki pengalaman pada Mikrotik, Linux Server, Proxmox, Arduino, ESP32, UI/UX Figma, dan implementasi jaringan komputer.</p>
+    <div class="h-tag rv"><b></b><span data-key="hero.tag">available for work</span></div>
+    <h1 class="rv" data-key="hero.title">Halo, saya<br /><span>Muhammad<br/>Dhiyauddin.</span></h1>
+    <p class="h-sub rv" data-key="hero.sub">Fresh Graduate TJKT yang memiliki pengalaman pada Mikrotik, Linux Server, Proxmox, Arduino, ESP32, UI/UX Figma, dan implementasi jaringan komputer.</p>
   </div>
-  <div class="h-row">
+  <div class="h-row rv">
     <div class="term">
       <div class="tb"><i></i><i></i><i></i><span>dhiya@portfolio: ~</span></div>
-      <div class="tt" id="term-body"></div>
+      <div class="tt" id="term-body" aria-live="polite"></div>
+      <label class="tin"><span class="tp">$</span><input id="term-in" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" placeholder="ketik: help" aria-label="terminal input"/></label>
     </div>
     <div class="h-right">
       <div class="btns">
@@ -251,7 +432,7 @@ h1 span{font-family:var(--serif);font-weight:400;font-style:italic;color:var(--a
 
 <!-- ABOUT -->
 <section class="sec" id="about">
-  <div class="sec-h"><span class="lb" data-key="about.label">01 — about me</span><h2 class="big" data-key="about.title">Sedikit tentang saya</h2></div>
+  <div class="sec-h rv"><span class="lb" data-key="about.label">01 — about me</span><h2 class="big" data-key="about.title">Sedikit tentang saya</h2></div>
   <div class="ab">
     <div class="ab-t rv">
       <p data-key="about.p1">Saya adalah <strong>Network Engineer</strong> yang berpengalaman dalam merancang dan mengelola infrastruktur jaringan.</p>
@@ -282,21 +463,21 @@ h1 span{font-family:var(--serif);font-weight:400;font-style:italic;color:var(--a
 
 <!-- PROJECTS -->
 <section class="sec" id="projects">
-  <div class="sec-h"><span class="lb" data-key="projects.label">02 — projects</span><h2 class="big" data-key="projects.title">Proyek pilihan</h2></div>
+  <div class="sec-h rv"><span class="lb" data-key="projects.label">02 — projects</span><h2 class="big" data-key="projects.title">Proyek pilihan</h2></div>
   <div class="rows">
-    <div class="prow rv" onclick="openModal('proj-01')"><span class="pn">01</span><div class="pt">Smart Car Mini</div><p class="pd" data-key="projects.desc1">Mobil mini cerdas dengan sensor ultrasonik HC-SR04 untuk menghindari rintangan secara otomatis, dilengkapi fitur penyedot debu berbasis dinamo kipas.</p><button class="pgo" data-key="projects.btn">Lihat Bukti &amp; Detail</button></div>
-    <div class="prow rv" onclick="openModal('proj-07')"><span class="pn">02</span><div class="pt">Kos Adin — Sistem Manajemen Kos-Kosan</div><p class="pd" data-key="projects.desc7">Sistem manajemen kos-kosan berbasis web dengan 3 role (Admin, Penghuni, Publik). Fitur: tagihan otomatis, verifikasi pembayaran, QR code, rating &amp; review, email notification, dan export PDF.</p><button class="pgo" data-key="projects.btn">Lihat Bukti &amp; Detail</button></div>
-    <div class="prow rv" onclick="openModal('proj-02')"><span class="pn">03</span><div class="pt">UI/UX Aplikasi TJKT – SI Wistek</div><p class="pd" data-key="projects.desc2">Desain antarmuka aplikasi Sistem Informasi Jurusan berbasis mobile untuk SMK Wisata Indonesia. Dibuat menggunakan Figma.</p><button class="pgo" data-key="projects.btn">Lihat Bukti &amp; Detail</button></div>
-    <div class="prow rv" onclick="openModal('proj-05')"><span class="pn">04</span><div class="pt">Caffe Adin — QR Code Restoran</div><p class="pd" data-key="projects.desc5">Sistem pemesanan restoran digital via QR Code. Pelanggan scan QR di meja, pesan mandiri via HP. Dashboard admin dengan grafik penjualan, export Excel hasil penjualan, pemantauan pesanan secara real-time</p><button class="pgo" data-key="projects.btn">Lihat Bukti &amp; Detail</button></div>
-    <div class="prow rv" onclick="openModal('proj-03')"><span class="pn">05</span><div class="pt">Server dan Jaringan Virtual</div><p class="pd" data-key="projects.desc3">Membangun server dan jaringan virtual menggunakan Proxmox VE, Mikrotik, Ubuntu, dan hosting web menggunakan aaPanel.</p><button class="pgo" data-key="projects.btn">Lihat Bukti &amp; Detail</button></div>
-    <div class="prow rv" onclick="openModal('proj-04')"><span class="pn">06</span><div class="pt">Smart Door Lock Berbasis ESP32 &amp; RFID</div><p class="pd" data-key="projects.desc4">Sistem keamanan pintu pintar berbasis ESP32 dengan modul RFID RC522 dan solenoid door lock sebagai mekanisme pengunci.</p><button class="pgo" data-key="projects.btn">Lihat Bukti &amp; Detail</button></div>
-    <div class="prow rv" onclick="openModal('proj-06')"><span class="pn">07</span><div class="pt">Kado Digital ESP32 — Happy Birthday Bunda</div><p class="pd" data-key="projects.desc6">Hadiah interaktif berbasis ESP32 dengan layar TFT 2.8", buzzer, dan tombol. Menampilkan slideshow foto &amp; pesan, memutar lagu ulang tahun otomatis.</p><button class="pgo" data-key="projects.btn">Lihat Bukti &amp; Detail</button></div>
+    <div class="prow rv" role="button" tabindex="0" onclick="openModal('proj-01')"><span class="pn">01</span><div class="pt">Smart Car Mini</div><p class="pd" data-key="projects.desc1">Mobil mini cerdas dengan sensor ultrasonik HC-SR04 untuk menghindari rintangan secara otomatis, dilengkapi fitur penyedot debu berbasis dinamo kipas.</p><button class="pgo" data-key="projects.btn">Lihat Bukti &amp; Detail</button></div>
+    <div class="prow rv" role="button" tabindex="0" onclick="openModal('proj-07')"><span class="pn">02</span><div class="pt">Kos Adin — Sistem Manajemen Kos-Kosan</div><p class="pd" data-key="projects.desc7">Sistem manajemen kos-kosan berbasis web dengan 3 role (Admin, Penghuni, Publik). Fitur: tagihan otomatis, verifikasi pembayaran, QR code, rating &amp; review, email notification, dan export PDF.</p><button class="pgo" data-key="projects.btn">Lihat Bukti &amp; Detail</button></div>
+    <div class="prow rv" role="button" tabindex="0" onclick="openModal('proj-02')"><span class="pn">03</span><div class="pt">UI/UX Aplikasi TJKT – SI Wistek</div><p class="pd" data-key="projects.desc2">Desain antarmuka aplikasi Sistem Informasi Jurusan berbasis mobile untuk SMK Wisata Indonesia. Dibuat menggunakan Figma.</p><button class="pgo" data-key="projects.btn">Lihat Bukti &amp; Detail</button></div>
+    <div class="prow rv" role="button" tabindex="0" onclick="openModal('proj-05')"><span class="pn">04</span><div class="pt">Caffe Adin — QR Code Restoran</div><p class="pd" data-key="projects.desc5">Sistem pemesanan restoran digital via QR Code. Pelanggan scan QR di meja, pesan mandiri via HP. Dashboard admin dengan grafik penjualan, export Excel hasil penjualan, pemantauan pesanan secara real-time</p><button class="pgo" data-key="projects.btn">Lihat Bukti &amp; Detail</button></div>
+    <div class="prow rv" role="button" tabindex="0" onclick="openModal('proj-03')"><span class="pn">05</span><div class="pt">Server dan Jaringan Virtual</div><p class="pd" data-key="projects.desc3">Membangun server dan jaringan virtual menggunakan Proxmox VE, Mikrotik, Ubuntu, dan hosting web menggunakan aaPanel.</p><button class="pgo" data-key="projects.btn">Lihat Bukti &amp; Detail</button></div>
+    <div class="prow rv" role="button" tabindex="0" onclick="openModal('proj-04')"><span class="pn">06</span><div class="pt">Smart Door Lock Berbasis ESP32 &amp; RFID</div><p class="pd" data-key="projects.desc4">Sistem keamanan pintu pintar berbasis ESP32 dengan modul RFID RC522 dan solenoid door lock sebagai mekanisme pengunci.</p><button class="pgo" data-key="projects.btn">Lihat Bukti &amp; Detail</button></div>
+    <div class="prow rv" role="button" tabindex="0" onclick="openModal('proj-06')"><span class="pn">07</span><div class="pt">Kado Digital ESP32 — Happy Birthday Bunda</div><p class="pd" data-key="projects.desc6">Hadiah interaktif berbasis ESP32 dengan layar TFT 2.8", buzzer, dan tombol. Menampilkan slideshow foto &amp; pesan, memutar lagu ulang tahun otomatis.</p><button class="pgo" data-key="projects.btn">Lihat Bukti &amp; Detail</button></div>
   </div>
 </section>
 
 <!-- EXPERIENCE -->
 <section class="sec" id="experience">
-  <div class="sec-h"><span class="lb" data-key="experience.label">03 — experience</span><h2 class="big" data-key="experience.title">Pengalaman kerja</h2></div>
+  <div class="sec-h rv"><span class="lb" data-key="experience.label">03 — experience</span><h2 class="big" data-key="experience.title">Pengalaman kerja</h2></div>
   <div class="ex rv">
     <div class="ex-y">2026<small>Ongoing</small></div>
     <div>
@@ -328,7 +509,7 @@ h1 span{font-family:var(--serif);font-weight:400;font-style:italic;color:var(--a
 
 <!-- CERTS -->
 <section class="sec" id="certifications">
-  <div class="sec-h"><span class="lb" data-key="cert.label">04 — Certifications</span><h2 class="big" data-key="cert.title">Sertifikasi &amp; Lisensi</h2></div>
+  <div class="sec-h rv"><span class="lb" data-key="cert.label">04 — Certifications</span><h2 class="big" data-key="cert.title">Sertifikasi &amp; Lisensi</h2></div>
   <div class="tk">
     <div class="ticket rv" onclick="openModal('cert-01')">
       <div><div class="ct" data-key="cert.bnsp.title">Junior Network Administrator</div><div class="ci" data-key="cert.bnsp.issuer">BNSP / LSP Teknologi Digital</div><div class="cd" data-key="cert.bnsp.date">Diterbitkan Apr 2026 · Berlaku s.d. Apr 2029</div></div>
@@ -343,24 +524,24 @@ h1 span{font-family:var(--serif);font-weight:400;font-style:italic;color:var(--a
 
 <!-- CONTACT -->
 <section class="sec" id="contact">
-  <div class="sec-h"><span class="lb" data-key="contact.label">05 — contact</span><h2 class="big" data-key="contact.title">Mari berkolaborasi.</h2></div>
+  <div class="sec-h rv"><span class="lb" data-key="contact.label">05 — contact</span><h2 class="big" data-key="contact.title">Mari berkolaborasi.</h2></div>
   <p class="c-desc" data-key="contact.desc">Saya terbuka untuk peluang kerja, freelance, atau sekadar diskusi. Hubungi saya lewat email atau media sosial.</p>
   <a class="mail" href="https://mail.google.com/mail/?view=cm&to=dhiyauddintjkt@gmail.com" target="_blank">dhiyauddintjkt@gmail.com ↗</a>
   <div class="btns">
     <a href="https://linkedin.com/in/mdhiyauddin" class="btn" target="_blank">LinkedIn</a>
     <a href="https://github.com/mdhiyauddin" class="btn" target="_blank">GitHub</a>
   </div>
-  <div class="foot" data-key="footer.copyright">© 2026 Muhammad Dhiyauddin</div>
+  <div class="foot"><span data-key="footer.copyright">© 2026 Muhammad Dhiyauddin</span><span class="built"><i></i>// built with ☕ by Dhiyauddin</span></div>
 </section>
 </main>
 </div>
 
 <!-- MODALS -->
-<div class="mo" id="modal-proj-01"><div class="mb">
+<div class="mo" id="modal-proj-01"><div class="mb"><div class="grab"></div>
   <div class="mh"><div><div class="mtag">Project 01</div><div class="mtitle">Smart Car Mini</div></div><button class="mx" onclick="closeModal('proj-01')">✕</button></div>
   <div class="mbody">
     <div><div class="msl">Foto &amp; Video Proyek</div><div class="gal">
-      <div class="gi"><img src="car1.jpg" alt="Foto 1"/><div class="ml">Foto 1</div></div>
+      <div class="gi"><img loading="lazy" decoding="async" src="car1.jpg" alt="Foto 1"/><div class="ml">Foto 1</div></div>
       <div class="gi"><a class="yt" href="https://youtube.com/shorts/lNb6Mr2K8M8?feature=share" target="_blank"><b>▶️</b><span>Klik untuk nonton di YouTube</span></a><div class="ml">Video Demo (YouTube Shorts)</div></div>
       <div class="gi"><a class="yt" href="https://youtube.com/shorts/EVVFEc6twj0?feature=share" target="_blank"><b>▶️</b><span>Klik untuk nonton di YouTube</span></a><div class="ml">Video Demo 2 (YouTube Shorts)</div></div>
     </div></div>
@@ -368,46 +549,46 @@ h1 span{font-family:var(--serif);font-weight:400;font-style:italic;color:var(--a
   </div>
 </div></div>
 
-<div class="mo" id="modal-proj-02"><div class="mb">
+<div class="mo" id="modal-proj-02"><div class="mb"><div class="grab"></div>
   <div class="mh"><div><div class="mtag">Project 03 · UI/UX Design</div><div class="mtitle">Aplikasi SI Wistek – TJKT</div></div><button class="mx" onclick="closeModal('proj-02')">✕</button></div>
   <div class="mbody">
     <div><div class="msl">Tampilan UI Aplikasi</div><div class="gal gal-p">
-      <div class="gi"><img src="ui-1-welcome.png" alt="Welcome"/><div class="ml">Welcome</div></div>
-      <div class="gi"><img src="ui-2-login.png" alt="Login"/><div class="ml">Login</div></div>
-      <div class="gi"><img src="ui-3-home.png" alt="Dashboard"/><div class="ml">Dashboard</div></div>
-      <div class="gi"><img src="ui-4-profile.png" alt="Profil"/><div class="ml">Profil Siswa</div></div>
-      <div class="gi"><img src="ui-5-info.png" alt="Info"/><div class="ml">Info Aplikasi</div></div>
-      <div class="gi"><img src="ui-6-kalender.png" alt="Kalender"/><div class="ml">Kalender Jurusan</div></div>
+      <div class="gi"><img loading="lazy" decoding="async" src="ui-1-welcome.png" alt="Welcome"/><div class="ml">Welcome</div></div>
+      <div class="gi"><img loading="lazy" decoding="async" src="ui-2-login.png" alt="Login"/><div class="ml">Login</div></div>
+      <div class="gi"><img loading="lazy" decoding="async" src="ui-3-home.png" alt="Dashboard"/><div class="ml">Dashboard</div></div>
+      <div class="gi"><img loading="lazy" decoding="async" src="ui-4-profile.png" alt="Profil"/><div class="ml">Profil Siswa</div></div>
+      <div class="gi"><img loading="lazy" decoding="async" src="ui-5-info.png" alt="Info"/><div class="ml">Info Aplikasi</div></div>
+      <div class="gi"><img loading="lazy" decoding="async" src="ui-6-kalender.png" alt="Kalender"/><div class="ml">Kalender Jurusan</div></div>
     </div></div>
     <div><div class="msl">Deskripsi Lengkap</div><p class="md">Desain UI/UX aplikasi mobile Sistem Informasi Jurusan (SI Wistek) untuk SMK Wisata Indonesia jurusan TJKT. Dibuat menggunakan Figma dengan pendekatan mobile-first.</p>
     <a href="https://www.figma.com/design/jo2iNYlK98NIi0x6qfa5vJ/" target="_blank" class="dbtn" style="margin-top:.6rem">Buka di Figma</a></div>
   </div>
 </div></div>
 
-<div class="mo" id="modal-proj-03"><div class="mb">
+<div class="mo" id="modal-proj-03"><div class="mb"><div class="grab"></div>
   <div class="mh"><div><div class="mtag">Project 05</div><div class="mtitle">Server dan Jaringan Virtual</div></div><button class="mx" onclick="closeModal('proj-03')">✕</button></div>
   <div class="mbody"><div><div class="msl">Deskripsi Lengkap</div><p class="md">Membangun server dan jaringan virtual menggunakan Proxmox VE. Mengkonfigurasi routing pada Mikrotik, server berbasis Ubuntu, serta melakukan deployment dan hosting web menggunakan aaPanel di lingkungan Linux secara mandiri.</p></div></div>
 </div></div>
 
-<div class="mo" id="modal-proj-04"><div class="mb">
+<div class="mo" id="modal-proj-04"><div class="mb"><div class="grab"></div>
   <div class="mh"><div><div class="mtag">Project 06</div><div class="mtitle">Smart Door Lock Berbasis ESP32 &amp; RFID</div></div><button class="mx" onclick="closeModal('proj-04')">✕</button></div>
   <div class="mbody">
     <div><div class="msl">Foto &amp; Video Proyek</div><div class="gal">
-      <div class="gi"><img src="prj41.jpeg" alt="Foto 1"/><div class="ml">Foto 1</div></div>
-      <div class="gi"><img src="prj42.jpeg" alt="Foto 2"/><div class="ml">Foto 2</div></div>
+      <div class="gi"><img loading="lazy" decoding="async" src="prj41.jpeg" alt="Foto 1"/><div class="ml">Foto 1</div></div>
+      <div class="gi"><img loading="lazy" decoding="async" src="prj42.jpeg" alt="Foto 2"/><div class="ml">Foto 2</div></div>
     </div></div>
     <div><div class="msl">Deskripsi Lengkap</div><p class="md">Sistem keamanan pintu pintar berbasis ESP32 dengan modul RFID RC522 dan Solenoid Door Lock. Hanya kartu RFID terdaftar yang dapat membuka pintu secara otomatis.</p></div>
   </div>
 </div></div>
 
-<div class="mo" id="modal-proj-05"><div class="mb">
+<div class="mo" id="modal-proj-05"><div class="mb"><div class="grab"></div>
   <div class="mh"><div><div class="mtag">Project 04 · Fullstack Web</div><div class="mtitle">Caffe Adin - QR Code Restoran</div></div><button class="mx" onclick="closeModal('proj-05')">✕</button></div>
   <div class="mbody">
     <div><div class="msl">Foto &amp; Video Proyek</div><div class="gal">
-      <div class="gi"><img src="caffe-login.jpg" alt="login"/><div class="ml">login</div></div>
-      <div class="gi"><img src="caffe-dashboard.png" alt="Dashboard"/><div class="ml">Dashboard</div></div>
-      <div class="gi"><img src="caffe-menu.png" alt="Menu"/><div class="ml">Halaman Menu</div></div>
-      <div class="gi"><img src="caffe-qr.png" alt="QR Code"/><div class="ml">QR Code Meja</div></div>
+      <div class="gi"><img loading="lazy" decoding="async" src="caffe-login.jpg" alt="login"/><div class="ml">login</div></div>
+      <div class="gi"><img loading="lazy" decoding="async" src="caffe-dashboard.png" alt="Dashboard"/><div class="ml">Dashboard</div></div>
+      <div class="gi"><img loading="lazy" decoding="async" src="caffe-menu.png" alt="Menu"/><div class="ml">Halaman Menu</div></div>
+      <div class="gi"><img loading="lazy" decoding="async" src="caffe-qr.png" alt="QR Code"/><div class="ml">QR Code Meja</div></div>
       <div class="gi"><a class="yt" href="https://youtu.be/3doNaotOeCw" target="_blank"><b>▶️</b><span>Klik untuk nonton di YouTube</span></a><div class="ml">Video Demo (YouTube)</div></div>
     </div></div>
     <div><div class="msl">Deskripsi Lengkap</div><p class="md">
@@ -419,11 +600,11 @@ h1 span{font-family:var(--serif);font-weight:400;font-style:italic;color:var(--a
   </div>
 </div></div>
 
-<div class="mo" id="modal-proj-06"><div class="mb">
+<div class="mo" id="modal-proj-06"><div class="mb"><div class="grab"></div>
   <div class="mh"><div><div class="mtag">Project 07 · Embedded System</div><div class="mtitle">Kado Digital ESP32 - Happy Birthday Bunda</div></div><button class="mx" onclick="closeModal('proj-06')">✕</button></div>
   <div class="mbody">
     <div><div class="msl">Foto &amp; Video Proyek</div><div class="gal">
-      <div class="gi"><img src="kado-cover.jpg" alt="Cover"/><div class="ml">Cover</div></div>
+      <div class="gi"><img loading="lazy" decoding="async" src="kado-cover.jpg" alt="Cover"/><div class="ml">Cover</div></div>
       <div class="gi"><a class="yt" href="https://youtube.com/shorts/B3zeqS7JX2U?feature=share" target="_blank"><b>▶️</b><span>Klik untuk nonton di YouTube</span></a><div class="ml">Video Demo (YouTube Shorts)</div></div>
     </div></div>
     <div><div class="msl">Deskripsi Lengkap</div><p class="md">
@@ -433,14 +614,14 @@ h1 span{font-family:var(--serif);font-weight:400;font-style:italic;color:var(--a
   </div>
 </div></div>
 
-<div class="mo" id="modal-proj-07"><div class="mb">
+<div class="mo" id="modal-proj-07"><div class="mb"><div class="grab"></div>
   <div class="mh"><div><div class="mtag">Project 02 · Fullstack Web</div><div class="mtitle">Kos Adin - Sistem Manajemen Kos-Kosan</div></div><button class="mx" onclick="closeModal('proj-07')">✕</button></div>
   <div class="mbody">
     <div><div class="msl">Foto &amp; Video Proyek</div><div class="gal">
-      <div class="gi"><img src="landing.png" alt="Landing Page"/><div class="ml">Landing Page</div></div>
-      <div class="gi"><img src="login.png" alt="Login Page"/><div class="ml">Login Page</div></div>
-      <div class="gi"><img src="admindsh.png" alt="Admin Dashboard"/><div class="ml">Admin Dashboard</div></div>
-      <div class="gi"><img src="pnghuni.png" alt="Penghuni Dashboard"/><div class="ml">Penghuni Dashboard</div></div>
+      <div class="gi"><img loading="lazy" decoding="async" src="landing.png" alt="Landing Page"/><div class="ml">Landing Page</div></div>
+      <div class="gi"><img loading="lazy" decoding="async" src="login.png" alt="Login Page"/><div class="ml">Login Page</div></div>
+      <div class="gi"><img loading="lazy" decoding="async" src="admindsh.png" alt="Admin Dashboard"/><div class="ml">Admin Dashboard</div></div>
+      <div class="gi"><img loading="lazy" decoding="async" src="pnghuni.png" alt="Penghuni Dashboard"/><div class="ml">Penghuni Dashboard</div></div>
       <div class="gi"><a class="yt" href="https://youtu.be/gr_H8QldiKk" target="_blank"><b>▶️</b><span>Klik untuk nonton di YouTube</span></a><div class="ml">Video Demo (YouTube)</div></div>
     </div></div>
     <div><div class="msl">Deskripsi Lengkap</div><p class="md">
@@ -452,7 +633,7 @@ h1 span{font-family:var(--serif);font-weight:400;font-style:italic;color:var(--a
   </div>
 </div></div>
 
-<div class="mo" id="modal-exp-01"><div class="mb">
+<div class="mo" id="modal-exp-01"><div class="mb"><div class="grab"></div>
   <div class="mh"><div><div class="mtag">Experience · 2024 — 2025</div><div class="mtitle">PT Solusi Intek Indonesia</div></div><button class="mx" onclick="closeModal('exp-01')">✕</button></div>
   <div class="mbody">
     <div><div class="msl">Detail Kegiatan</div><p class="md">Menjalani program PKL sebagai Programmer Intern dengan fokus pada pengumpulan dan ekstraksi data (Data Scraping).</p></div>
@@ -461,7 +642,7 @@ h1 span{font-family:var(--serif);font-weight:400;font-style:italic;color:var(--a
   </div>
 </div></div>
 
-<div class="mo" id="modal-exp-04"><div class="mb">
+<div class="mo" id="modal-exp-04"><div class="mb"><div class="grab"></div>
   <div class="mh"><div><div class="mtag">Experience · 2026 (Ongoing)</div><div class="mtitle">PT Remala Abadi Tbk</div></div><button class="mx" onclick="closeModal('exp-04')">✕</button></div>
   <div class="mbody">
     <div><div class="msl">Detail Kegiatan</div><p class="md">Saat ini saya sedang menjalani program internship selama 4 bulan sebagai Intern Admin NOC di PT Remala Abadi Tbk (penempatan di anak perusahaan). Selama periode ini, fokus utama saya adalah mendukung operasional harian NOC.</p></div>
@@ -470,12 +651,12 @@ h1 span{font-family:var(--serif);font-weight:400;font-style:italic;color:var(--a
   </div>
 </div></div>
 
-<div class="mo" id="modal-exp-03"><div class="mb">
+<div class="mo" id="modal-exp-03"><div class="mb"><div class="grab"></div>
   <div class="mh"><div><div class="mtag">Project · 2025</div><div class="mtitle">Instalasi CCTV Sekolah</div></div><button class="mx" onclick="closeModal('exp-03')">✕</button></div>
   <div class="mbody">
     <div><div class="msl">Dokumentasi</div><div class="gal">
-      <div class="gi"><img src="cctv-1.jpeg" alt="Penarikan Kabel"/><div class="ml">Penarikan Kabel</div></div>
-      <div class="gi"><img src="cctv-2.jpeg" alt="Pemasangan Kamera"/><div class="ml">Pemasangan Kamera</div></div>
+      <div class="gi"><img loading="lazy" decoding="async" src="cctv-1.jpeg" alt="Penarikan Kabel"/><div class="ml">Penarikan Kabel</div></div>
+      <div class="gi"><img loading="lazy" decoding="async" src="cctv-2.jpeg" alt="Pemasangan Kamera"/><div class="ml">Pemasangan Kamera</div></div>
       <div class="gi"><a class="yt" href="https://youtube.com/shorts/6SfIis50l60?feature=share" target="_blank"><b>▶️</b><span>Klik untuk nonton di YouTube</span></a><div class="ml">Video Proses Penataan Kabel</div></div>
     </div><p style="font-size:.7rem;color:var(--muted);margin-top:.5rem">*Foto &amp; video dokumentasi sebagai bukti pengerjaan proyek</p></div>
     <div><div class="msl">Deskripsi Proyek</div><p class="md">Terlibat dalam proyek instalasi CCTV di lingkungan sekolah dengan tugas utama melakukan penarikan kabel, pemasangan perangkat CCTV, serta pengecekan koneksi fisik untuk memastikan perangkat dapat berfungsi dengan baik.</p></div>
@@ -485,18 +666,18 @@ h1 span{font-family:var(--serif);font-weight:400;font-style:italic;color:var(--a
   </div>
 </div></div>
 
-<div class="mo" id="modal-cert-01"><div class="mb">
+<div class="mo" id="modal-cert-01"><div class="mb"><div class="grab"></div>
   <div class="mh"><div><div class="mtag">Certification · 2026</div><div class="mtitle">Junior Network Administrator</div></div><button class="mx" onclick="closeModal('cert-01')">✕</button></div>
   <div class="mbody">
-    <div><div class="msl">Sertifikat &amp; Dokumen</div><div class="gal"><div class="gi"><img src="sertifikat-bnsp.jpeg" alt="Sertifikat BNSP"/><div class="ml">Sertifikat BNSP</div></div></div></div>
+    <div><div class="msl">Sertifikat &amp; Dokumen</div><div class="gal"><div class="gi"><img loading="lazy" decoding="async" src="sertifikat-bnsp.jpeg" alt="Sertifikat BNSP"/><div class="ml">Sertifikat BNSP</div></div></div></div>
     <div><div class="msl">Detail Sertifikasi</div><p class="md">Sertifikasi Kompetensi BNSP (Badan Nasional Sertifikasi Profesi) bidang Rekayasa Jaringan Komputer (Network Engineer) dengan kualifikasi Network Administrator Muda. Diterbitkan oleh LSP Teknologi Digital. Berlaku 3 tahun (2026-2029).</p></div>
   </div>
 </div></div>
 
-<div class="mo" id="modal-cert-02"><div class="mb">
+<div class="mo" id="modal-cert-02"><div class="mb"><div class="grab"></div>
   <div class="mh"><div><div class="mtag">Certification · 2025</div><div class="mtitle">Programmer Intern Certificate</div></div><button class="mx" onclick="closeModal('cert-02')">✕</button></div>
   <div class="mbody">
-    <div><div class="msl">Sertifikat &amp; Dokumen</div><div class="gal"><div class="gi"><img src="cert.jpeg" alt="Sertifikat PKL"/><div class="ml">Sertifikat PKL</div></div></div></div>
+    <div><div class="msl">Sertifikat &amp; Dokumen</div><div class="gal"><div class="gi"><img loading="lazy" decoding="async" src="cert.jpeg" alt="Sertifikat PKL"/><div class="ml">Sertifikat PKL</div></div></div></div>
     <div><div class="msl">Detail Sertifikasi</div><p class="md">Sertifikat penyelesaian Program Praktik Kerja Lapangan (PKL) selama 6 bulan di PT Solusi Intek Indonesia sebagai Programmer Intern. Berfokus pada analisis data dan deteksi potensi kebocoran data.</p></div>
   </div>
 </div></div>
@@ -509,22 +690,18 @@ h1 span{font-family:var(--serif);font-weight:400;font-style:italic;color:var(--a
 
 
 <script>
-/* modals */
-function openModal(id){const e=document.getElementById('modal-'+id);if(e)e.classList.add('open');document.body.style.overflow='hidden'}
-function closeModal(id){const e=document.getElementById('modal-'+id);if(e)e.classList.remove('open');document.body.style.overflow=''}
-document.querySelectorAll('.mo').forEach(m=>m.addEventListener('click',e=>{if(e.target===m){m.classList.remove('open');document.body.style.overflow=''}}));
-function openLightbox(src){const i=document.getElementById('lb-img');i.src=src;document.getElementById('lightbox').classList.add('open')}
-function closeLightbox(){document.getElementById('lightbox').classList.remove('open')}
-document.querySelectorAll('.gi').forEach(el=>el.addEventListener('click',function(){const i=this.querySelector('img');if(i)openLightbox(i.src)}));
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLightbox();document.querySelectorAll('.mo.open').forEach(m=>m.classList.remove('open'));document.body.style.overflow=''}});
+/* ───────── helpers ───────── */
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const FINE=matchMedia('(hover:hover) and (pointer:fine)').matches;
+const REDUCE=matchMedia('(prefers-reduced-motion:reduce)').matches;
 
-/* i18n */
+/* ───────── i18n data ───────── */
 const T={
 id:{
 'hero.tag':'available for work','hero.title':'Halo, saya<br /><span>Muhammad<br/>Dhiyauddin.</span>',
 'hero.sub':'Fresh Graduate TJKT yang memiliki pengalaman pada Mikrotik, Linux Server, Proxmox, Arduino, ESP32, UI/UX Figma, dan implementasi jaringan komputer.',
 'hero.btn1':'Lihat proyek saya →','hero.btn2':'Hubungi saya','hero.scroll':'scroll to explore',
-'hero.stats1':'Projects','hero.stats2':'Certificates','hero.stats3':'Internships',
+'hero.stats1':'Projects','hero.stats2':'Certificates','hero.stats3':'Internships','hero.stats4':'Freelance',
 'about.label':'01 — about me','about.title':'Sedikit tentang saya',
 'about.p1':'Saya adalah <strong>Network Engineer</strong> yang berpengalaman dalam merancang dan mengelola infrastruktur jaringan.',
 'about.p2':'Keahlian saya mencakup <strong>konfigurasi Mikrotik &amp; server Linux</strong>, virtualisasi dengan Proxmox, dan pemrograman mikrokontroler.',
@@ -556,7 +733,7 @@ en:{
 'hero.tag':'available for work','hero.title':'Hello, I\'m<br /><span>Muhammad<br/>Dhiyauddin.</span>',
 'hero.sub':'Fresh Graduate in Computer and Network Engineering with experience in Mikrotik, Linux Server, Proxmox, Arduino, ESP32, UI/UX Figma, and network implementation.',
 'hero.btn1':'View my projects →','hero.btn2':'Contact me','hero.scroll':'scroll to explore',
-'hero.stats1':'Projects','hero.stats2':'Certificates','hero.stats3':'Internships',
+'hero.stats1':'Projects','hero.stats2':'Certificates','hero.stats3':'Internships','hero.stats4':'Freelance',
 'about.label':'01 — about me','about.title':'A bit about me',
 'about.p1':'I am a <strong>Network Engineer</strong> experienced in designing and managing network infrastructure.',
 'about.p2':'My expertise includes <strong>Mikrotik &amp; Linux server configuration</strong>, virtualization with Proxmox, and microcontroller programming.',
@@ -586,44 +763,196 @@ en:{
 'footer.copyright':'© 2026 Muhammad Dhiyauddin'}
 };
 let lang='id';
-function toggleLang(){lang=lang==='id'?'en':'id';document.getElementById('langBtn').textContent=lang==='id'?'🇬🇧 EN':'🇮🇩 ID';
-  document.querySelectorAll('[data-key]').forEach(e=>{const v=T[lang][e.getAttribute('data-key')];if(v!==undefined)e.innerHTML=v})}
 
-/* photo crossfade */
-(function(){const p=document.querySelectorAll('.photo .ph');let i=0;setInterval(()=>{p[i].classList.remove('on');i=(i+1)%p.length;p[i].classList.add('on')},4500)})();
+/* ───────── modals / lightbox ───────── */
+function syncLock(){const o=$$('.mo.open').length>0||$('#lightbox').classList.contains('open');document.body.classList.toggle('lock',o)}
+function openModal(id){const e=document.getElementById('modal-'+id);if(!e)return;e.classList.add('open');const mb=$('.mb',e);if(mb){mb.scrollTop=0;mb.style.transform='';mb.style.transition=''}syncLock()}
+function closeModal(id){const e=document.getElementById('modal-'+id);if(!e)return;e.classList.remove('open');syncLock()}
+function openLightbox(src){$('#lb-img').src=src;$('#lightbox').classList.add('open');syncLock()}
+function closeLightbox(){$('#lightbox').classList.remove('open');syncLock()}
+$$('.mo').forEach(m=>m.addEventListener('click',e=>{if(e.target===m){m.classList.remove('open');syncLock()}}));
+$$('.gi').forEach(el=>el.addEventListener('click',function(){const i=this.querySelector('img');if(i)openLightbox(i.src)}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLightbox();$$('.mo.open').forEach(m=>m.classList.remove('open'));syncLock()}});
+$$('.prow').forEach(r=>r.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();r.click()}}));
+/* swipe down to close (bottom-sheet on phones) */
+$$('.mb').forEach(mb=>{
+  let y0=null,dy=0;
+  mb.addEventListener('touchstart',e=>{y0=(mb.scrollTop<=0&&innerWidth<=700)?e.touches[0].clientY:null;dy=0},{passive:true});
+  mb.addEventListener('touchmove',e=>{if(y0===null)return;dy=e.touches[0].clientY-y0;if(dy>0){mb.style.transition='none';mb.style.transform='translateY('+dy+'px)'}else mb.style.transform=''},{passive:true});
+  mb.addEventListener('touchend',()=>{
+    if(y0===null)return;
+    mb.style.transition='transform .25s cubic-bezier(.22,1,.36,1)';
+    if(dy>110){mb.style.transform='translateY(100%)';setTimeout(()=>{mb.closest('.mo').classList.remove('open');mb.style.transform='';mb.style.transition='';syncLock()},230)}
+    else{mb.style.transform='';setTimeout(()=>{mb.style.transition=''},260)}
+    y0=null;dy=0;
+  },{passive:true});
+});
 
-/* terminal */
+/* ───────── language toggle ───────── */
+function toggleLang(){
+  lang=lang==='id'?'en':'id';
+  $('#langBtn').textContent=lang==='id'?'🇬🇧 EN':'🇮🇩 ID';
+  document.documentElement.lang=lang;
+  $$('[data-key]').forEach(e=>{const v=T[lang][e.getAttribute('data-key')];if(v!==undefined)e.innerHTML=v});
+}
+
+/* ───────── photo slideshow (auto + tap to switch) ───────── */
+const phs=$$('.photo .ph');let pi=0,ptimer;
+function showPhoto(n){phs[pi].classList.remove('on');pi=(n+phs.length)%phs.length;phs[pi].classList.add('on')}
+function startPhoto(){clearInterval(ptimer);ptimer=setInterval(()=>showPhoto(pi+1),4500)}
+function togglePhoto(){showPhoto(pi+1);startPhoto();const t=$('.photo .tap');if(t)t.classList.add('gone')}
+startPhoto();
+
+/* ───────── toast + confetti ───────── */
+let toastT;
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),3200)}
+const cv=$('#confetti'),cx=cv.getContext('2d');let parts=[],raf=0,W=0,H=0;
+function fit(){const d=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;cv.width=W*d;cv.height=H*d;cx.setTransform(d,0,0,d,0,0)}
+addEventListener('resize',fit);fit();
+const COL=['#ff4d1c','#121212','#ffb199','#ffd400','#2b7fff','#1f9d63'];
+function confetti(x,y,n){
+  if(REDUCE)return;n=n||70;
+  for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,s=4+Math.random()*8;
+    parts.push({x:x,y:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-6,r:Math.random()*6.28,vr:(Math.random()-.5)*.4,w:5+Math.random()*6,h:3+Math.random()*4,c:COL[Math.random()*COL.length|0],l:0,life:90+Math.random()*50})}
+  if(!raf)raf=requestAnimationFrame(drawConfetti);
+}
+function drawConfetti(){
+  cx.clearRect(0,0,W,H);
+  parts=parts.filter(p=>p.l<p.life&&p.y<H+30);
+  for(const p of parts){p.l++;p.vy+=.28;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;
+    cx.save();cx.translate(p.x,p.y);cx.rotate(p.r);cx.globalAlpha=Math.min(1,(p.life-p.l)/30);cx.fillStyle=p.c;cx.fillRect(-p.w/2,-p.h/2,p.w,p.h);cx.restore()}
+  if(parts.length)raf=requestAnimationFrame(drawConfetti);else{raf=0;cx.clearRect(0,0,W,H)}
+}
+
+/* easter egg: tap the name 5x */
 (function(){
-  const b=document.getElementById('term-body');
+  let n=0,t0=0;
+  $('#side-name').addEventListener('click',()=>{
+    const now=Date.now();if(now-t0>2000)n=0;t0=now;n++;
+    if(n>=5){n=0;confetti(innerWidth/2,innerHeight/3,140);toast(lang==='id'?'🎉 Kamu nemu easter egg! Mau lanjut ngobrol? → hubungi saya':'🎉 You found the easter egg! Want to chat? → contact me')}
+  });
+})();
+
+/* ───────── terminal ───────── */
+(function(){
+  const b=$('#term-body'),inp=$('#term-in');
   const L=[{t:'whoami',a:'→ Dhiyauddin'},{t:'cat skills.txt',a:'→ Mikrotik / Linux / Proxmox / ESP32'},{t:'echo $status',a:'→ available for work ✓'}];
-  let li=0,ci=0,ph='c',out='';
+  let out='',li=0,ci=0,ph='c',stop=false,done=false,hist=[],hi=0;
+  const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const paint=cur=>{b.innerHTML=out+(cur||'');b.scrollTop=b.scrollHeight};
   function s(){
-    if(li>=L.length){b.innerHTML=out+'<span class="cur"></span>';return}
+    if(stop)return;
+    if(li>=L.length){done=true;paint('');return}
     const l=L[li];
     if(ph==='c'){
-      if(ci<=l.t.length){b.innerHTML=out+'<span class="tl"><span class="tp">$ </span>'+l.t.slice(0,ci)+'<span class="cur"></span></span>';ci++;setTimeout(s,55+Math.random()*45)}
+      if(ci<=l.t.length){paint('<span class="tl"><span class="tp">$ </span>'+l.t.slice(0,ci)+'<span class="cur"></span></span>');ci++;setTimeout(s,55+Math.random()*45)}
       else{out+='<span class="tl"><span class="tp">$ </span>'+l.t+'</span>';ph='a';ci=0;setTimeout(s,260)}
-    }else{out+='<span class="tl" style="color:var(--accent)">'+l.a+'</span>';b.innerHTML=out;li++;ph='c';ci=0;setTimeout(s,420)}
+    }else{out+='<span class="tl" style="color:var(--accent)">'+l.a+'</span>';paint('');li++;ph='c';ci=0;setTimeout(s,420)}
   }
   setTimeout(s,500);
+  function finishDemo(){if(done)return;stop=true;out='';L.forEach(l=>{out+='<span class="tl"><span class="tp">$ </span>'+l.t+'</span><span class="tl" style="color:var(--accent)">'+l.a+'</span>'});done=true}
+  const o=t=>'<span class="tl o">'+t+'</span>';
+  const go=id=>{const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:REDUCE?'auto':'smooth'})};
+  const SEC={home:'hero',hero:'hero',about:'about',projects:'projects',experience:'experience',exp:'experience',certs:'certifications',certifications:'certifications',contact:'contact'};
+  const CMD={
+    help:()=>o('help · whoami · skills · projects · exp · certs · contact')+o('cd &lt;section&gt; · clear · hire')+o('<span style="color:#6d695f">psst… try `sudo`</span>'),
+    whoami:()=>o('Muhammad Dhiyauddin — Network Engineer, Jakarta'),
+    skills:()=>o('Mikrotik · Linux Server · Proxmox VE · Ubuntu')+o('ESP32 · Arduino · Python · Laravel · Figma · Excel'),
+    projects:()=>o('01 Smart Car Mini')+o('02 Kos Adin (Laravel)')+o('03 UI/UX SI Wistek')+o('04 Caffe Adin QR')+o('05 Server &amp; Jaringan Virtual')+o('06 Smart Door Lock ESP32')+o('07 Kado Digital ESP32'),
+    ls:()=>o('about/  projects/  experience/  certs/  contact/'),
+    exp:()=>o('2026  Intern Admin NOC — PT Remala Abadi Tbk')+o('2025  Freelance Technician — CCTV')+o('2024-25  Programmer Intern — PT Solusi Intek'),
+    certs:()=>o('Junior Network Administrator (BNSP)')+o('Programmer Intern Certificate'),
+    contact:()=>o('dhiyauddintjkt@gmail.com')+o('github.com/mdhiyauddin · linkedin.com/in/mdhiyauddin'),
+    hire:()=>{setTimeout(()=>go('contact'),250);return o('<span style="color:var(--accent)">good choice →</span> scrolling to contact…')},
+    sudo:()=>o('permission denied 😏 — but you can still hire me.'),
+    date:()=>o(new Date().toString().slice(0,24)),
+    clear:()=>{out='';return ''}
+  };
+  function run(raw){
+    const cmd=raw.trim();if(!cmd)return;
+    finishDemo();hist.push(cmd);hi=hist.length;
+    out+='<span class="tl"><span class="tp">$ </span>'+esc(cmd)+'</span>';
+    const parts=cmd.split(/\s+/),c=parts[0].toLowerCase();
+    if(c==='cd'){const id=SEC[(parts[1]||'').replace(/\/$/,'').toLowerCase()];if(id){go(id);out+=o('→ '+esc(parts[1]))}else out+=o('no such directory: '+esc(parts[1]||''))}
+    else if(CMD[c]){out+=CMD[c]()}
+    else out+=o('command not found: '+esc(c)+' — type <b>help</b>');
+    paint('');
+  }
+  inp.addEventListener('keydown',e=>{
+    if(e.key==='Enter'){run(inp.value);inp.value=''}
+    else if(e.key==='ArrowUp'&&hist.length){e.preventDefault();hi=Math.max(0,hi-1);inp.value=hist[hi]}
+    else if(e.key==='ArrowDown'&&hist.length){e.preventDefault();hi=Math.min(hist.length,hi+1);inp.value=hist[hi]||''}
+  });
+  inp.addEventListener('focus',finishDemo);
 })();
 
-/* reveal */
+/* ───────── scramble labels + counters ───────── */
+const GL='!<>-_\\/[]{}=+*^?#01';
+function scramble(el){
+  if(REDUCE)return;
+  const key=el.getAttribute('data-key'),fin=(key&&T[lang][key])||el.textContent,id=(el._sc=(el._sc||0)+1);let f=0;const total=20;
+  (function step(){
+    if(el._sc!==id)return;f++;
+    const k=Math.floor(f/total*fin.length);let s='';
+    for(let i=0;i<fin.length;i++)s+=(i<k||fin[i]===' ')?fin[i]:GL[Math.random()*GL.length|0];
+    el.textContent=s;
+    if(f<total)setTimeout(step,32);else el.textContent=fin;
+  })();
+}
+function countUp(el){
+  const m=el.textContent.match(/^(\d+)(.*)$/);if(!m||REDUCE)return;
+  const to=+m[1],suf=m[2];let t0=null;
+  const step=t=>{if(t0===null)t0=t;const p=Math.min((t-t0)/1100,1),e=1-Math.pow(1-p,3);el.textContent=Math.round(to*e)+suf;if(p<1)requestAnimationFrame(step)};
+  el.textContent='0'+suf;requestAnimationFrame(step);
+}
+
+/* ───────── scroll reveal (staggered via CSS var) ───────── */
 (function(){
-  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){
-    const sib=[...e.target.parentElement.children].filter(c=>c.classList.contains('rv'));
-    setTimeout(()=>e.target.classList.add('in'),sib.indexOf(e.target)*80);io.unobserve(e.target)}}),{threshold:.1});
-  document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+  const io=new IntersectionObserver(es=>es.forEach(e=>{
+    if(!e.isIntersecting)return;
+    const t=e.target;io.unobserve(t);
+    const sib=Array.from(t.parentElement.children).filter(c=>c.classList.contains('rv'));
+    t.style.setProperty('--d',Math.min(sib.indexOf(t),6)*90+'ms');
+    t.classList.add('in');
+    const lb=t.querySelector('.lb');if(lb)scramble(lb);
+    $$('.stat h3',t).forEach(countUp);
+  }),{threshold:.1,rootMargin:'0px 0px -5% 0px'});
+  $$('.rv').forEach(el=>io.observe(el));
 })();
 
-/* scroll spy */
+/* ───────── scroll progress + scroll spy (rAF throttled) ───────── */
 (function(){
-  const links=[...document.querySelectorAll('.snav a')];
-  const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
-  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){
-    links.forEach(l=>l.classList.toggle('act',l.getAttribute('href')==='#'+e.target.id))}}),{rootMargin:'-45% 0px -50% 0px'});
-  secs.forEach(s=>s&&io.observe(s));
+  const bar=$('#progress'),links=$$('.snav a,.dock a'),ids=['hero','about','projects','experience','certifications','contact'];
+  const secs=ids.map(i=>document.getElementById(i));let tick=false,cur='';
+  function update(){
+    tick=false;
+    const h=document.documentElement.scrollHeight-innerHeight;
+    bar.style.transform='scaleX('+(h>0?Math.min(scrollY/h,1):0)+')';
+    let id=ids[0];
+    for(let i=0;i<secs.length;i++){if(secs[i].getBoundingClientRect().top<=innerHeight*.4)id=ids[i]}
+    if(h>0&&scrollY>=h-6)id=ids[ids.length-1];
+    if(id!==cur){cur=id;links.forEach(l=>l.classList.toggle('act',l.getAttribute('href')==='#'+id))}
+  }
+  addEventListener('scroll',()=>{if(!tick){tick=true;requestAnimationFrame(update)}},{passive:true});
+  addEventListener('resize',update);update();
 })();
+
+/* ───────── desktop only: cursor glow + 3D tilt ───────── */
+if(FINE&&!REDUCE){
+  const g=$('#glow');let gx=0,gy=0,tx=0,ty=0,run=false;
+  const loop=()=>{gx+=(tx-gx)*.14;gy+=(ty-gy)*.14;g.style.transform='translate3d('+gx+'px,'+gy+'px,0)';
+    if(Math.abs(tx-gx)+Math.abs(ty-gy)>.5)requestAnimationFrame(loop);else run=false};
+  addEventListener('pointermove',e=>{tx=e.clientX;ty=e.clientY;g.style.opacity=1;if(!run){run=true;requestAnimationFrame(loop)}},{passive:true});
+  document.documentElement.addEventListener('mouseleave',()=>{g.style.opacity=0});
+  $$('.ticket,.term').forEach(el=>{
+    el.addEventListener('pointermove',e=>{
+      const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+      el.style.transform='perspective(700px) rotateX('+(-y*7).toFixed(2)+'deg) rotateY('+(x*9).toFixed(2)+'deg) translateY(-3px)';
+    },{passive:true});
+    el.addEventListener('pointerleave',()=>{el.style.transform=''});
+  });
+}
+
 </script>
 </body>
 </html>
